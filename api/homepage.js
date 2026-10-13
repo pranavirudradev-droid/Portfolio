@@ -1,4 +1,4 @@
-import { HOMEPAGE_IDENTITY, HERO_STATEMENT, HOME_IMAGES } from '../src/config/homepage.js';
+import { getPortfolioData, savePortfolioData } from './_supabase.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -7,16 +7,36 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(204).end();
 
+  const portfolio = await getPortfolioData();
+
   if (req.method === 'GET') {
-    return res.status(200).json({
-      identity: HOMEPAGE_IDENTITY,
-      hero: HERO_STATEMENT,
-      images: HOME_IMAGES
-    });
+    return res.status(200).json(portfolio.homepage || {});
   }
 
   if (req.method === 'POST') {
     const { slotId, imageSrc, heroStatement, tagline } = req.body || {};
+
+    if (!portfolio.homepage) portfolio.homepage = {};
+    if (!portfolio.homepage.hero) portfolio.homepage.hero = {};
+    if (!portfolio.homepage.images) portfolio.homepage.images = [];
+
+    if (slotId) {
+      const s = portfolio.homepage.images.find(x => x.id === slotId);
+      if (s) {
+        s.src = imageSrc || null;
+      } else {
+        portfolio.homepage.images.push({ id: slotId, src: imageSrc || null });
+      }
+    }
+
+    if (heroStatement !== undefined) {
+      portfolio.homepage.hero.statement = heroStatement;
+    }
+    if (tagline !== undefined) {
+      portfolio.homepage.hero.tagline = tagline;
+    }
+
+    await savePortfolioData(portfolio);
 
     try {
       const fs = await import('fs');
@@ -26,7 +46,7 @@ export default async function handler(req, res) {
 
       if (slotId) {
         if (imageSrc) {
-          const relImg = imageSrc.startsWith('/') ? imageSrc : '/' + imageSrc;
+          const relImg = imageSrc.startsWith('http') ? imageSrc : (imageSrc.startsWith('/') ? imageSrc : '/' + imageSrc);
           const slotRegex = new RegExp(`(id:\\s*['"]${slotId}['"],[\\s\\S]*?src:\\s*)(null|'[^']*'|"[^"]*")`);
           if (slotRegex.test(homeFile)) {
             homeFile = homeFile.replace(slotRegex, `$1'${relImg}'`);
@@ -51,7 +71,8 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
-      message: imageSrc ? 'Homepage updated successfully' : `Photo removed from ${slotId}`
+      message: imageSrc ? 'Homepage updated successfully' : `Photo removed from ${slotId}`,
+      homepage: portfolio.homepage
     });
   }
 

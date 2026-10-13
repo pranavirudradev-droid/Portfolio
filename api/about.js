@@ -1,6 +1,4 @@
-import { ABOUT_CONTENT } from '../content/about/index.js';
-
-let liveAbout = { ...ABOUT_CONTENT };
+import { getPortfolioData, savePortfolioData } from './_supabase.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -9,25 +7,25 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(204).end();
 
+  const portfolio = await getPortfolioData();
+
   if (req.method === 'GET') {
-    return res.status(200).json({ about: liveAbout });
+    return res.status(200).json({ about: portfolio.about || {} });
   }
 
   if (req.method === 'POST') {
     const { headline, intro, curiosity, imageSrc } = req.body || {};
 
-    if (headline) {
-      if (!liveAbout.meta) liveAbout.meta = {};
-      liveAbout.meta.headline = headline;
-    }
-    if (intro || curiosity) {
-      if (!liveAbout.whoAmI) liveAbout.whoAmI = {};
-      if (intro) liveAbout.whoAmI.intro = intro;
-      if (curiosity) liveAbout.whoAmI.curiosity = curiosity;
-    }
-    if (imageSrc !== undefined) {
-      liveAbout.imageSrc = imageSrc;
-    }
+    if (!portfolio.about) portfolio.about = {};
+    if (!portfolio.about.meta) portfolio.about.meta = {};
+    if (!portfolio.about.whoAmI) portfolio.about.whoAmI = {};
+
+    if (headline) portfolio.about.meta.headline = headline;
+    if (intro) portfolio.about.whoAmI.intro = intro;
+    if (curiosity) portfolio.about.whoAmI.curiosity = curiosity;
+    if (imageSrc !== undefined) portfolio.about.imageSrc = imageSrc;
+
+    await savePortfolioData(portfolio);
 
     try {
       const fs = await import('fs');
@@ -69,8 +67,8 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
-      message: 'About page content updated successfully',
-      about: liveAbout
+      message: 'About page updated successfully',
+      about: portfolio.about
     });
   }
 

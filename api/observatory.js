@@ -1,4 +1,4 @@
-import { OBSERVATORY_ENTRIES, OBSERVATORY_DOCUMENTARY } from '../content/observatory/index.js';
+import { getPortfolioData, savePortfolioData } from './_supabase.js';
 
 function slugify(text) {
   return String(text || '')
@@ -16,32 +16,38 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(204).end();
 
+  const portfolio = await getPortfolioData();
+
   if (req.method === 'GET') {
     return res.status(200).json({
-      observatory: OBSERVATORY_ENTRIES,
-      documentary: OBSERVATORY_DOCUMENTARY
+      observatory: portfolio.observatory || [],
+      documentary: portfolio.documentary || {}
     });
   }
 
   if (req.method === 'POST') {
     const body = req.body || {};
 
-    // Check if updating documentary video
+    // Documentary video update
     if (body.videoSrc !== undefined || body.badge !== undefined || body.meta !== undefined) {
+      const existingDoc = portfolio.documentary || {};
       const updatedDoc = {
-        ...OBSERVATORY_DOCUMENTARY,
-        title: body.title !== undefined ? body.title : (OBSERVATORY_DOCUMENTARY.title || ''),
-        badge: body.badge !== undefined ? body.badge : (OBSERVATORY_DOCUMENTARY.badge || 'FIELD OBSERVATION'),
-        meta: body.meta !== undefined ? body.meta : (OBSERVATORY_DOCUMENTARY.meta || ''),
-        videoSrc: body.videoSrc !== undefined ? body.videoSrc : (OBSERVATORY_DOCUMENTARY.videoSrc || ''),
-        description: body.description !== undefined ? body.description : (OBSERVATORY_DOCUMENTARY.description || '')
+        ...existingDoc,
+        title: body.title !== undefined ? body.title : (existingDoc.title || ''),
+        badge: body.badge !== undefined ? body.badge : (existingDoc.badge || 'FIELD OBSERVATION'),
+        meta: body.meta !== undefined ? body.meta : (existingDoc.meta || ''),
+        videoSrc: body.videoSrc !== undefined ? body.videoSrc : (existingDoc.videoSrc || ''),
+        description: body.description !== undefined ? body.description : (existingDoc.description || '')
       };
+
+      portfolio.documentary = updatedDoc;
+      await savePortfolioData(portfolio);
 
       try {
         const fs = await import('fs');
         const path = await import('path');
         const obsJsPath = path.resolve(process.cwd(), 'content/observatory/index.js');
-        const content = `export const OBSERVATORY_DOCUMENTARY = ${JSON.stringify(updatedDoc, null, 2)};\nexport const OBSERVATORY_ENTRIES = ${JSON.stringify(OBSERVATORY_ENTRIES, null, 2)};\n`;
+        const content = `export const OBSERVATORY_DOCUMENTARY = ${JSON.stringify(updatedDoc, null, 2)};\nexport const OBSERVATORY_ENTRIES = ${JSON.stringify(portfolio.observatory || [], null, 2)};\n`;
         fs.writeFileSync(obsJsPath, content, 'utf8');
       } catch (_) {}
 
@@ -52,14 +58,14 @@ export default async function handler(req, res) {
       });
     }
 
-    // Otherwise updating photo essay entry
+    // Photo essay entry update
     const { id: existingId, title, category, date, summary, imageSrc } = body;
     if (!title) {
       return res.status(400).json({ error: 'Observatory Title is required' });
     }
 
     const slug = existingId || slugify(title);
-    const existing = OBSERVATORY_ENTRIES.find(o => o.id === slug) || {};
+    const existing = (portfolio.observatory || []).find(o => o.id === slug) || {};
 
     const newEntry = {
       ...existing,
@@ -78,15 +84,19 @@ export default async function handler(req, res) {
       accent: '#4D0E12'
     };
 
+    const entries = [...(portfolio.observatory || [])];
+    const idx = entries.findIndex(o => o.id === slug);
+    if (idx >= 0) entries[idx] = newEntry;
+    else entries.push(newEntry);
+    portfolio.observatory = entries;
+
+    await savePortfolioData(portfolio);
+
     try {
       const fs = await import('fs');
       const path = await import('path');
       const obsJsPath = path.resolve(process.cwd(), 'content/observatory/index.js');
-      const entries = [...OBSERVATORY_ENTRIES];
-      const idx = entries.findIndex(o => o.id === slug);
-      if (idx >= 0) entries[idx] = newEntry;
-      else entries.push(newEntry);
-      const content = `export const OBSERVATORY_DOCUMENTARY = ${JSON.stringify(OBSERVATORY_DOCUMENTARY, null, 2)};\nexport const OBSERVATORY_ENTRIES = ${JSON.stringify(entries, null, 2)};\n`;
+      const content = `export const OBSERVATORY_DOCUMENTARY = ${JSON.stringify(portfolio.documentary || {}, null, 2)};\nexport const OBSERVATORY_ENTRIES = ${JSON.stringify(entries, null, 2)};\n`;
       fs.writeFileSync(obsJsPath, content, 'utf8');
     } catch (_) {}
 
@@ -99,6 +109,17 @@ export default async function handler(req, res) {
 
   if (req.method === 'DELETE') {
     const { id } = req.query || {};
+    if (id) {
+      portfolio.observatory = (portfolio.observatory || []).filter(o => o.id !== id);
+      await savePortfolioData(portfolio);
+      try {
+        const fs = await import('fs');
+        const path = await import('path');
+        const obsJsPath = path.resolve(process.cwd(), 'content/observatory/index.js');
+        const content = `export const OBSERVATORY_DOCUMENTARY = ${JSON.stringify(portfolio.documentary || {}, null, 2)};\nexport const OBSERVATORY_ENTRIES = ${JSON.stringify(portfolio.observatory, null, 2)};\n`;
+        fs.writeFileSync(obsJsPath, content, 'utf8');
+      } catch (_) {}
+    }
     return res.status(200).json({ success: true, message: `Observation ${id || ''} deleted` });
   }
 

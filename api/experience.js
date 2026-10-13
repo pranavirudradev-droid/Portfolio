@@ -1,4 +1,4 @@
-import { EXPERIENCES } from '../content/experience/index.js';
+import { getPortfolioData, savePortfolioData } from './_supabase.js';
 
 function slugify(text) {
   return String(text || '')
@@ -16,8 +16,10 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(204).end();
 
+  const portfolio = await getPortfolioData();
+
   if (req.method === 'GET') {
-    return res.status(200).json({ experiences: EXPERIENCES });
+    return res.status(200).json({ experiences: portfolio.experiences || [] });
   }
 
   if (req.method === 'POST') {
@@ -42,7 +44,7 @@ export default async function handler(req, res) {
     }
 
     const slug = existingId || slugify(`${organisation}-${title}`);
-    const existing = EXPERIENCES.find(e => e.id === slug) || {};
+    const existing = (portfolio.experiences || []).find(e => e.id === slug) || {};
 
     const updatedExp = {
       ...existing,
@@ -74,14 +76,18 @@ export default async function handler(req, res) {
       tags: Array.isArray(tags) ? tags : (tags ? tags.split(',').map(t => t.trim().toUpperCase()).filter(Boolean) : (existing.tags || ['BRAND STRATEGY']))
     };
 
+    const experiences = [...(portfolio.experiences || [])];
+    const idx = experiences.findIndex(e => e.id === slug);
+    if (idx >= 0) experiences[idx] = updatedExp;
+    else experiences.push(updatedExp);
+    portfolio.experiences = experiences;
+
+    await savePortfolioData(portfolio);
+
     try {
       const fs = await import('fs');
       const path = await import('path');
       const expJsPath = path.resolve(process.cwd(), 'content/experience/index.js');
-      const experiences = [...EXPERIENCES];
-      const idx = experiences.findIndex(e => e.id === slug);
-      if (idx >= 0) experiences[idx] = updatedExp;
-      else experiences.push(updatedExp);
       fs.writeFileSync(expJsPath, `export const EXPERIENCES = ${JSON.stringify(experiences, null, 2)};\n`, 'utf8');
     } catch (_) {}
 
@@ -94,6 +100,16 @@ export default async function handler(req, res) {
 
   if (req.method === 'DELETE') {
     const { id } = req.query || {};
+    if (id) {
+      portfolio.experiences = (portfolio.experiences || []).filter(e => e.id !== id);
+      await savePortfolioData(portfolio);
+      try {
+        const fs = await import('fs');
+        const path = await import('path');
+        const expJsPath = path.resolve(process.cwd(), 'content/experience/index.js');
+        fs.writeFileSync(expJsPath, `export const EXPERIENCES = ${JSON.stringify(portfolio.experiences, null, 2)};\n`, 'utf8');
+      } catch (_) {}
+    }
     return res.status(200).json({ success: true, message: `Experience ${id || ''} deleted` });
   }
 

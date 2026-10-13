@@ -1802,6 +1802,7 @@
     // INITIAL LOAD
     // ==========================================
     async function loadData() {
+      const SUPABASE_CDN = 'https://afclwzukxhsfvrpmuaqo.supabase.co/storage/v1/object/public/portfolio-assets/data/portfolio.json';
       try {
         const res = await fetch('/api/content');
         if (res.ok) {
@@ -1810,29 +1811,38 @@
           throw new Error('API route returned status: ' + res.status);
         }
       } catch (err) {
-        // Fallback: direct dynamic module import in browser
         try {
-          const [projMod, expMod, obsMod, aboutMod, homeMod] = await Promise.all([
-            import('../content/projects/index.js'),
-            import('../content/experience/index.js'),
-            import('../content/observatory/index.js'),
-            import('../content/about/index.js'),
-            import('../src/config/homepage.js')
-          ]);
-          portfolio = {
-            projects: projMod.PROJECTS || [],
-            experiences: expMod.EXPERIENCES || [],
-            observatory: obsMod.OBSERVATORY_ENTRIES || [],
-            documentary: obsMod.OBSERVATORY_DOCUMENTARY || {},
-            about: aboutMod.ABOUT_CONTENT || {},
-            homepage: {
-              identity: homeMod.HOMEPAGE_IDENTITY || {},
-              hero: homeMod.HERO_STATEMENT || {},
-              images: homeMod.HOME_IMAGES || []
-            }
-          };
-        } catch (modErr) {
-          console.warn('Could not load portfolio via modules:', modErr);
+          const res = await fetch(SUPABASE_CDN + '?t=' + Date.now());
+          if (res.ok) {
+            portfolio = await res.json();
+          } else {
+            throw new Error('Supabase CDN returned status: ' + res.status);
+          }
+        } catch (_) {
+          // Fallback: direct dynamic module import in browser
+          try {
+            const [projMod, expMod, obsMod, aboutMod, homeMod] = await Promise.all([
+              import('../content/projects/index.js'),
+              import('../content/experience/index.js'),
+              import('../content/observatory/index.js'),
+              import('../content/about/index.js'),
+              import('../src/config/homepage.js')
+            ]);
+            portfolio = {
+              projects: projMod.PROJECTS || [],
+              experiences: expMod.EXPERIENCES || [],
+              observatory: obsMod.OBSERVATORY_ENTRIES || [],
+              documentary: obsMod.OBSERVATORY_DOCUMENTARY || {},
+              about: aboutMod.ABOUT_CONTENT || {},
+              homepage: {
+                identity: homeMod.HOMEPAGE_IDENTITY || {},
+                hero: homeMod.HERO_STATEMENT || {},
+                images: homeMod.HOME_IMAGES || []
+              }
+            };
+          } catch (modErr) {
+            console.warn('Could not load portfolio via modules:', modErr);
+          }
         }
       }
 

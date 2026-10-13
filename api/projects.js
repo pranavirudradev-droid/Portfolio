@@ -1,4 +1,4 @@
-import { PROJECTS } from '../content/projects/index.js';
+import { getPortfolioData, savePortfolioData } from './_supabase.js';
 
 function slugify(text) {
   return String(text || '')
@@ -16,8 +16,10 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(204).end();
 
+  const portfolio = await getPortfolioData();
+
   if (req.method === 'GET') {
-    return res.status(200).json({ projects: PROJECTS });
+    return res.status(200).json({ projects: portfolio.projects || [] });
   }
 
   if (req.method === 'POST') {
@@ -39,7 +41,7 @@ export default async function handler(req, res) {
     }
 
     const slug = existingId || slugify(title);
-    const existing = PROJECTS.find(p => p.id === slug) || {};
+    const existing = (portfolio.projects || []).find(p => p.id === slug) || {};
 
     const updatedProj = {
       ...existing,
@@ -66,15 +68,21 @@ export default async function handler(req, res) {
       accent: accent || existing.accent || '#A5BCD6'
     };
 
-    // Attempt local file write if filesystem is writable
+    // Update in memory portfolio
+    const projects = [...(portfolio.projects || [])];
+    const idx = projects.findIndex(p => p.id === slug);
+    if (idx >= 0) projects[idx] = updatedProj;
+    else projects.push(updatedProj);
+    portfolio.projects = projects;
+
+    // Save to Supabase Storage
+    await savePortfolioData(portfolio);
+
+    // Also attempt local file write for local development
     try {
       const fs = await import('fs');
       const path = await import('path');
       const projectsJsPath = path.resolve(process.cwd(), 'content/projects/index.js');
-      const projects = [...PROJECTS];
-      const idx = projects.findIndex(p => p.id === slug);
-      if (idx >= 0) projects[idx] = updatedProj;
-      else projects.push(updatedProj);
       fs.writeFileSync(projectsJsPath, `export const PROJECTS = ${JSON.stringify(projects, null, 2)};\n`, 'utf8');
     } catch (_) {}
 
@@ -87,6 +95,16 @@ export default async function handler(req, res) {
 
   if (req.method === 'DELETE') {
     const { id } = req.query || {};
+    if (id) {
+      portfolio.projects = (portfolio.projects || []).filter(p => p.id !== id);
+      await savePortfolioData(portfolio);
+      try {
+        const fs = await import('fs');
+        const path = await import('path');
+        const projectsJsPath = path.resolve(process.cwd(), 'content/projects/index.js');
+        fs.writeFileSync(projectsJsPath, `export const PROJECTS = ${JSON.stringify(portfolio.projects, null, 2)};\n`, 'utf8');
+      } catch (_) {}
+    }
     return res.status(200).json({ success: true, message: `Project ${id || ''} deleted` });
   }
 

@@ -1,3 +1,5 @@
+import { uploadFileToSupabase } from './_supabase.js';
+
 export const config = {
   api: {
     bodyParser: {
@@ -35,7 +37,14 @@ export default async function handler(req, res) {
     const folder = CATEGORY_PATHS[category] || `assets/${category.replace('-', '/')}`;
     const relPath = `${folder}/${safeName}`;
 
-    // Attempt local file write if filesystem is writable
+    let supabaseFile = null;
+    try {
+      supabaseFile = await uploadFileToSupabase(safeName, category, dataUrl);
+    } catch (sbErr) {
+      console.warn('Supabase upload warning:', sbErr.message);
+    }
+
+    // Attempt local file write if filesystem is writable (local dev)
     try {
       const fs = await import('fs');
       const path = await import('path');
@@ -44,21 +53,21 @@ export default async function handler(req, res) {
         fs.mkdirSync(targetDir, { recursive: true });
       }
       if (dataUrl) {
-        const matches = dataUrl.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+        const matches = dataUrl.match(/^data:([A-Za-z0-9-+\/]+);base64,(.+)$/);
         const buffer = matches ? Buffer.from(matches[2], 'base64') : Buffer.from(dataUrl, 'base64');
         fs.writeFileSync(path.join(targetDir, safeName), buffer);
       }
-    } catch (_) {
-      // Cloud environment (Vercel) read-only filesystem is handled cleanly
-    }
+    } catch (_) {}
+
+    const fileUrl = supabaseFile?.url || dataUrl || `/${relPath}`;
 
     return res.status(200).json({
       success: true,
       message: `File "${safeName}" uploaded successfully`,
       file: {
         name: safeName,
-        path: relPath,
-        url: dataUrl || `/${relPath}`,
+        path: fileUrl,
+        url: fileUrl,
         category
       }
     });
