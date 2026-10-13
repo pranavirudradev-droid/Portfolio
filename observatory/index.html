@@ -1304,37 +1304,61 @@
     <div class="fisheye-lens-rim"></div>
   </div>
 
-  <!-- Dynamic synchronization script with Admin API -->
+  <!-- Dynamic synchronization script with Admin API + localStorage -->
   <script>
-    fetch('/api/content').then(r => r.json()).then(data => {
-      if (data && data.documentary) {
-        const doc = data.documentary;
-        const titleEl = document.querySelector('.doc-feature-title');
-        const descEl = document.querySelector('.doc-feature-synopsis');
-        const badgeEl = document.querySelector('.doc-badge-live');
-        const metaEl = document.querySelector('.doc-badge-res');
+    function syncObservatory() {
+      let localData = null;
+      try {
+        const raw = localStorage.getItem('pranavi_portfolio_overrides');
+        if (raw) localData = JSON.parse(raw);
+      } catch (e) {}
 
-        if (titleEl && doc.title) titleEl.textContent = doc.title;
-        if (descEl && doc.description) descEl.textContent = doc.description;
-        if (badgeEl && doc.badge) badgeEl.textContent = '● ' + doc.badge;
-        if (metaEl && doc.meta) metaEl.textContent = doc.meta;
+      fetch('/api/content')
+        .then(r => r.json())
+        .catch(() => ({}))
+        .then(data => {
+          const doc = (localData && localData.documentary) ? localData.documentary : (data && data.documentary ? data.documentary : null);
+          if (doc) {
+            const titleEl = document.querySelector('.doc-feature-title');
+            const descEl = document.querySelector('.doc-feature-synopsis');
+            const badgeEl = document.querySelector('.doc-badge-live');
+            const metaEl = document.querySelector('.doc-badge-res');
 
-        if (doc.videoSrc) {
-          const frame = document.querySelector('.doc-player-frame');
-          let vid = document.getElementById('docVideoPlayer');
-          const cleanSrc = doc.videoSrc.startsWith('/') ? doc.videoSrc : '/' + doc.videoSrc.replace(/^\.\.\//, '');
-          if (!vid && frame) {
-            vid = document.createElement('video');
-            vid.id = 'docVideoPlayer';
-            vid.playsInline = true;
-            vid.controls = true;
-            vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;background:#000;';
-            frame.appendChild(vid);
+            if (titleEl && doc.title) titleEl.textContent = doc.title;
+            if (descEl && doc.description) descEl.textContent = doc.description;
+            if (badgeEl && doc.badge) badgeEl.textContent = '● ' + doc.badge;
+            if (metaEl && doc.meta) metaEl.textContent = doc.meta;
+
+            if (doc.videoSrc) {
+              const frame = document.querySelector('.doc-player-frame');
+              let vid = document.getElementById('docVideoPlayer');
+              const cleanSrc = doc.videoSrc.startsWith('/') ? doc.videoSrc : '/' + doc.videoSrc.replace(/^\.\.\//, '');
+              if (!vid && frame) {
+                vid = document.createElement('video');
+                vid.id = 'docVideoPlayer';
+                vid.playsInline = true;
+                vid.controls = true;
+                vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;background:#000;';
+                frame.appendChild(vid);
+              }
+              if (vid) vid.src = cleanSrc;
+            }
           }
-          if (vid) vid.src = cleanSrc;
-        }
-      }
-    }).catch(() => {});
+
+          const obsEntries = (localData && localData.observatory) ? localData.observatory : (data && data.observatory ? data.observatory : []);
+          if (obsEntries && obsEntries.length) {
+            const slides = document.querySelectorAll('.carousel-slide');
+            obsEntries.forEach((entry, idx) => {
+              if (slides[idx] && entry.media && entry.media.src) {
+                const img = slides[idx].querySelector('img');
+                const srcPath = entry.media.src.startsWith('/') ? entry.media.src : '/' + entry.media.src.replace(/^\.\.\//, '');
+                if (img) img.src = srcPath;
+              }
+            });
+          }
+        });
+    }
+    syncObservatory();
   </script>
 
 </body>

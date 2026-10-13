@@ -1133,27 +1133,46 @@
       }
     };
 
-    // Auto-sync dynamic projects & uploaded files from server
-    fetch('/api/content').then(r => r.json()).then(data => {
-      if (data && data.projects) {
-        data.projects.forEach(p => {
-          const docSrc = p.document && p.document.src ? (p.document.src.startsWith('assets') ? '../' + p.document.src : p.document.src) : '';
-          const coverSrc = p.cover && p.cover.src ? (p.cover.src.startsWith('assets') ? '../' + p.cover.src : p.cover.src) : '';
-          if (PROJECT_DOCS[p.id]) {
-            PROJECT_DOCS[p.id].title = p.title || PROJECT_DOCS[p.id].title;
-            if (docSrc) PROJECT_DOCS[p.id].src = docSrc;
-            if (coverSrc) PROJECT_DOCS[p.id].pages = [coverSrc];
-          } else {
-            PROJECT_DOCS[p.id] = {
-              title: p.title,
-              type: (p.document && p.document.type) || 'pdf',
-              src: docSrc,
-              pages: [coverSrc]
-            };
+    // Auto-sync dynamic projects & uploaded files from server + localStorage
+    function syncProjects() {
+      let localData = null;
+      try {
+        const raw = localStorage.getItem('pranavi_portfolio_overrides');
+        if (raw) localData = JSON.parse(raw);
+      } catch (e) {}
+
+      fetch('/api/content')
+        .then(r => r.json())
+        .catch(() => ({}))
+        .then(data => {
+          const projects = (localData && localData.projects) ? localData.projects : (data && data.projects ? data.projects : []);
+          if (projects && projects.length) {
+            projects.forEach(p => {
+              const docSrc = p.document && p.document.src ? (p.document.src.startsWith('assets') ? '../' + p.document.src : p.document.src) : '';
+              const coverSrc = p.cover && p.cover.src ? (p.cover.src.startsWith('assets') ? '../' + p.cover.src : p.cover.src) : '';
+              if (PROJECT_DOCS[p.id]) {
+                PROJECT_DOCS[p.id].title = p.title || PROJECT_DOCS[p.id].title;
+                if (docSrc) PROJECT_DOCS[p.id].src = docSrc;
+                if (coverSrc) PROJECT_DOCS[p.id].pages = [coverSrc];
+              } else {
+                PROJECT_DOCS[p.id] = {
+                  title: p.title,
+                  type: (p.document && p.document.type) || 'pdf',
+                  src: docSrc,
+                  pages: [coverSrc]
+                };
+              }
+
+              const btn = document.querySelector(`button[onclick*="'${p.id}'"]`);
+              if (btn) {
+                const titleEl = btn.querySelector('.proj-row-title');
+                if (titleEl && p.title) titleEl.textContent = p.title;
+              }
+            });
           }
         });
-      }
-    }).catch(() => {});
+    }
+    syncProjects();
 
     window.openProjectDoc = (id) => {
       const doc = PROJECT_DOCS[id];

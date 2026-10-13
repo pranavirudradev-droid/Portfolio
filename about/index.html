@@ -2249,28 +2249,42 @@
     <div class="fisheye-lens-rim"></div>
   </div>
 
-  <!-- Dynamic synchronization script with Admin API -->
+  <!-- Dynamic synchronization script with Admin API + localStorage -->
   <script>
-    fetch('/api/content').then(r => r.json()).then(data => {
-      if (data && data.about) {
-        if (data.about.meta && data.about.meta.headline) {
-          const el = document.getElementById('about-pull-statement');
-          if (el) el.textContent = data.about.meta.headline;
-        }
-        if (data.about.whoAmI) {
-          const introEl = document.getElementById('who-am-i-intro');
-          if (introEl && data.about.whoAmI.intro) introEl.textContent = data.about.whoAmI.intro;
-          const curEl = document.getElementById('who-am-i-curiosity');
-          if (curEl && data.about.whoAmI.curiosity) curEl.textContent = data.about.whoAmI.curiosity;
-        }
-        if (data.about.imageSrc) {
-          const frame = document.querySelector('.image-placeholder-frame');
-          if (frame) {
-            frame.innerHTML = `<img src="/${data.about.imageSrc.replace(/^\\.\\.\\//, '').replace(/^\\//, '')}" alt="Pranavi Rudradev" style="width:100%;height:100%;object-fit:cover;border-radius:4px;" />`;
+    function syncAbout() {
+      let localData = null;
+      try {
+        const raw = localStorage.getItem('pranavi_portfolio_overrides');
+        if (raw) localData = JSON.parse(raw);
+      } catch (e) {}
+
+      fetch('/api/content')
+        .then(r => r.json())
+        .catch(() => ({}))
+        .then(data => {
+          const about = (localData && localData.about) ? localData.about : (data && data.about ? data.about : null);
+          if (about) {
+            if (about.meta && about.meta.headline) {
+              const el = document.getElementById('about-pull-statement');
+              if (el) el.textContent = about.meta.headline;
+            }
+            if (about.whoAmI) {
+              const introEl = document.getElementById('who-am-i-intro');
+              if (introEl && about.whoAmI.intro) introEl.textContent = about.whoAmI.intro;
+              const curEl = document.getElementById('who-am-i-curiosity');
+              if (curEl && about.whoAmI.curiosity) curEl.textContent = about.whoAmI.curiosity;
+            }
+            if (about.imageSrc) {
+              const frame = document.querySelector('.image-placeholder-frame');
+              if (frame) {
+                const cleanImg = about.imageSrc.startsWith('/') ? about.imageSrc : '/' + about.imageSrc.replace(/^(\.\.\/)+/, '');
+                frame.innerHTML = `<img src="${cleanImg}" alt="Pranavi Rudradev" style="width:100%;height:100%;object-fit:cover;border-radius:4px;" />`;
+              }
+            }
           }
-        }
-      }
-    }).catch(() => {});
+        });
+    }
+    syncAbout();
   </script>
 </body>
 </html>

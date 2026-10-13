@@ -794,26 +794,61 @@
       }
     };
 
-    // Auto-sync dynamic experience & uploaded documents from server
-    fetch('/api/content').then(r => r.json()).then(data => {
-      if (data && data.experiences) {
-        data.experiences.forEach(e => {
-          const docSrc = e.document && e.document.src ? (e.document.src.startsWith('assets') ? '../' + e.document.src : e.document.src) : '';
-          const coverSrc = e.image && e.image.src ? (e.image.src.startsWith('assets') ? '../' + e.image.src : e.image.src) : '';
-          const pages = [coverSrc || docSrc].filter(Boolean);
-          if (DOC_MAP[e.id]) {
-            DOC_MAP[e.id].title = e.title || DOC_MAP[e.id].title;
-            if (pages.length) DOC_MAP[e.id].pages = pages;
-          } else {
-            DOC_MAP[e.id] = {
-              title: e.title,
-              type: (e.document && e.document.type) || 'presentation',
-              pages: pages
-            };
+    // Auto-sync dynamic experience & uploaded documents from server + localStorage
+    function syncExperience() {
+      let localData = null;
+      try {
+        const raw = localStorage.getItem('pranavi_portfolio_overrides');
+        if (raw) localData = JSON.parse(raw);
+      } catch (e) {}
+
+      fetch('/api/content')
+        .then(r => r.json())
+        .catch(() => ({}))
+        .then(data => {
+          const experiences = (localData && localData.experiences) ? localData.experiences : (data && data.experiences ? data.experiences : []);
+          if (experiences && experiences.length) {
+            experiences.forEach(e => {
+              const docSrc = e.document && e.document.src ? (e.document.src.startsWith('assets') ? '../' + e.document.src : e.document.src) : '';
+              const coverSrc = e.image && e.image.src ? (e.image.src.startsWith('assets') ? '../' + e.image.src : e.image.src) : '';
+              const pages = [coverSrc || docSrc].filter(Boolean);
+              if (DOC_MAP[e.id]) {
+                DOC_MAP[e.id].title = e.title || DOC_MAP[e.id].title;
+                if (pages.length) DOC_MAP[e.id].pages = pages;
+              } else {
+                DOC_MAP[e.id] = {
+                  title: e.title,
+                  type: (e.document && e.document.type) || 'presentation',
+                  pages: pages
+                };
+              }
+
+              // Update article in DOM if present
+              const item = document.getElementById(`exp-${e.id}`);
+              if (item) {
+                const roleEl = item.querySelector('.exp-role-title');
+                if (roleEl && e.title) roleEl.textContent = e.title;
+                const datesEl = item.querySelector('.exp-dates');
+                if (datesEl && e.period) datesEl.textContent = e.period;
+                const locEl = item.querySelector('.exp-location');
+                if (locEl && e.location) locEl.textContent = e.location;
+                const catEl = item.querySelector('.exp-category');
+                if (catEl && (e.category || e.orgSub)) catEl.textContent = e.category || e.orgSub;
+                const bullets = item.querySelector('.exp-bullet-list');
+                if (bullets && Array.isArray(e.bulletPoints) && e.bulletPoints.length) {
+                  bullets.innerHTML = e.bulletPoints.map(b => `
+                    <li class="exp-bullet-item">
+                      <span class="exp-bullet-dot">•</span>
+                      <span class="exp-bullet-text">${b}</span>
+                    </li>
+                  `).join('');
+                }
+              }
+            });
           }
         });
-      }
-    }).catch(() => {});
+    }
+    syncExperience();
 
     window.openDocById = (id) => {
       const doc = DOC_MAP[id];

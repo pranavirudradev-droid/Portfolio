@@ -435,6 +435,8 @@
       <a href="../experience/" target="_blank">Experience ↗</a>
       <a href="../observatory/" target="_blank">Observatory ↗</a>
       <a href="../about/" target="_blank">About ↗</a>
+      <button type="button" class="btn" style="padding:4px 10px; font-size:11px; background:rgba(165,188,214,0.15); border:1px solid var(--accent-blue); color:var(--text-yellow);" onclick="exportPortfolioJson()">⬇ Export JSON</button>
+      <button type="button" class="btn" style="padding:4px 10px; font-size:11px; background:rgba(255,100,100,0.15); border:1px solid #ff9b9b; color:#ff9b9b;" onclick="resetLocalStorageOverrides()">Reset Local Edits</button>
     </div>
   </header>
 
@@ -883,6 +885,41 @@
     let obsMode = 'create';
     let currentObsId = null;
 
+    function saveToLocalStorage() {
+      try {
+        localStorage.setItem('pranavi_portfolio_overrides', JSON.stringify(portfolio));
+      } catch (e) {
+        console.warn('Failed to save to localStorage:', e);
+      }
+    }
+
+    function loadFromLocalStorage() {
+      try {
+        const raw = localStorage.getItem('pranavi_portfolio_overrides');
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        console.warn('Failed to load from localStorage:', e);
+        return null;
+      }
+    }
+
+    function exportPortfolioJson() {
+      const blob = new Blob([JSON.stringify(portfolio, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'portfolio.json';
+      a.click();
+      showToast('📥 Downloaded portfolio.json');
+    }
+
+    function resetLocalStorageOverrides() {
+      if (confirm('Reset all unpublished browser edits and restore published portfolio?')) {
+        localStorage.removeItem('pranavi_portfolio_overrides');
+        showToast('Restoring published data...');
+        setTimeout(() => window.location.reload(), 400);
+      }
+    }
+
     function showToast(msg, type = 'success') {
       const t = document.getElementById('toast');
       t.textContent = msg;
@@ -943,7 +980,7 @@
     // ==========================================
     function setProjCover(file) {
       document.getElementById('proj-cover-src').value = file.path;
-      document.getElementById('thumb-proj-cover').src = `/${file.path}`;
+      document.getElementById('thumb-proj-cover').src = file.url || (file.path.startsWith('/') ? file.path : `/${file.path}`);
       document.getElementById('name-proj-cover').textContent = file.name;
       document.getElementById('preview-proj-cover').style.display = 'flex';
     }
@@ -1000,7 +1037,7 @@
 
       if (p.cover && p.cover.src) {
         document.getElementById('proj-cover-src').value = p.cover.src;
-        document.getElementById('thumb-proj-cover').src = `/${p.cover.src}`;
+        document.getElementById('thumb-proj-cover').src = p.cover.src.startsWith('/') ? p.cover.src : `/${p.cover.src}`;
         document.getElementById('name-proj-cover').textContent = p.cover.src.split('/').pop();
         document.getElementById('preview-proj-cover').style.display = 'flex';
       } else {
@@ -1041,10 +1078,17 @@
         const data = await res.json();
         if (res.ok) {
           showToast(data.message || '🎉 Project saved & synced to website!');
-          await loadData();
-          if (projMode === 'edit') {
-            populateProjSelect();
+          if (data.project) {
+            const idx = (portfolio.projects || []).findIndex(p => p.id === data.project.id);
+            if (idx >= 0) portfolio.projects[idx] = data.project;
+            else (portfolio.projects = portfolio.projects || []).push(data.project);
+            saveToLocalStorage();
+          }
+          populateProjSelect();
+          if (data.project) {
+            currentProjId = data.project.id;
             document.getElementById('select-proj').value = data.project.id;
+            onSelectProject();
           }
         } else {
           showToast(data.error || 'Failed to save', 'error');
@@ -1063,7 +1107,9 @@
         const data = await res.json();
         if (res.ok) {
           showToast('Project deleted successfully');
-          await loadData();
+          portfolio.projects = (portfolio.projects || []).filter(p => p.id !== currentProjId);
+          saveToLocalStorage();
+          populateProjSelect();
           setProjMode('create');
         } else {
           showToast(data.error || 'Failed to delete', 'error');
@@ -1078,7 +1124,7 @@
     // ==========================================
     function setExpCover(file) {
       document.getElementById('exp-cover-src').value = file.path;
-      document.getElementById('thumb-exp-cover').src = `/${file.path}`;
+      document.getElementById('thumb-exp-cover').src = file.url || (file.path.startsWith('/') ? file.path : `/${file.path}`);
       document.getElementById('name-exp-cover').textContent = file.name;
       document.getElementById('preview-exp-cover').style.display = 'flex';
     }
@@ -1137,7 +1183,7 @@
 
       if (exp.image && exp.image.src) {
         document.getElementById('exp-cover-src').value = exp.image.src;
-        document.getElementById('thumb-exp-cover').src = `/${exp.image.src}`;
+        document.getElementById('thumb-exp-cover').src = exp.image.src.startsWith('/') ? exp.image.src : `/${exp.image.src}`;
         document.getElementById('name-exp-cover').textContent = exp.image.src.split('/').pop();
         document.getElementById('preview-exp-cover').style.display = 'flex';
       } else {
@@ -1180,10 +1226,17 @@
         const data = await res.json();
         if (res.ok) {
           showToast(data.message || '🎉 Experience saved & synced to website!');
-          await loadData();
-          if (expMode === 'edit') {
-            populateExpSelect();
+          if (data.experience) {
+            const idx = (portfolio.experiences || []).findIndex(e => e.id === data.experience.id);
+            if (idx >= 0) portfolio.experiences[idx] = data.experience;
+            else (portfolio.experiences = portfolio.experiences || []).push(data.experience);
+            saveToLocalStorage();
+          }
+          populateExpSelect();
+          if (data.experience) {
+            currentExpId = data.experience.id;
             document.getElementById('select-exp').value = data.experience.id;
+            onSelectExperience();
           }
         } else {
           showToast(data.error || 'Failed to save', 'error');
@@ -1202,7 +1255,9 @@
         const data = await res.json();
         if (res.ok) {
           showToast('Experience deleted successfully');
-          await loadData();
+          portfolio.experiences = (portfolio.experiences || []).filter(e => e.id !== currentExpId);
+          saveToLocalStorage();
+          populateExpSelect();
           setExpMode('create');
         } else {
           showToast(data.error || 'Failed to delete', 'error');
@@ -1217,7 +1272,7 @@
     // ==========================================
     function setObsImage(file) {
       document.getElementById('obs-img-src').value = file.path;
-      document.getElementById('thumb-obs-img').src = `/${file.path}`;
+      document.getElementById('thumb-obs-img').src = file.url || (file.path.startsWith('/') ? file.path : `/${file.path}`);
       document.getElementById('name-obs-img').textContent = file.name;
       document.getElementById('preview-obs-img').style.display = 'flex';
     }
@@ -1296,10 +1351,17 @@
         const data = await res.json();
         if (res.ok) {
           showToast(data.message || '🎉 Observation saved & synced to website!');
-          await loadData();
-          if (obsMode === 'edit') {
-            populateObsSelect();
+          if (data.entry) {
+            const idx = (portfolio.observatory || []).findIndex(o => o.id === data.entry.id);
+            if (idx >= 0) portfolio.observatory[idx] = data.entry;
+            else (portfolio.observatory = portfolio.observatory || []).push(data.entry);
+            saveToLocalStorage();
+          }
+          populateObsSelect();
+          if (data.entry) {
+            currentObsId = data.entry.id;
             document.getElementById('select-obs').value = data.entry.id;
+            onSelectObservatory();
           }
         } else {
           showToast(data.error || 'Failed to save', 'error');
@@ -1318,7 +1380,9 @@
         const data = await res.json();
         if (res.ok) {
           showToast('Deleted observation');
-          await loadData();
+          portfolio.observatory = (portfolio.observatory || []).filter(o => o.id !== currentObsId);
+          saveToLocalStorage();
+          populateObsSelect();
           setObsMode('create');
         } else {
           showToast(data.error || 'Failed to delete', 'error');
@@ -1354,7 +1418,8 @@
         const data = await res.json();
         if (res.ok) {
           showToast('🎬 Documentary showcase updated & synced!');
-          await loadData();
+          portfolio.documentary = data.documentary || payload;
+          saveToLocalStorage();
         } else {
           showToast(data.error || 'Failed to save documentary', 'error');
         }
@@ -1368,7 +1433,7 @@
     // ==========================================
     function setAboutImage(file) {
       document.getElementById('about-img-src').value = file.path;
-      document.getElementById('thumb-about-img').src = `/${file.path}`;
+      document.getElementById('thumb-about-img').src = file.url || (file.path.startsWith('/') ? file.path : `/${file.path}`);
       document.getElementById('name-about-img').textContent = file.name;
       document.getElementById('preview-about-img').style.display = 'flex';
     }
@@ -1391,6 +1456,14 @@
         const data = await res.json();
         if (res.ok) {
           showToast('🎉 About page updated & synced!');
+          if (!portfolio.about) portfolio.about = {};
+          if (!portfolio.about.meta) portfolio.about.meta = {};
+          if (!portfolio.about.whoAmI) portfolio.about.whoAmI = {};
+          portfolio.about.meta.headline = payload.headline;
+          portfolio.about.whoAmI.intro = payload.intro;
+          portfolio.about.whoAmI.curiosity = payload.curiosity;
+          if (payload.imageSrc) portfolio.about.imageSrc = payload.imageSrc;
+          saveToLocalStorage();
         } else {
           showToast(data.error || 'Failed to update', 'error');
         }
@@ -1416,8 +1489,16 @@
           body: JSON.stringify(payload)
         });
         const data = await res.json();
-        if (res.ok) showToast('🎉 Hero statement saved!');
-        else showToast(data.error, 'error');
+        if (res.ok) {
+          showToast('🎉 Hero statement saved!');
+          if (!portfolio.homepage) portfolio.homepage = {};
+          if (!portfolio.homepage.hero) portfolio.homepage.hero = {};
+          portfolio.homepage.hero.statement = payload.heroStatement;
+          portfolio.homepage.hero.tagline = payload.tagline;
+          saveToLocalStorage();
+        } else {
+          showToast(data.error, 'error');
+        }
       } catch (err) {
         showToast('Error: ' + err.message, 'error');
       }
@@ -1455,7 +1536,9 @@
         });
         if (res.ok) {
           showToast(`Photo removed from ${slotId}`);
-          await loadData();
+          const s = (portfolio.homepage.images || []).find(x => x.id === slotId);
+          if (s) s.src = null;
+          saveToLocalStorage();
           renderHomepageSlots();
         }
       } catch (err) {
@@ -1493,7 +1576,9 @@
 
         if (res.ok) {
           showToast(`🎉 Photo saved & synced to ${slotId}!`);
-          await loadData();
+          const s = (portfolio.homepage.images || []).find(x => x.id === slotId);
+          if (s) s.src = uploaded.path;
+          saveToLocalStorage();
           renderHomepageSlots();
         } else {
           showToast('Failed to attach photo', 'error');
@@ -1641,6 +1726,21 @@
         } catch (modErr) {
           console.warn('Could not load portfolio via modules:', modErr);
         }
+      }
+
+      // Merge client overrides from localStorage (if any)
+      const overrides = loadFromLocalStorage();
+      if (overrides) {
+        portfolio = {
+          ...portfolio,
+          ...overrides,
+          projects: overrides.projects || portfolio.projects,
+          experiences: overrides.experiences || portfolio.experiences,
+          observatory: overrides.observatory || portfolio.observatory,
+          documentary: overrides.documentary || portfolio.documentary,
+          about: overrides.about || portfolio.about,
+          homepage: overrides.homepage || portfolio.homepage
+        };
       }
 
       if (portfolio) {

@@ -1329,36 +1329,49 @@
       }
     }
 
-    /* Dynamic synchronization script with Admin API */
-    fetch('/api/content').then(r => r.json()).then(data => {
-      if (data && data.homepage) {
-        // Sync Hero Statement and Tagline
-        if (data.homepage.hero) {
-          const heroTitle = document.querySelector('.home-hero-title');
-          const taglineEl = document.querySelector('.home-tagline');
-          if (data.homepage.hero.statement && heroTitle) {
-            const lines = data.homepage.hero.statement.split('\n').filter(Boolean);
-            heroTitle.innerHTML = lines.map(line => `<span>${line}</span>`).join('');
-          }
-          if (data.homepage.hero.tagline && taglineEl) {
-            taglineEl.textContent = data.homepage.hero.tagline;
-          }
-        }
-        // Sync Photo Slots
-        if (Array.isArray(data.homepage.images)) {
-          data.homepage.images.forEach(slot => {
-            if (slot.id) {
-              if (slot.src && slot.src !== 'null') {
-                const fullSrc = slot.src.startsWith('/') ? slot.src : '/' + slot.src;
-                window.setHomeImage(slot.id, fullSrc, slot.alt || slot.id);
-              } else {
-                window.setHomeImage(slot.id, null);
+    /* Dynamic synchronization script with Admin API + localStorage */
+    function syncHomepage() {
+      let localData = null;
+      try {
+        const raw = localStorage.getItem('pranavi_portfolio_overrides');
+        if (raw) localData = JSON.parse(raw);
+      } catch (e) {}
+
+      fetch('/api/content')
+        .then(r => r.json())
+        .catch(() => ({}))
+        .then(data => {
+          const home = (localData && localData.homepage) ? localData.homepage : (data && data.homepage ? data.homepage : null);
+          if (home) {
+            // Sync Hero Statement and Tagline
+            if (home.hero) {
+              const heroTitle = document.querySelector('.home-hero-title');
+              const taglineEl = document.querySelector('.home-tagline');
+              if (home.hero.statement && heroTitle) {
+                const lines = home.hero.statement.split('\n').filter(Boolean);
+                heroTitle.innerHTML = lines.map(line => `<span>${line}</span>`).join('');
+              }
+              if (home.hero.tagline && taglineEl) {
+                taglineEl.textContent = home.hero.tagline;
               }
             }
-          });
-        }
-      }
-    }).catch(() => {});
+            // Sync Photo Slots
+            if (Array.isArray(home.images)) {
+              home.images.forEach(slot => {
+                if (slot.id) {
+                  if (slot.src && slot.src !== 'null') {
+                    const fullSrc = slot.src.startsWith('/') ? slot.src : '/' + slot.src;
+                    window.setHomeImage(slot.id, fullSrc, slot.alt || slot.id);
+                  } else {
+                    window.setHomeImage(slot.id, null);
+                  }
+                }
+              });
+            }
+          }
+        });
+    }
+    syncHomepage();
   </script>
 
 </body>
