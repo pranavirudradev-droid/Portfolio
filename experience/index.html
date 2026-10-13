@@ -809,8 +809,14 @@
           const experiences = (localData && localData.experiences) ? localData.experiences : (data && data.experiences ? data.experiences : []);
           if (experiences && experiences.length) {
             experiences.forEach(e => {
-              const docSrc = e.document && e.document.src ? (e.document.src.startsWith('assets') ? '../' + e.document.src : e.document.src) : '';
-              const coverSrc = e.image && e.image.src ? (e.image.src.startsWith('assets') ? '../' + e.image.src : e.image.src) : '';
+              let docSrc = (e.document && e.document.src) ? e.document.src : '';
+              if (docSrc && !docSrc.startsWith('http') && !docSrc.startsWith('data:') && !docSrc.startsWith('blob:') && !docSrc.startsWith('/')) {
+                docSrc = '../' + docSrc.replace(/^(\.\.\/)+/, '');
+              }
+              let coverSrc = (e.image && e.image.src) ? e.image.src : '';
+              if (coverSrc && !coverSrc.startsWith('http') && !coverSrc.startsWith('data:') && !coverSrc.startsWith('blob:') && !coverSrc.startsWith('/')) {
+                coverSrc = '../' + coverSrc.replace(/^(\.\.\/)+/, '');
+              }
               const pages = [coverSrc || docSrc].filter(Boolean);
               if (DOC_MAP[e.id]) {
                 DOC_MAP[e.id].title = e.title || DOC_MAP[e.id].title;

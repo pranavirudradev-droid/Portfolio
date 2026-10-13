@@ -1332,7 +1332,10 @@
             if (doc.videoSrc) {
               const frame = document.querySelector('.doc-player-frame');
               let vid = document.getElementById('docVideoPlayer');
-              const cleanSrc = doc.videoSrc.startsWith('/') ? doc.videoSrc : '/' + doc.videoSrc.replace(/^\.\.\//, '');
+              let cleanSrc = doc.videoSrc;
+              if (cleanSrc && !cleanSrc.startsWith('http') && !cleanSrc.startsWith('data:') && !cleanSrc.startsWith('blob:') && !cleanSrc.startsWith('/')) {
+                cleanSrc = '/' + cleanSrc.replace(/^(\.\.\/)+/, '');
+              }
               if (!vid && frame) {
                 vid = document.createElement('video');
                 vid.id = 'docVideoPlayer';
@@ -1351,7 +1354,10 @@
             obsEntries.forEach((entry, idx) => {
               if (slides[idx] && entry.media && entry.media.src) {
                 const img = slides[idx].querySelector('img');
-                const srcPath = entry.media.src.startsWith('/') ? entry.media.src : '/' + entry.media.src.replace(/^\.\.\//, '');
+                let srcPath = entry.media.src;
+                if (srcPath && !srcPath.startsWith('http') && !srcPath.startsWith('data:') && !srcPath.startsWith('blob:') && !srcPath.startsWith('/')) {
+                  srcPath = '/' + srcPath.replace(/^(\.\.\/)+/, '');
+                }
                 if (img) img.src = srcPath;
               }
             });

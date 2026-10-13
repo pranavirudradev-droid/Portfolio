@@ -1148,8 +1148,14 @@
           const projects = (localData && localData.projects) ? localData.projects : (data && data.projects ? data.projects : []);
           if (projects && projects.length) {
             projects.forEach(p => {
-              const docSrc = p.document && p.document.src ? (p.document.src.startsWith('assets') ? '../' + p.document.src : p.document.src) : '';
-              const coverSrc = p.cover && p.cover.src ? (p.cover.src.startsWith('assets') ? '../' + p.cover.src : p.cover.src) : '';
+              let docSrc = (p.document && p.document.src) ? p.document.src : '';
+              if (docSrc && !docSrc.startsWith('http') && !docSrc.startsWith('data:') && !docSrc.startsWith('blob:') && !docSrc.startsWith('/')) {
+                docSrc = '../' + docSrc.replace(/^(\.\.\/)+/, '');
+              }
+              let coverSrc = (p.cover && p.cover.src) ? p.cover.src : '';
+              if (coverSrc && !coverSrc.startsWith('http') && !coverSrc.startsWith('data:') && !coverSrc.startsWith('blob:') && !coverSrc.startsWith('/')) {
+                coverSrc = '../' + coverSrc.replace(/^(\.\.\/)+/, '');
+              }
               if (PROJECT_DOCS[p.id]) {
                 PROJECT_DOCS[p.id].title = p.title || PROJECT_DOCS[p.id].title;
                 if (docSrc) PROJECT_DOCS[p.id].src = docSrc;

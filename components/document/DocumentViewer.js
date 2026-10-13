@@ -102,7 +102,7 @@ export class DocumentViewer {
     typeEl.textContent = (documentData.type || 'PDF').toUpperCase();
     
     let fileSrc = documentData.src || '';
-    if (fileSrc && !fileSrc.startsWith('http')) {
+    if (fileSrc && !fileSrc.startsWith('http') && !fileSrc.startsWith('data:') && !fileSrc.startsWith('blob:')) {
       fileSrc = '/' + fileSrc.replace(/^\.\.\//, '').replace(/^\//, '');
     }
 
@@ -113,7 +113,7 @@ export class DocumentViewer {
       downloadEl.style.display = 'none';
     }
 
-    const isPdf = (documentData.type === 'pdf') || (fileSrc && fileSrc.toLowerCase().endsWith('.pdf'));
+    const isPdf = (documentData.type === 'pdf') || (fileSrc && (fileSrc.toLowerCase().endsWith('.pdf') || fileSrc.startsWith('data:application/pdf')));
 
     if (isPdf && fileSrc) {
       // Direct high-resolution PDF rendering with hardware acceleration and smooth scrolling
@@ -130,7 +130,7 @@ export class DocumentViewer {
       let sheetsHtml = '';
       for (let i = 1; i <= count; i++) {
         let pageSrc = documentData.pages[i - 1] || '';
-        if (pageSrc && !pageSrc.startsWith('http')) {
+        if (pageSrc && !pageSrc.startsWith('http') && !pageSrc.startsWith('data:') && !pageSrc.startsWith('blob:')) {
           pageSrc = '/' + pageSrc.replace(/^\.\.\//, '').replace(/^\//, '');
         }
         sheetsHtml += DocumentSheet.render({

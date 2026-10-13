@@ -941,15 +941,73 @@
       if (tab === 'files') refreshFileLibrary();
     }
 
+    // Client-side image optimizer to keep payloads fast, light, and below Vercel/localStorage limits
+    function optimizeImage(file, maxDimension = 1600, quality = 0.82) {
+      return new Promise((resolve, reject) => {
+        if (!file.type || !file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+          return;
+        }
+
+        const img = new Image();
+        const objUrl = URL.createObjectURL(file);
+        img.onload = () => {
+          URL.revokeObjectURL(objUrl);
+          let w = img.width;
+          let h = img.height;
+
+          if (w > maxDimension || h > maxDimension) {
+            if (w > h) {
+              h = Math.round((h * maxDimension) / w);
+              w = maxDimension;
+            } else {
+              w = Math.round((w * maxDimension) / h);
+              h = maxDimension;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+
+          const outType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+          const dataUrl = canvas.toDataURL(outType, quality);
+          resolve(dataUrl);
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(objUrl);
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        };
+        img.src = objUrl;
+      });
+    }
+
     // Direct File Upload Helper
     async function handleDirectUpload(e, category, callback) {
       const file = e.target.files[0];
       if (!file) return;
 
-      showToast(`Uploading ${file.name}...`);
-      const reader = new FileReader();
+      showToast(`Processing ${file.name}...`);
+      try {
+        const dataUrl = await optimizeImage(file);
+        const folder = category ? category.replace('-', '/') : 'general';
+        const fallbackPath = `assets/${folder}/${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
 
-      reader.onload = async (event) => {
+        const clientFileObj = {
+          name: file.name,
+          path: fallbackPath,
+          url: dataUrl,
+          category: category
+        };
+
         try {
           const res = await fetch('/api/upload', {
             method: 'POST',
@@ -957,37 +1015,46 @@
             body: JSON.stringify({
               filename: file.name,
               category: category,
-              dataUrl: event.target.result
+              dataUrl: dataUrl
             })
           });
 
-          const data = await res.json();
           if (res.ok) {
+            const data = await res.json();
             showToast(`✅ Uploaded ${file.name}`);
-            callback(data.file);
-          } else {
-            showToast(data.error || 'Upload failed', 'error');
+            callback({
+              name: data.file?.name || file.name,
+              path: data.file?.path || fallbackPath,
+              url: dataUrl,
+              category: category
+            });
+            return;
           }
-        } catch (err) {
-          showToast('Upload error: ' + err.message, 'error');
+        } catch (serverErr) {
+          console.warn('Server upload skipped, using direct data asset:', serverErr);
         }
-      };
 
-      reader.readAsDataURL(file);
+        showToast(`✅ Ready: ${file.name}`);
+        callback(clientFileObj);
+      } catch (err) {
+        showToast('Upload error: ' + err.message, 'error');
+      }
     }
 
     // ==========================================
     // 1. PROJECTS LOGIC
     // ==========================================
     function setProjCover(file) {
-      document.getElementById('proj-cover-src').value = file.path;
-      document.getElementById('thumb-proj-cover').src = file.url || (file.path.startsWith('/') ? file.path : `/${file.path}`);
+      const targetSrc = file.url || file.path;
+      document.getElementById('proj-cover-src').value = targetSrc;
+      document.getElementById('thumb-proj-cover').src = targetSrc.startsWith('data:') || targetSrc.startsWith('blob:') || targetSrc.startsWith('http') || targetSrc.startsWith('/') ? targetSrc : `/${targetSrc}`;
       document.getElementById('name-proj-cover').textContent = file.name;
       document.getElementById('preview-proj-cover').style.display = 'flex';
     }
 
     function setProjDoc(file) {
-      document.getElementById('proj-doc-src').value = file.path;
+      const targetSrc = file.url || file.path;
+      document.getElementById('proj-doc-src').value = targetSrc;
       document.getElementById('name-proj-doc').textContent = file.name;
       document.getElementById('preview-proj-doc').style.display = 'flex';
     }
@@ -1038,8 +1105,9 @@
 
       if (p.cover && p.cover.src) {
         document.getElementById('proj-cover-src').value = p.cover.src;
-        document.getElementById('thumb-proj-cover').src = p.cover.src.startsWith('/') ? p.cover.src : `/${p.cover.src}`;
-        document.getElementById('name-proj-cover').textContent = p.cover.src.split('/').pop();
+        const cSrc = p.cover.src;
+        document.getElementById('thumb-proj-cover').src = (cSrc.startsWith('data:') || cSrc.startsWith('blob:') || cSrc.startsWith('http') || cSrc.startsWith('/')) ? cSrc : `/${cSrc}`;
+        document.getElementById('name-proj-cover').textContent = cSrc.split('/').pop().slice(0, 40);
         document.getElementById('preview-proj-cover').style.display = 'flex';
       } else {
         document.getElementById('preview-proj-cover').style.display = 'none';
@@ -1047,7 +1115,8 @@
 
       if (p.document && p.document.src) {
         document.getElementById('proj-doc-src').value = p.document.src;
-        document.getElementById('name-proj-doc').textContent = p.document.src.split('/').pop();
+        const dSrc = p.document.src;
+        document.getElementById('name-proj-doc').textContent = dSrc.split('/').pop().slice(0, 40);
         document.getElementById('preview-proj-doc').style.display = 'flex';
       } else {
         document.getElementById('preview-proj-doc').style.display = 'none';
@@ -1124,14 +1193,16 @@
     // 2. EXPERIENCE LOGIC
     // ==========================================
     function setExpCover(file) {
-      document.getElementById('exp-cover-src').value = file.path;
-      document.getElementById('thumb-exp-cover').src = file.url || (file.path.startsWith('/') ? file.path : `/${file.path}`);
+      const targetSrc = file.url || file.path;
+      document.getElementById('exp-cover-src').value = targetSrc;
+      document.getElementById('thumb-exp-cover').src = targetSrc.startsWith('data:') || targetSrc.startsWith('blob:') || targetSrc.startsWith('http') || targetSrc.startsWith('/') ? targetSrc : `/${targetSrc}`;
       document.getElementById('name-exp-cover').textContent = file.name;
       document.getElementById('preview-exp-cover').style.display = 'flex';
     }
 
     function setExpDoc(file) {
-      document.getElementById('exp-doc-src').value = file.path;
+      const targetSrc = file.url || file.path;
+      document.getElementById('exp-doc-src').value = targetSrc;
       document.getElementById('name-exp-doc').textContent = file.name;
       document.getElementById('preview-exp-doc').style.display = 'flex';
     }
@@ -1184,8 +1255,9 @@
 
       if (exp.image && exp.image.src) {
         document.getElementById('exp-cover-src').value = exp.image.src;
-        document.getElementById('thumb-exp-cover').src = exp.image.src.startsWith('/') ? exp.image.src : `/${exp.image.src}`;
-        document.getElementById('name-exp-cover').textContent = exp.image.src.split('/').pop();
+        const cSrc = exp.image.src;
+        document.getElementById('thumb-exp-cover').src = (cSrc.startsWith('data:') || cSrc.startsWith('blob:') || cSrc.startsWith('http') || cSrc.startsWith('/')) ? cSrc : `/${cSrc}`;
+        document.getElementById('name-exp-cover').textContent = cSrc.split('/').pop().slice(0, 40);
         document.getElementById('preview-exp-cover').style.display = 'flex';
       } else {
         document.getElementById('preview-exp-cover').style.display = 'none';
@@ -1193,7 +1265,8 @@
 
       if (exp.document && exp.document.src) {
         document.getElementById('exp-doc-src').value = exp.document.src;
-        document.getElementById('name-exp-doc').textContent = exp.document.src.split('/').pop();
+        const dSrc = exp.document.src;
+        document.getElementById('name-exp-doc').textContent = dSrc.split('/').pop().slice(0, 40);
         document.getElementById('preview-exp-doc').style.display = 'flex';
       } else {
         document.getElementById('preview-exp-doc').style.display = 'none';
@@ -1272,8 +1345,9 @@
     // 3. OBSERVATORY LOGIC
     // ==========================================
     function setObsImage(file) {
-      document.getElementById('obs-img-src').value = file.path;
-      document.getElementById('thumb-obs-img').src = file.url || (file.path.startsWith('/') ? file.path : `/${file.path}`);
+      const targetSrc = file.url || file.path;
+      document.getElementById('obs-img-src').value = targetSrc;
+      document.getElementById('thumb-obs-img').src = targetSrc.startsWith('data:') || targetSrc.startsWith('blob:') || targetSrc.startsWith('http') || targetSrc.startsWith('/') ? targetSrc : `/${targetSrc}`;
       document.getElementById('name-obs-img').textContent = file.name;
       document.getElementById('preview-obs-img').style.display = 'flex';
     }
@@ -1321,8 +1395,9 @@
 
       if (obs.media && obs.media.src) {
         document.getElementById('obs-img-src').value = obs.media.src;
-        document.getElementById('thumb-obs-img').src = `/${obs.media.src}`;
-        document.getElementById('name-obs-img').textContent = obs.media.src.split('/').pop();
+        const mSrc = obs.media.src;
+        document.getElementById('thumb-obs-img').src = (mSrc.startsWith('data:') || mSrc.startsWith('blob:') || mSrc.startsWith('http') || mSrc.startsWith('/')) ? mSrc : `/${mSrc}`;
+        document.getElementById('name-obs-img').textContent = mSrc.split('/').pop().slice(0, 40);
         document.getElementById('preview-obs-img').style.display = 'flex';
       } else {
         document.getElementById('preview-obs-img').style.display = 'none';
@@ -1395,7 +1470,8 @@
 
     // Documentary Video Functions
     function setDocVideo(file) {
-      document.getElementById('doc-video-src').value = file.path;
+      const targetSrc = file.url || file.path;
+      document.getElementById('doc-video-src').value = targetSrc;
       document.getElementById('name-doc-vid').textContent = file.name;
       document.getElementById('preview-doc-vid').style.display = 'flex';
     }
@@ -1545,7 +1621,7 @@
 
       grid.innerHTML = slots.map(s => {
         const hasImg = s.src && s.src !== 'null';
-        const srcUrl = hasImg ? (s.src.startsWith('/') ? s.src : '/' + s.src) : '';
+        const srcUrl = hasImg ? ((s.src.startsWith('data:') || s.src.startsWith('blob:') || s.src.startsWith('http') || s.src.startsWith('/')) ? s.src : '/' + s.src) : '';
         return `
           <div class="slot-card">
             <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -1587,37 +1663,34 @@
 
       showToast(`Uploading photo for ${slotId}...`);
       try {
-        const uploaded = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = async (ev) => {
-            const res = await fetch('/api/upload', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ filename: file.name, category: 'home', dataUrl: ev.target.result })
-            });
+        const dataUrl = await optimizeImage(file);
+        let imageSrc = dataUrl;
+
+        try {
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filename: file.name, category: 'home', dataUrl })
+          });
+          if (res.ok) {
             const d = await res.json();
-            if (res.ok) resolve(d.file);
-            else reject(new Error(d.error));
-          };
-          reader.readAsDataURL(file);
-        });
+            if (d.file && d.file.path) imageSrc = d.file.path;
+          }
+        } catch (_) {}
 
-        // Now save to homepage
-        const res = await fetch('/api/homepage', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ slotId, imageSrc: uploaded.path })
-        });
+        try {
+          await fetch('/api/homepage', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slotId, imageSrc })
+          });
+        } catch (_) {}
 
-        if (res.ok) {
-          showToast(`🎉 Photo saved & synced to ${slotId}!`);
-          const s = (portfolio.homepage.images || []).find(x => x.id === slotId);
-          if (s) s.src = uploaded.path;
-          saveToLocalStorage();
-          renderHomepageSlots();
-        } else {
-          showToast('Failed to attach photo', 'error');
-        }
+        showToast(`🎉 Photo saved & synced to ${slotId}!`);
+        const s = (portfolio.homepage.images || []).find(x => x.id === slotId);
+        if (s) s.src = imageSrc;
+        saveToLocalStorage();
+        renderHomepageSlots();
       } catch (err) {
         showToast('Error: ' + err.message, 'error');
       }

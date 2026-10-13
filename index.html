@@ -1360,7 +1360,7 @@
               home.images.forEach(slot => {
                 if (slot.id) {
                   if (slot.src && slot.src !== 'null') {
-                    const fullSrc = slot.src.startsWith('/') ? slot.src : '/' + slot.src;
+                    const fullSrc = (slot.src.startsWith('data:') || slot.src.startsWith('blob:') || slot.src.startsWith('http') || slot.src.startsWith('/')) ? slot.src : '/' + slot.src;
                     window.setHomeImage(slot.id, fullSrc, slot.alt || slot.id);
                   } else {
                     window.setHomeImage(slot.id, null);
