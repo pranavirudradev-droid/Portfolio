@@ -7,6 +7,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "echo 'Static build ready'",
     "start": "node admin/server.js",
     "admin": "node admin/server.js",
     "test": "ruby tests/verify_system.rb",
