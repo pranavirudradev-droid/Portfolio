@@ -447,7 +447,6 @@
       <button class="tab-btn" onclick="switchTab('observatory')">3. The Observatory</button>
       <button class="tab-btn" onclick="switchTab('about')">4. About Me</button>
       <button class="tab-btn" onclick="switchTab('homepage')">5. Homepage Photos</button>
-      <button class="tab-btn" onclick="switchTab('files')">6. File Library</button>
     </div>
 
     <!-- ======================================================== -->
@@ -495,23 +494,8 @@
               </select>
             </div>
 
-            <!-- Upload Cover Photo -->
-            <div class="form-group">
-              <label>Cover Photo (Choose from computer)</label>
-              <div class="upload-control">
-                <input type="file" accept="image/*" onchange="handleDirectUpload(event, 'projects-covers', setProjCover)" />
-                <div class="upload-preview" id="preview-proj-cover" style="display:none;">
-                  <img id="thumb-proj-cover" src="" alt="cover" />
-                  <div style="flex:1;">
-                    <span class="upload-badge">Cover Ready</span>
-                    <div id="name-proj-cover" style="font-size:11px; margin-top:4px; opacity:0.8;"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <!-- Upload Document / PDF -->
-            <div class="form-group">
+            <div class="form-group full">
               <label>Document / PDF (Choose from computer)</label>
               <div class="upload-control">
                 <input type="file" accept=".pdf,.ppt,.pptx,.doc,.docx" onchange="handleDirectUpload(event, 'projects-documents', setProjDoc)" />
@@ -594,21 +578,7 @@
               <input type="text" id="exp-location" placeholder="e.g. Bengaluru" />
             </div>
 
-            <div class="form-group">
-              <label>Cover Photo (Choose from computer)</label>
-              <div class="upload-control">
-                <input type="file" accept="image/*" onchange="handleDirectUpload(event, 'experience-documents', setExpCover)" />
-                <div class="upload-preview" id="preview-exp-cover" style="display:none;">
-                  <img id="thumb-exp-cover" src="" alt="cover" />
-                  <div style="flex:1;">
-                    <span class="upload-badge">Cover Ready</span>
-                    <div id="name-exp-cover" style="font-size:11px; margin-top:4px; opacity:0.8;"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group">
+            <div class="form-group full">
               <label>Presentation / PDF Document</label>
               <div class="upload-control">
                 <input type="file" accept=".pdf,.ppt,.pptx,.doc,.docx" onchange="handleDirectUpload(event, 'experience-documents', setExpDoc)" />
@@ -846,33 +816,6 @@
       </div>
     </div>
 
-    <!-- ======================================================== -->
-    <!-- 6. FILE LIBRARY                                          -->
-    <!-- ======================================================== -->
-    <div class="tab-panel" id="panel-files">
-      <div class="card">
-        <h2 class="card-title">File Asset Library</h2>
-        <p class="card-desc">Browse and clean up uploaded files by category.</p>
-
-        <div class="form-group full" style="margin-bottom:20px;">
-          <label for="files-cat-select">Select Category</label>
-          <select id="files-cat-select" onchange="refreshFileLibrary()">
-            <option value="projects-covers">Projects — Covers</option>
-            <option value="projects-documents">Projects — Documents & PDFs</option>
-            <option value="experience-documents">Experience — Documents & Presentations</option>
-            <option value="observatory-images">Observatory — Photos & Images</option>
-            <option value="observatory-videos">Observatory — Video Clips (.mp4, .webm)</option>
-            <option value="home">Homepage — Photos</option>
-            <option value="about">About Me — Photos</option>
-            <option value="general">General UI Assets</option>
-          </select>
-        </div>
-
-        <div class="file-grid" id="library-grid">
-          <div style="opacity:0.6; font-size:13px;">Loading files...</div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <div class="toast" id="toast">Changes saved.</div>
@@ -937,8 +880,6 @@
 
       const panel = document.getElementById(`panel-${tab}`);
       if (panel) panel.classList.add('active');
-
-      if (tab === 'files') refreshFileLibrary();
     }
 
     // Client-side image optimizer to keep payloads fast, light, and below Vercel/localStorage limits
@@ -1080,10 +1021,8 @@
     // ==========================================
     function setProjCover(file) {
       const targetSrc = file.url || file.path;
-      document.getElementById('proj-cover-src').value = targetSrc;
-      document.getElementById('thumb-proj-cover').src = targetSrc.startsWith('data:') || targetSrc.startsWith('blob:') || targetSrc.startsWith('http') || targetSrc.startsWith('/') ? targetSrc : `/${targetSrc}`;
-      document.getElementById('name-proj-cover').textContent = file.name;
-      document.getElementById('preview-proj-cover').style.display = 'flex';
+      const el = document.getElementById('proj-cover-src');
+      if (el) el.value = targetSrc;
     }
 
     function setProjDoc(file) {
@@ -1108,7 +1047,6 @@
         document.getElementById('form-project').reset();
         document.getElementById('proj-cover-src').value = '';
         document.getElementById('proj-doc-src').value = '';
-        document.getElementById('preview-proj-cover').style.display = 'none';
         document.getElementById('preview-proj-doc').style.display = 'none';
       } else {
         selectGroup.style.display = 'flex';
@@ -1139,12 +1077,6 @@
 
       if (p.cover && p.cover.src) {
         document.getElementById('proj-cover-src').value = p.cover.src;
-        const cSrc = p.cover.src;
-        document.getElementById('thumb-proj-cover').src = (cSrc.startsWith('data:') || cSrc.startsWith('blob:') || cSrc.startsWith('http') || cSrc.startsWith('/')) ? cSrc : `/${cSrc}`;
-        document.getElementById('name-proj-cover').textContent = cSrc.split('/').pop().slice(0, 40);
-        document.getElementById('preview-proj-cover').style.display = 'flex';
-      } else {
-        document.getElementById('preview-proj-cover').style.display = 'none';
       }
 
       if (p.document && p.document.src) {
@@ -1228,10 +1160,8 @@
     // ==========================================
     function setExpCover(file) {
       const targetSrc = file.url || file.path;
-      document.getElementById('exp-cover-src').value = targetSrc;
-      document.getElementById('thumb-exp-cover').src = targetSrc.startsWith('data:') || targetSrc.startsWith('blob:') || targetSrc.startsWith('http') || targetSrc.startsWith('/') ? targetSrc : `/${targetSrc}`;
-      document.getElementById('name-exp-cover').textContent = file.name;
-      document.getElementById('preview-exp-cover').style.display = 'flex';
+      const el = document.getElementById('exp-cover-src');
+      if (el) el.value = targetSrc;
     }
 
     function setExpDoc(file) {
@@ -1256,7 +1186,6 @@
         document.getElementById('form-exp').reset();
         document.getElementById('exp-cover-src').value = '';
         document.getElementById('exp-doc-src').value = '';
-        document.getElementById('preview-exp-cover').style.display = 'none';
         document.getElementById('preview-exp-doc').style.display = 'none';
       } else {
         selectGroup.style.display = 'flex';
@@ -1289,12 +1218,6 @@
 
       if (exp.image && exp.image.src) {
         document.getElementById('exp-cover-src').value = exp.image.src;
-        const cSrc = exp.image.src;
-        document.getElementById('thumb-exp-cover').src = (cSrc.startsWith('data:') || cSrc.startsWith('blob:') || cSrc.startsWith('http') || cSrc.startsWith('/')) ? cSrc : `/${cSrc}`;
-        document.getElementById('name-exp-cover').textContent = cSrc.split('/').pop().slice(0, 40);
-        document.getElementById('preview-exp-cover').style.display = 'flex';
-      } else {
-        document.getElementById('preview-exp-cover').style.display = 'none';
       }
 
       if (exp.document && exp.document.src) {
@@ -1757,108 +1680,6 @@
         if (s) s.src = imageSrc;
         saveToLocalStorage();
         renderHomepageSlots();
-      } catch (err) {
-        showToast('Error: ' + err.message, 'error');
-      }
-    }
-
-    // ==========================================
-    // 6. FILE LIBRARY
-    // ==========================================
-    const STATIC_ASSET_MANIFEST = {
-      'projects-covers': [
-        'airport-never-the-problem.jpg',
-        'character-analysis-personality.jpg',
-        'colours-consumer-behaviour.jpg',
-        'communication-theory.jpg',
-        'd2c-brands-india.jpg',
-        'forecasting-demand.jpg',
-        'hireficient-market-gap.jpg',
-        'nazakath.jpg',
-        'packaging-brand-recall.jpg',
-        'primary-research-consumer-behaviour.jpg',
-        'primary-study-marketing-insights.jpg',
-        'qualitative-field-fragment.jpg',
-        'retail-marketing-shoppers-stop.jpg',
-        'sustainable-product.jpg'
-      ].map(name => ({ name, path: `assets/projects/covers/${name}`, size: 1024 })),
-      'projects-documents': [
-        'How_do_colours_influence_consumer_behaviour.pdf',
-        'how-do-colours-influence-consumer-behaviour.pdf'
-      ].map(name => ({ name, path: `assets/projects/documents/${name}`, size: 36352986 })),
-      'experience-documents': [
-        'origami-creative-cover.jpg',
-        'experience-three-cover.jpg',
-        'experience-four-cover.jpg',
-        'dhara-magazine-cover.jpg',
-        'avirata-ngo-cover.jpg'
-      ].map(name => ({ name, path: `assets/experience/documents/${name}`, size: 700 })),
-      'observatory-images': [
-        'beetle-macro.jpg',
-        'checkout-rituals.jpg',
-        'informal-signage.jpg',
-        'tactile-friction.jpg'
-      ].map(name => ({ name, path: `assets/observatory/images/${name}`, size: 576 })),
-      'home': [
-        'qualitative-field-fragment.jpg'
-      ].map(name => ({ name, path: `assets/home/${name}`, size: 1024 })),
-      'about': [
-        'about-cover.jpg'
-      ].map(name => ({ name, path: `assets/about/${name}`, size: 1024 }))
-    };
-
-    async function refreshFileLibrary() {
-      const cat = document.getElementById('files-cat-select').value;
-      const grid = document.getElementById('library-grid');
-      grid.innerHTML = '<div style="opacity:0.6; font-size:13px;">Scanning files...</div>';
-
-      let files = [];
-      try {
-        const res = await fetch(`/api/files?category=${cat}`);
-        if (res.ok) {
-          const data = await res.json();
-          files = data.files || [];
-        } else {
-          files = STATIC_ASSET_MANIFEST[cat] || [];
-        }
-      } catch (err) {
-        files = STATIC_ASSET_MANIFEST[cat] || [];
-      }
-
-      if (!files || files.length === 0) {
-        grid.innerHTML = '<div style="opacity:0.6; font-size:13px;">No files found in this category.</div>';
-        return;
-      }
-
-      grid.innerHTML = files.map(f => {
-        const isImg = /\.(jpg|jpeg|png|webp|svg)$/i.test(f.name);
-        return `
-          <div class="file-card">
-            ${isImg ? `<img src="/${f.path}" alt="${f.name}" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'50\\' height=\\'50\\'><text y=\\'25\\' fill=\\'%23A5BCD6\\'>IMG</text></svg>';" />` : `<div style="height:110px; background:#19110f; display:flex; align-items:center; justify-content:center; font-size:32px;">📄</div>`}
-            <div style="font-size:11px; font-weight:600; word-break:break-all;">${f.name}</div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto;">
-              <span style="font-size:10px; opacity:0.6;">${(f.size/1024).toFixed(0)} KB</span>
-              <button class="btn btn-danger" style="padding:3px 8px; font-size:10px;" onclick="deleteFile('${f.path}')">Delete 🗑</button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    async function deleteFile(p) {
-      if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-        showToast('Running in cloud mode: File deletion is only available locally via "npm start".', 'error');
-        return;
-      }
-      if (!confirm(`Delete "${p}"?`)) return;
-      try {
-        const res = await fetch(`/api/files?filePath=${encodeURIComponent(p)}`, { method: 'DELETE' });
-        if (res.ok) {
-          showToast('File deleted');
-          refreshFileLibrary();
-        } else {
-          showToast('Failed to delete', 'error');
-        }
       } catch (err) {
         showToast('Error: ' + err.message, 'error');
       }
