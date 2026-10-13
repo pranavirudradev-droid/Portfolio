@@ -23,7 +23,7 @@ export const ABOUT_CONTENT = Object.freeze({
     kicker: '[01] · WORLD ONE — ABOUT ME',
     sectionTitle: 'ABOUT ME',
     name: 'PRANAVI RUDRADEV',
-    headline: 'Curious by nature. Strategic by interest.',
+    headline: "Curious by nature. Strategic by interest.",
     descriptor: 'Brand Strategy · Consumer Psychology · Qualitative Thinking',
     accent: PALETTE.SCEPTRE_RED
   },
@@ -31,8 +31,8 @@ export const ABOUT_CONTENT = Object.freeze({
   // SECTION 1: WHO AM I
   whoAmI: {
     title: 'WHO AM I',
-    intro: "Hello, I’m Pranavi Rudradev, a Marketing major and Psychology minor (BBA) from FLAME University.",
-    curiosity: "I’ve always been curious about people, what catches our attention, shapes our choices, and makes certain things stay with us? These questions are also what draw me to brands. There’s something fascinating about looking beyond the obvious and discovering the little things that shape how people think, feel, and connect with the world around them.",
+    intro: "Hello, I'm Pranavi Rudradev, a Marketing major and Psychology minor (BBA) from FLAME University.",
+    curiosity: "I've always been curious about people, what catches our attention, shapes our choices, and makes certain things stay with us? These questions are also what draw me to brands. There's something fascinating about looking beyond the obvious and discovering the little things that shape how people think, feel, and connect with the world around them.",
     aspectsHeading: "A few things that make me, me.",
     aspects: [
       {

@@ -108,12 +108,13 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: clamp(32px, 5vw, 64px) var(--space-margin);
+  padding: clamp(24px, 4vw, 48px) var(--space-margin);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: clamp(24px, 4vw, 48px);
-  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 /* Tactile Document Sheet (Paper container) */

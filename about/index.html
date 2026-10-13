@@ -1277,7 +1277,7 @@
     <header class="about-masthead">
       <span class="about-kicker">[01] &#183; WORLD ONE &#8212; ABOUT ME</span>
       <h1 class="about-title">PRANAVI RUDRADEV</h1>
-      <blockquote class="about-pull-statement">
+      <blockquote class="about-pull-statement" id="about-pull-statement">
         Curious by nature. Strategic by interest.
       </blockquote>
     </header>
@@ -1292,10 +1292,10 @@
         <div class="who-am-i-top-grid">
           <div class="who-am-i-text-col">
             <h2 class="section-heading who-am-i-heading">WHO AM <em>I</em></h2>
-            <p class="who-am-i-para">
+            <p class="who-am-i-para" id="who-am-i-intro">
               Hello, I'm Pranavi Rudradev, a Marketing major and Psychology minor (BBA) from FLAME University.
             </p>
-            <p class="who-am-i-para">
+            <p class="who-am-i-para" id="who-am-i-curiosity">
               I've always been curious about people, what catches our attention, shapes our choices, and makes certain things stay with us? These questions are also what draw me to brands. There's something fascinating about looking beyond the obvious and discovering the little things that shape how people think, feel, and connect with the world around them.
             </p>
             <h3 class="who-am-i-subhead">A few things that make me, me.</h3>
@@ -2247,7 +2247,28 @@
     </div>
     <div class="fisheye-lens-glass-overlay"></div>
     <div class="fisheye-lens-rim"></div>
-  </div>
-
+  <!-- Dynamic synchronization script with Admin API -->
+  <script>
+    fetch('/api/content').then(r => r.json()).then(data => {
+      if (data && data.about) {
+        if (data.about.meta && data.about.meta.headline) {
+          const el = document.getElementById('about-pull-statement');
+          if (el) el.textContent = data.about.meta.headline;
+        }
+        if (data.about.whoAmI) {
+          const introEl = document.getElementById('who-am-i-intro');
+          if (introEl && data.about.whoAmI.intro) introEl.textContent = data.about.whoAmI.intro;
+          const curEl = document.getElementById('who-am-i-curiosity');
+          if (curEl && data.about.whoAmI.curiosity) curEl.textContent = data.about.whoAmI.curiosity;
+        }
+        if (data.about.imageSrc) {
+          const frame = document.querySelector('.image-placeholder-frame');
+          if (frame) {
+            frame.innerHTML = `<img src="/${data.about.imageSrc.replace(/^\\.\\.\\//, '').replace(/^\\//, '')}" alt="Pranavi Rudradev" style="width:100%;height:100%;object-fit:cover;border-radius:4px;" />`;
+          }
+        }
+      }
+    }).catch(() => {});
+  </script>
 </body>
 </html>

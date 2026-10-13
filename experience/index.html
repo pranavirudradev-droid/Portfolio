@@ -794,6 +794,27 @@
       }
     };
 
+    // Auto-sync dynamic experience & uploaded documents from server
+    fetch('/api/content').then(r => r.json()).then(data => {
+      if (data && data.experiences) {
+        data.experiences.forEach(e => {
+          const docSrc = e.document && e.document.src ? (e.document.src.startsWith('assets') ? '../' + e.document.src : e.document.src) : '';
+          const coverSrc = e.image && e.image.src ? (e.image.src.startsWith('assets') ? '../' + e.image.src : e.image.src) : '';
+          const pages = [coverSrc || docSrc].filter(Boolean);
+          if (DOC_MAP[e.id]) {
+            DOC_MAP[e.id].title = e.title || DOC_MAP[e.id].title;
+            if (pages.length) DOC_MAP[e.id].pages = pages;
+          } else {
+            DOC_MAP[e.id] = {
+              title: e.title,
+              type: (e.document && e.document.type) || 'presentation',
+              pages: pages
+            };
+          }
+        });
+      }
+    }).catch(() => {});
+
     window.openDocById = (id) => {
       const doc = DOC_MAP[id];
       if (doc) {

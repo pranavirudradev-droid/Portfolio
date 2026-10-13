@@ -101,30 +101,59 @@ export class DocumentViewer {
     titleEl.textContent = documentData.title || 'STRATEGIC DOCUMENT';
     typeEl.textContent = (documentData.type || 'PDF').toUpperCase();
     
-    if (documentData.src) {
-      downloadEl.setAttribute('href', documentData.src);
+    let fileSrc = documentData.src || '';
+    if (fileSrc && !fileSrc.startsWith('http')) {
+      fileSrc = '/' + fileSrc.replace(/^\.\.\//, '').replace(/^\//, '');
+    }
+
+    if (fileSrc) {
+      downloadEl.setAttribute('href', fileSrc);
       downloadEl.style.display = 'inline-block';
     } else {
       downloadEl.style.display = 'none';
     }
 
-    // Build vertical scrolling sheets
-    const count = documentData.pageCount || 3;
-    const format = documentData.type === 'presentation' ? 'presentation' : 'portrait';
-    
-    let sheetsHtml = '';
-    for (let i = 1; i <= count; i++) {
-      const pageSrc = (documentData.pages && documentData.pages[i - 1]) || '';
-      sheetsHtml += DocumentSheet.render({
-        pageNumber: i,
-        totalPages: count,
-        src: pageSrc,
-        format,
-        title: documentData.title,
-      });
+    const isPdf = (documentData.type === 'pdf') || (fileSrc && fileSrc.toLowerCase().endsWith('.pdf'));
+
+    if (isPdf && fileSrc) {
+      // Direct high-resolution PDF rendering with hardware acceleration and smooth scrolling
+      this.track.innerHTML = `
+        <div style="width: 100%; max-width: 1120px; height: calc(100vh - 100px); min-height: 600px; background: #FAF7EE; border-radius: 6px; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.6); display: flex; flex-direction: column; transform: translateZ(0); will-change: transform;">
+          <iframe src="${fileSrc}#toolbar=1&navpanes=0&scrollbar=1" class="doc-viewer-frame" style="width: 100%; height: 100%; border: none; display: block;" loading="lazy"></iframe>
+        </div>
+      `;
+    } else if (documentData.pages && documentData.pages.length > 0 && documentData.type !== 'pdf') {
+      // Build vertical scrolling sheets from authentic slide images
+      const count = documentData.pages.length;
+      const format = documentData.type === 'presentation' ? 'presentation' : 'portrait';
+      
+      let sheetsHtml = '';
+      for (let i = 1; i <= count; i++) {
+        let pageSrc = documentData.pages[i - 1] || '';
+        if (pageSrc && !pageSrc.startsWith('http')) {
+          pageSrc = '/' + pageSrc.replace(/^\.\.\//, '').replace(/^\//, '');
+        }
+        sheetsHtml += DocumentSheet.render({
+          pageNumber: i,
+          totalPages: count,
+          src: pageSrc,
+          format,
+          title: documentData.title,
+        });
+      }
+
+      this.track.innerHTML = sheetsHtml;
+    } else {
+      // Clean fallback if file is missing
+      this.track.innerHTML = `
+        <div style="width: 100%; max-width: 800px; padding: 48px 32px; background: #FAF7EE; color: #4A2E27; border-radius: 6px; text-align: center; box-shadow: 0 12px 36px rgba(0,0,0,0.4);">
+          <h3 style="font-size: 22px; margin-bottom: 12px; font-weight: 700;">${documentData.title || 'Document Viewer'}</h3>
+          <p style="font-size: 14px; opacity: 0.8; margin-bottom: 24px;">Please upload or attach a PDF document in the Admin portal.</p>
+          ${fileSrc ? `<a href="${fileSrc}" target="_blank" style="display: inline-block; padding: 12px 24px; background: #4A2E27; color: #F5EFC6; font-weight: 700; text-decoration: none; border-radius: 4px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;">Open File ↗</a>` : ''}
+        </div>
+      `;
     }
 
-    this.track.innerHTML = sheetsHtml;
     this.overlay.classList.add('is-open');
     this.isOpen = true;
     document.body.style.overflow = 'hidden';

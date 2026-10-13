@@ -22,7 +22,7 @@ export const HERO_STATEMENT = Object.freeze({
     'REVEAL WHAT OTHERS OVERLOOK.'
   ],
   tagline: "Because there's more to every detail.",
-  statement: 'RIGHT QUESTIONS\nREVEAL WHAT OTHERS OVERLOOK.',
+  statement: "RIGHT QUESTIONS\nREVEAL WHAT OTHERS OVERLOOK.",
   placeholder: '[HERO STATEMENT]'
 });
 

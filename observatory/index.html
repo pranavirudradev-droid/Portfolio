@@ -626,6 +626,9 @@
     -->
     <div class="obs-carousel-container" id="observatory-gallery-mount" aria-label="22 photographic observations, auto-scrolling">
       <div class="carousel-track" role="list" data-speed="1">
+        <div class="carousel-slide" role="listitem" aria-label="Deciphering Informal Signage &amp; Consumer Trust">
+          <img src="../assets/observatory/images/WhatsApp_Image_2026-10-03_at_12.12.16_PM.jpeg" alt="Deciphering Informal Signage &amp; Consumer Trust" loading="lazy" />
+        </div>
 
         <!-- ══════════════════════════════════ SET A (items 01–22) -->
 
@@ -1300,6 +1303,39 @@
     <div class="fisheye-lens-glass-overlay"></div>
     <div class="fisheye-lens-rim"></div>
   </div>
+
+  <!-- Dynamic synchronization script with Admin API -->
+  <script>
+    fetch('/api/content').then(r => r.json()).then(data => {
+      if (data && data.documentary) {
+        const doc = data.documentary;
+        const titleEl = document.querySelector('.doc-feature-title');
+        const descEl = document.querySelector('.doc-feature-synopsis');
+        const badgeEl = document.querySelector('.doc-badge-live');
+        const metaEl = document.querySelector('.doc-badge-res');
+
+        if (titleEl && doc.title) titleEl.textContent = doc.title;
+        if (descEl && doc.description) descEl.textContent = doc.description;
+        if (badgeEl && doc.badge) badgeEl.textContent = '● ' + doc.badge;
+        if (metaEl && doc.meta) metaEl.textContent = doc.meta;
+
+        if (doc.videoSrc) {
+          const frame = document.querySelector('.doc-player-frame');
+          let vid = document.getElementById('docVideoPlayer');
+          const cleanSrc = doc.videoSrc.startsWith('/') ? doc.videoSrc : '/' + doc.videoSrc.replace(/^\.\.\//, '');
+          if (!vid && frame) {
+            vid = document.createElement('video');
+            vid.id = 'docVideoPlayer';
+            vid.playsInline = true;
+            vid.controls = true;
+            vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;background:#000;';
+            frame.appendChild(vid);
+          }
+          if (vid) vid.src = cleanSrc;
+        }
+      }
+    }).catch(() => {});
+  </script>
 
 </body>
 </html>

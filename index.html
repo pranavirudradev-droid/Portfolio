@@ -1147,10 +1147,33 @@
        setHomeImage('home-image-01', '/assets/home/image-01.jpg', 'Description');
        The photo immediately appears, inheriting identical movement.
        ========================================================= */
+    const initialSlotContent = {};
+    const initialMirrorContent = {};
+    imageSlots.forEach((slot, idx) => {
+      initialSlotContent[slot.id] = slot.innerHTML;
+      if (mirrorSlots && mirrorSlots[idx]) {
+        initialMirrorContent[slot.id] = mirrorSlots[idx].innerHTML;
+      }
+    });
+
     export function setHomeImage(slotId, src, alt = '') {
       const cleanId = slotId.startsWith('#') ? slotId.slice(1) : slotId;
       const slot = document.getElementById(cleanId) || document.querySelector(`.${cleanId}`);
-      if (!slot || !src) return;
+      if (!slot) return;
+      const idx = imageSlots.findIndex(s => s.id === cleanId || s.classList.contains(cleanId));
+      const mirrorSlot = (mirrorSlots && idx >= 0 && mirrorSlots[idx]) ? mirrorSlots[idx] : null;
+
+      if (!src || src === 'null') {
+        // Restore default generative artwork plate / clear photo
+        slot.innerHTML = initialSlotContent[cleanId] || '<div class="photo-surface"></div>';
+        slot.classList.remove('has-image');
+
+        if (mirrorSlot) {
+          mirrorSlot.innerHTML = initialMirrorContent[cleanId] || '<div class="photo-surface"></div>';
+          mirrorSlot.classList.remove('has-image');
+        }
+        return;
+      }
 
       slot.innerHTML = '';
       const img = document.createElement('img');
@@ -1161,16 +1184,13 @@
       slot.appendChild(img);
       slot.classList.add('has-image');
 
-      if (mirrorStage) {
-        const mirrorSlot = mirrorStage.querySelector(`.${cleanId}`);
-        if (mirrorSlot) {
-          mirrorSlot.innerHTML = '';
-          const mirrorImg = document.createElement('img');
-          mirrorImg.src = src;
-          mirrorImg.alt = alt;
-          mirrorSlot.appendChild(mirrorImg);
-          mirrorSlot.classList.add('has-image');
-        }
+      if (mirrorSlot) {
+        mirrorSlot.innerHTML = '';
+        const mirrorImg = document.createElement('img');
+        mirrorImg.src = src;
+        mirrorImg.alt = alt;
+        mirrorSlot.appendChild(mirrorImg);
+        mirrorSlot.classList.add('has-image');
       }
     }
 
@@ -1308,6 +1328,37 @@
         heroStatementEl.style.transform = 'translate(-50%, -50%)';
       }
     }
+
+    /* Dynamic synchronization script with Admin API */
+    fetch('/api/content').then(r => r.json()).then(data => {
+      if (data && data.homepage) {
+        // Sync Hero Statement and Tagline
+        if (data.homepage.hero) {
+          const heroTitle = document.querySelector('.home-hero-title');
+          const taglineEl = document.querySelector('.home-tagline');
+          if (data.homepage.hero.statement && heroTitle) {
+            const lines = data.homepage.hero.statement.split('\n').filter(Boolean);
+            heroTitle.innerHTML = lines.map(line => `<span>${line}</span>`).join('');
+          }
+          if (data.homepage.hero.tagline && taglineEl) {
+            taglineEl.textContent = data.homepage.hero.tagline;
+          }
+        }
+        // Sync Photo Slots
+        if (Array.isArray(data.homepage.images)) {
+          data.homepage.images.forEach(slot => {
+            if (slot.id) {
+              if (slot.src && slot.src !== 'null') {
+                const fullSrc = slot.src.startsWith('/') ? slot.src : '/' + slot.src;
+                window.setHomeImage(slot.id, fullSrc, slot.alt || slot.id);
+              } else {
+                window.setHomeImage(slot.id, null);
+              }
+            }
+          });
+        }
+      }
+    }).catch(() => {});
   </script>
 
 </body>

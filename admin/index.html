@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — Pranavi Rudradev Portfolio</title>
+  <link rel="stylesheet" href="../assets/fonts/satoshi.css" />
+  <link rel="stylesheet" href="../styles/reset.css" />
+  <style>
+    :root {
+      --bg-dark: #231815;
+      --bg-card: #33201B;
+      --bg-surface: #4A2E27;
+      --text-yellow: #F5EFC6;
+      --accent-blue: #A5BCD6;
+      --accent-red: #8C272C;
+      --accent-green: #4E8A5E;
+      --border: rgba(245, 239, 198, 0.16);
+      --font-primary: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-yellow);
+      font-family: var(--font-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+    }
+
+    header {
+      background-color: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      padding: 18px clamp(20px, 4vw, 48px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand-title {
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-yellow);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-admin {
+      background: var(--accent-red);
+      color: #fff;
+      font-size: 9px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      letter-spacing: 0.1em;
+    }
+
+    .quick-links {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .quick-links a {
+      color: var(--accent-blue);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: opacity 0.2s;
+    }
+
+    .quick-links a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1140px;
+      width: 100%;
+      margin: 0 auto;
+      padding: clamp(20px, 3vw, 40px) clamp(16px, 3vw, 32px);
+      flex: 1;
+    }
+
+    /* Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-bottom: none;
+      color: rgba(245, 239, 198, 0.7);
+      padding: 10px 18px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 6px 6px 0 0;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-yellow);
+      background: rgba(245, 239, 198, 0.05);
+    }
+
+    .tab-btn.active {
+      color: var(--bg-dark);
+      background: var(--text-yellow);
+      border-color: var(--text-yellow);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Sub Navigation */
+    .mode-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .mode-toggle {
+      display: inline-flex;
+      background: var(--bg-surface);
+      padding: 4px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    .mode-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-yellow);
+      padding: 8px 16px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .mode-btn.active {
+      background: var(--accent-blue);
+      color: var(--bg-dark);
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: clamp(20px, 3vw, 32px);
+      margin-bottom: 28px;
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-yellow);
+      margin-bottom: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: rgba(245, 239, 198, 0.65);
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px 12px;
+      color: var(--text-yellow);
+      font-family: inherit;
+      font-size: 13px;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    /* Direct Upload Control Box */
+    .upload-control {
+      background: rgba(35, 24, 21, 0.6);
+      border: 1px dashed rgba(165, 188, 214, 0.4);
+      border-radius: 6px;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 0.2s;
+    }
+
+    .upload-control:hover {
+      border-color: var(--accent-blue);
+    }
+
+    .upload-control input[type="file"] {
+      font-size: 12px;
+      color: var(--text-yellow);
+      cursor: pointer;
+    }
+
+    .upload-preview {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-surface);
+      padding: 8px 12px;
+      border-radius: 4px;
+    }
+
+    .upload-preview img {
+      width: 52px;
+      height: 52px;
+      object-fit: cover;
+      border-radius: 4px;
+      background: #111;
+      border: 1px solid var(--border);
+    }
+
+    .upload-badge {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: var(--accent-green);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 22px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--accent-blue);
+      color: var(--bg-dark);
+    }
+
+    .btn-primary:hover {
+      background: #c3d6ec;
+      transform: translateY(-1px);
+    }
+
+    .btn-danger {
+      background: transparent;
+      border: 1px solid var(--accent-red);
+      color: #ff9b9b;
+    }
+
+    .btn-danger:hover {
+      background: var(--accent-red);
+      color: #fff;
+    }
+
+    .actions-row {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--accent-blue);
+      color: var(--text-yellow);
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 13px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transform: translateY(120%);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 1000;
+    }
+
+    .toast.show { transform: translateY(0); }
+    .toast.error { border-color: var(--accent-red); color: #ffb4b4; }
+    .toast.success { border-color: var(--accent-green); }
+
+    /* Slots Grid for Homepage */
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 16px;
+    }
+
+    .slot-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .slot-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      background: #111;
+      border-radius: 4px;
+    }
+
+    /* File Grid */
+    .file-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .file-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .file-card img {
+      width: 100%;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 4px;
+      background: #111;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-title">
+      <span>PRANAVI RUDRADEV</span>
+      <span class="badge-admin">ADMIN PORTAL</span>
+    </div>
+    <div class="quick-links">
+      <a href="../" target="_blank">Homepage ↗</a>
+      <a href="../projects/" target="_blank">Projects ↗</a>
+      <a href="../experience/" target="_blank">Experience ↗</a>
+      <a href="../observatory/" target="_blank">Observatory ↗</a>
+      <a href="../about/" target="_blank">About ↗</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('projects')">1. Projects</button>
+      <button class="tab-btn" onclick="switchTab('experience')">2. Experience</button>
+      <button class="tab-btn" onclick="switchTab('observatory')">3. The Observatory</button>
+      <button class="tab-btn" onclick="switchTab('about')">4. About Me</button>
+      <button class="tab-btn" onclick="switchTab('homepage')">5. Homepage Photos</button>
+      <button class="tab-btn" onclick="switchTab('files')">6. File Library</button>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 1. PROJECTS                                              -->
+    <!-- ======================================================== -->
+    <div class="tab-panel active" id="panel-projects">
+      <div class="card">
+        <div class="mode-bar">
+          <div class="mode-toggle">
+            <button class="mode-btn active" id="btn-proj-mode-create" onclick="setProjMode('create')">+ Add New Project</button>
+            <button class="mode-btn" id="btn-proj-mode-edit" onclick="setProjMode('edit')">✏ Edit Existing Project</button>
+          </div>
+          <a href="../projects/" target="_blank" style="font-size:12px; color:var(--accent-blue);">View Projects Archive ↗</a>
+        </div>
+
+        <div class="form-group full" id="group-select-proj" style="display:none; margin-bottom:20px;">
+          <label for="select-proj">Choose Project to Edit</label>
+          <select id="select-proj" onchange="onSelectProject()"></select>
+        </div>
+
+        <form id="form-project" onsubmit="saveProject(event)">
+          <input type="hidden" id="proj-cover-src" />
+          <input type="hidden" id="proj-doc-src" />
+
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="proj-title">Project Title *</label>
+              <input type="text" id="proj-title" required placeholder="e.g. Brand Sensory Architecture in Retail" />
+            </div>
+
+            <div class="form-group">
+              <label for="proj-category">Category *</label>
+              <select id="proj-category" required>
+                <option value="CONSUMER PSYCHOLOGY / INSIGHT">Consumer Psychology / Insight</option>
+                <option value="MARKET RESEARCH / CASE STUDY">Market Research / Case Study</option>
+                <option value="PRODUCT / STRATEGY">Product / Strategy</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="proj-accent">Section Accent</label>
+              <select id="proj-accent">
+                <option value="#A5BCD6">Cerulean Blue (#A5BCD6)</option>
+                <option value="#4D0E12">Sceptre Red (#4D0E12)</option>
+              </select>
+            </div>
+
+            <!-- Upload Cover Photo -->
+            <div class="form-group">
+              <label>Cover Photo (Choose from computer)</label>
+              <div class="upload-control">
+                <input type="file" accept="image/*" onchange="handleDirectUpload(event, 'projects-covers', setProjCover)" />
+                <div class="upload-preview" id="preview-proj-cover" style="display:none;">
+                  <img id="thumb-proj-cover" src="" alt="cover" />
+                  <div style="flex:1;">
+                    <span class="upload-badge">Cover Ready</span>
+                    <div id="name-proj-cover" style="font-size:11px; margin-top:4px; opacity:0.8;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Upload Document / PDF -->
+            <div class="form-group">
+              <label>Document / PDF (Choose from computer)</label>
+              <div class="upload-control">
+                <input type="file" accept=".pdf,.ppt,.pptx,.doc,.docx" onchange="handleDirectUpload(event, 'projects-documents', setProjDoc)" />
+                <div class="upload-preview" id="preview-proj-doc" style="display:none;">
+                  <span style="font-size:24px;">📄</span>
+                  <div style="flex:1;">
+                    <span class="upload-badge">PDF Ready</span>
+                    <div id="name-proj-doc" style="font-size:11px; margin-top:4px; opacity:0.8; word-break:break-all;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group full">
+              <label for="proj-desc">Project Description / Summary</label>
+              <textarea id="proj-desc" placeholder="Overview of the core questions, methodology, and brand findings..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                <input type="checkbox" id="proj-featured" style="width:16px; height:16px;" />
+                <span>Feature on Homepage</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button type="submit" class="btn btn-primary" id="btn-save-proj">Save Project & Sync Website</button>
+            <button type="button" class="btn btn-danger" id="btn-del-proj" style="display:none;" onclick="deleteProject()">Delete Project 🗑</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 2. EXPERIENCE                                            -->
+    <!-- ======================================================== -->
+    <div class="tab-panel" id="panel-experience">
+      <div class="card">
+        <div class="mode-bar">
+          <div class="mode-toggle">
+            <button class="mode-btn active" id="btn-exp-mode-create" onclick="setExpMode('create')">+ Add New Experience</button>
+            <button class="mode-btn" id="btn-exp-mode-edit" onclick="setExpMode('edit')">✏ Edit Existing Experience</button>
+          </div>
+          <a href="../experience/" target="_blank" style="font-size:12px; color:var(--accent-blue);">View Experience Archive ↗</a>
+        </div>
+
+        <div class="form-group full" id="group-select-exp" style="display:none; margin-bottom:20px;">
+          <label for="select-exp">Choose Experience to Edit</label>
+          <select id="select-exp" onchange="onSelectExperience()"></select>
+        </div>
+
+        <form id="form-exp" onsubmit="saveExperience(event)">
+          <input type="hidden" id="exp-cover-src" />
+          <input type="hidden" id="exp-doc-src" />
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="exp-title">Role / Title *</label>
+              <input type="text" id="exp-title" required placeholder="e.g. Brand Strategist" />
+            </div>
+
+            <div class="form-group">
+              <label for="exp-org">Organisation Name *</label>
+              <input type="text" id="exp-org" required placeholder="e.g. Origami Creative" />
+            </div>
+
+            <div class="form-group">
+              <label for="exp-category">Sector / Department</label>
+              <input type="text" id="exp-category" placeholder="e.g. ADVERTISING AGENCY" />
+            </div>
+
+            <div class="form-group">
+              <label for="exp-period">Period / Dates</label>
+              <input type="text" id="exp-period" placeholder="e.g. May 2026 — Jul 2026" />
+            </div>
+
+            <div class="form-group">
+              <label for="exp-location">Location</label>
+              <input type="text" id="exp-location" placeholder="e.g. Bengaluru" />
+            </div>
+
+            <div class="form-group">
+              <label>Cover Photo (Choose from computer)</label>
+              <div class="upload-control">
+                <input type="file" accept="image/*" onchange="handleDirectUpload(event, 'experience-documents', setExpCover)" />
+                <div class="upload-preview" id="preview-exp-cover" style="display:none;">
+                  <img id="thumb-exp-cover" src="" alt="cover" />
+                  <div style="flex:1;">
+                    <span class="upload-badge">Cover Ready</span>
+                    <div id="name-exp-cover" style="font-size:11px; margin-top:4px; opacity:0.8;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Presentation / PDF Document</label>
+              <div class="upload-control">
+                <input type="file" accept=".pdf,.ppt,.pptx,.doc,.docx" onchange="handleDirectUpload(event, 'experience-documents', setExpDoc)" />
+                <div class="upload-preview" id="preview-exp-doc" style="display:none;">
+                  <span style="font-size:24px;">📄</span>
+                  <div style="flex:1;">
+                    <span class="upload-badge">Doc Ready</span>
+                    <div id="name-exp-doc" style="font-size:11px; margin-top:4px; opacity:0.8; word-break:break-all;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group full">
+              <label for="exp-desc">Short Summary *</label>
+              <textarea id="exp-desc" required placeholder="Mandate, client sectors, and core accomplishments..."></textarea>
+            </div>
+
+            <div class="form-group full">
+              <label for="exp-bullets">Bullet Points (One per line)</label>
+              <textarea id="exp-bullets" placeholder="Conducted benchmark study across 14 competitors&#10;Mapped fan segments for a sports brand&#10;Built strategic pitch deck for sub-brand launch"></textarea>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button type="submit" class="btn btn-primary" id="btn-save-exp">Save Experience & Sync Website</button>
+            <button type="button" class="btn btn-danger" id="btn-del-exp" style="display:none;" onclick="deleteExperience()">Delete Experience 🗑</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 3. THE OBSERVATORY                                       -->
+    <!-- ======================================================== -->
+    <div class="tab-panel" id="panel-observatory">
+      <div class="card">
+        <div class="mode-bar">
+          <div class="mode-toggle">
+            <button class="mode-btn active" id="btn-obs-mode-create" onclick="setObsMode('create')">+ Add New Photo / Observation</button>
+            <button class="mode-btn" id="btn-obs-mode-edit" onclick="setObsMode('edit')">✏ Edit Existing Observation</button>
+          </div>
+          <a href="../observatory/" target="_blank" style="font-size:12px; color:var(--accent-blue);">View The Observatory ↗</a>
+        </div>
+
+        <div class="form-group full" id="group-select-obs" style="display:none; margin-bottom:20px;">
+          <label for="select-obs">Choose Observation to Edit</label>
+          <select id="select-obs" onchange="onSelectObservatory()"></select>
+        </div>
+
+        <form id="form-obs" onsubmit="saveObservatory(event)">
+          <input type="hidden" id="obs-img-src" />
+
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="obs-title">Title *</label>
+              <input type="text" id="obs-title" required placeholder="e.g. The Invisible Choreography of Checkout Queues" />
+            </div>
+
+            <div class="form-group">
+              <label for="obs-category">Category</label>
+              <select id="obs-category">
+                <option value="PHOTOGRAPHY">PHOTOGRAPHY</option>
+                <option value="QUALITATIVE INQUIRY">QUALITATIVE INQUIRY</option>
+                <option value="CULTURAL NOTE">CULTURAL NOTE</option>
+                <option value="FIELD LOG">FIELD LOG</option>
+                <option value="ESSAY">ESSAY</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="obs-date">Year / Date</label>
+              <input type="text" id="obs-date" placeholder="e.g. 2024" />
+            </div>
+
+            <div class="form-group full">
+              <label>Photograph / Image (Choose from computer)</label>
+              <div class="upload-control">
+                <input type="file" accept="image/*" onchange="handleDirectUpload(event, 'observatory-images', setObsImage)" />
+                <div class="upload-preview" id="preview-obs-img" style="display:none;">
+                  <img id="thumb-obs-img" src="" alt="photo" />
+                  <div style="flex:1;">
+                    <span class="upload-badge">Photo Ready</span>
+                    <div id="name-obs-img" style="font-size:11px; margin-top:4px; opacity:0.8;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group full">
+              <label for="obs-summary">Observation Summary / Note</label>
+              <textarea id="obs-summary" placeholder="Qualitative observation, behavioural trigger, or ethnography note..."></textarea>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button type="submit" class="btn btn-primary" id="btn-save-obs">Save Observation & Sync Website</button>
+            <button type="button" class="btn btn-danger" id="btn-del-obs" style="display:none;" onclick="deleteObservatory()">Delete Observation 🗑</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Documentary Video Showcase Management -->
+      <div class="card" style="margin-top:24px;">
+        <div class="mode-bar">
+          <h2 class="card-title">Featured Documentary Showcase (Video)</h2>
+          <a href="../observatory/#documentary-section" target="_blank" style="font-size:12px; color:var(--accent-blue);">Jump to Video on Site ↗</a>
+        </div>
+        <p class="card-desc">Upload a video file (.mp4, .webm, .mov) or update the title and narrative for India's Shadow Puppetry Documentary.</p>
+
+        <form id="form-doc-video" onsubmit="saveDocumentaryVideo(event)">
+          <input type="hidden" id="doc-video-src" />
+
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="doc-video-title">Documentary Title *</label>
+              <input type="text" id="doc-video-title" required placeholder="Behind the Shadows: Crafting a Documentary on India’s Shadow Puppetry Tradition" />
+            </div>
+
+            <div class="form-group">
+              <label for="doc-video-badge">Badge Label</label>
+              <input type="text" id="doc-video-badge" placeholder="FIELD OBSERVATION" />
+            </div>
+
+            <div class="form-group">
+              <label for="doc-video-meta">Resolution / Duration Meta</label>
+              <input type="text" id="doc-video-meta" placeholder="4K UHD · 24 FPS · 18:24" />
+            </div>
+
+            <div class="form-group full">
+              <label>Documentary Video File (Choose from computer: MP4, WebM, MOV)</label>
+              <div class="upload-control">
+                <input type="file" accept="video/mp4,video/webm,video/quicktime,video/*" onchange="handleDirectUpload(event, 'observatory-videos', setDocVideo)" />
+                <div class="upload-preview" id="preview-doc-vid" style="display:none;">
+                  <div style="font-size:28px;">🎬</div>
+                  <div style="flex:1;">
+                    <span class="upload-badge">Video File Ready</span>
+                    <div id="name-doc-vid" style="font-size:11px; margin-top:4px; opacity:0.8; word-break:break-all;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group full">
+              <label for="doc-video-desc">Documentary Narrative / Synopsis</label>
+              <textarea id="doc-video-desc" style="min-height:120px;" placeholder="As the Documentary Head, I led the creative journey of this film..."></textarea>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Save Documentary Video & Sync Website</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 4. ABOUT ME                                              -->
+    <!-- ======================================================== -->
+    <div class="tab-panel" id="panel-about">
+      <div class="card">
+        <div class="mode-bar">
+          <h2 class="card-title">Edit About Me Narrative & Photo</h2>
+          <a href="../about/" target="_blank" style="font-size:12px; color:var(--accent-blue);">View About Page ↗</a>
+        </div>
+        <p class="card-desc">Upload your portrait photo and customize your personal bio and narrative.</p>
+
+        <form id="form-about" onsubmit="saveAbout(event)">
+          <input type="hidden" id="about-img-src" />
+
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Portrait Photograph (Upload to replace placeholder)</label>
+              <div class="upload-control">
+                <input type="file" accept="image/*" onchange="handleDirectUpload(event, 'about', setAboutImage)" />
+                <div class="upload-preview" id="preview-about-img" style="display:none;">
+                  <img id="thumb-about-img" src="" alt="about portrait" />
+                  <div style="flex:1;">
+                    <span class="upload-badge">Portrait Ready</span>
+                    <div id="name-about-img" style="font-size:11px; margin-top:4px; opacity:0.8;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group full">
+              <label for="about-headline">Pull Headline Statement</label>
+              <input type="text" id="about-headline" placeholder="Curious by nature. Strategic by interest." />
+            </div>
+
+            <div class="form-group full">
+              <label for="about-intro">Introduction ("WHO AM I")</label>
+              <textarea id="about-intro" placeholder="Hello, I’m Pranavi Rudradev..."></textarea>
+            </div>
+
+            <div class="form-group full">
+              <label for="about-curiosity">Curiosity & Core Thesis</label>
+              <textarea id="about-curiosity" placeholder="I’ve always been curious about people..."></textarea>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Save About Changes & Sync Website</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 5. HOMEPAGE PHOTOS & HERO                                -->
+    <!-- ======================================================== -->
+    <div class="tab-panel" id="panel-homepage">
+      <div class="card">
+        <div class="mode-bar">
+          <h2 class="card-title">Homepage Hero & Tagline</h2>
+          <a href="../" target="_blank" style="font-size:12px; color:var(--accent-blue);">View Homepage ↗</a>
+        </div>
+
+        <form id="form-home-hero" onsubmit="saveHomeHero(event)">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="home-hero-statement">Central Hero Statement</label>
+              <textarea id="home-hero-statement" style="min-height:70px;" placeholder="RIGHT QUESTIONS&#10;REVEAL WHAT OTHERS OVERLOOK."></textarea>
+            </div>
+
+            <div class="form-group full">
+              <label for="home-tagline">Tagline</label>
+              <input type="text" id="home-tagline" placeholder="Because there's more to every detail." />
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" style="margin-bottom:24px;">Save Hero Statement</button>
+        </form>
+
+        <h3 class="card-title" style="margin-top:20px;">15 Photographic Parallax Slots</h3>
+        <p class="card-desc">Click "Choose File" on any slot to upload and insert a photo directly into the homepage. Photos automatically save and sync to the homepage in real-time.</p>
+
+        <div class="slots-grid" id="slots-grid"></div>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 6. FILE LIBRARY                                          -->
+    <!-- ======================================================== -->
+    <div class="tab-panel" id="panel-files">
+      <div class="card">
+        <h2 class="card-title">File Asset Library</h2>
+        <p class="card-desc">Browse and clean up uploaded files by category.</p>
+
+        <div class="form-group full" style="margin-bottom:20px;">
+          <label for="files-cat-select">Select Category</label>
+          <select id="files-cat-select" onchange="refreshFileLibrary()">
+            <option value="projects-covers">Projects — Covers</option>
+            <option value="projects-documents">Projects — Documents & PDFs</option>
+            <option value="experience-documents">Experience — Documents & Presentations</option>
+            <option value="observatory-images">Observatory — Photos & Images</option>
+            <option value="observatory-videos">Observatory — Video Clips (.mp4, .webm)</option>
+            <option value="home">Homepage — Photos</option>
+            <option value="about">About Me — Photos</option>
+            <option value="general">General UI Assets</option>
+          </select>
+        </div>
+
+        <div class="file-grid" id="library-grid">
+          <div style="opacity:0.6; font-size:13px;">Loading files...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Changes saved.</div>
+
+  <script>
+    let portfolio = { projects: [], experiences: [], observatory: [], about: {}, homepage: { images: [] } };
+    let projMode = 'create';
+    let currentProjId = null;
+    let expMode = 'create';
+    let currentExpId = null;
+    let obsMode = 'create';
+    let currentObsId = null;
+
+    function showToast(msg, type = 'success') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast show ' + type;
+      setTimeout(() => { t.className = 'toast'; }, 3500);
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tab));
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const panel = document.getElementById(`panel-${tab}`);
+      if (panel) panel.classList.add('active');
+
+      if (tab === 'files') refreshFileLibrary();
+    }
+
+    // Direct File Upload Helper
+    async function handleDirectUpload(e, category, callback) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      showToast(`Uploading ${file.name}...`);
+      const reader = new FileReader();
+
+      reader.onload = async (event) => {
+        try {
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              filename: file.name,
+              category: category,
+              dataUrl: event.target.result
+            })
+          });
+
+          const data = await res.json();
+          if (res.ok) {
+            showToast(`✅ Uploaded ${file.name}`);
+            callback(data.file);
+          } else {
+            showToast(data.error || 'Upload failed', 'error');
+          }
+        } catch (err) {
+          showToast('Upload error: ' + err.message, 'error');
+        }
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    // ==========================================
+    // 1. PROJECTS LOGIC
+    // ==========================================
+    function setProjCover(file) {
+      document.getElementById('proj-cover-src').value = file.path;
+      document.getElementById('thumb-proj-cover').src = `/${file.path}`;
+      document.getElementById('name-proj-cover').textContent = file.name;
+      document.getElementById('preview-proj-cover').style.display = 'flex';
+    }
+
+    function setProjDoc(file) {
+      document.getElementById('proj-doc-src').value = file.path;
+      document.getElementById('name-proj-doc').textContent = file.name;
+      document.getElementById('preview-proj-doc').style.display = 'flex';
+    }
+
+    function setProjMode(mode) {
+      projMode = mode;
+      document.getElementById('btn-proj-mode-create').className = 'mode-btn' + (mode === 'create' ? ' active' : '');
+      document.getElementById('btn-proj-mode-edit').className = 'mode-btn' + (mode === 'edit' ? ' active' : '');
+
+      const selectGroup = document.getElementById('group-select-proj');
+      const delBtn = document.getElementById('btn-del-proj');
+
+      if (mode === 'create') {
+        selectGroup.style.display = 'none';
+        delBtn.style.display = 'none';
+        currentProjId = null;
+        document.getElementById('form-project').reset();
+        document.getElementById('proj-cover-src').value = '';
+        document.getElementById('proj-doc-src').value = '';
+        document.getElementById('preview-proj-cover').style.display = 'none';
+        document.getElementById('preview-proj-doc').style.display = 'none';
+      } else {
+        selectGroup.style.display = 'flex';
+        delBtn.style.display = 'inline-flex';
+        populateProjSelect();
+      }
+    }
+
+    function populateProjSelect() {
+      const s = document.getElementById('select-proj');
+      s.innerHTML = '<option value="">-- Choose a project --</option>' +
+        (portfolio.projects || []).map(p => `<option value="${p.id}">${p.title}</option>`).join('');
+    }
+
+    function onSelectProject() {
+      const id = document.getElementById('select-proj').value;
+      currentProjId = id;
+      if (!id) return;
+
+      const p = (portfolio.projects || []).find(x => x.id === id);
+      if (!p) return;
+
+      document.getElementById('proj-title').value = p.title || '';
+      document.getElementById('proj-category').value = p.category || 'CONSUMER PSYCHOLOGY / INSIGHT';
+      document.getElementById('proj-accent').value = p.accent || '#A5BCD6';
+      document.getElementById('proj-desc').value = p.description || '';
+      document.getElementById('proj-featured').checked = Boolean(p.featured);
+
+      if (p.cover && p.cover.src) {
+        document.getElementById('proj-cover-src').value = p.cover.src;
+        document.getElementById('thumb-proj-cover').src = `/${p.cover.src}`;
+        document.getElementById('name-proj-cover').textContent = p.cover.src.split('/').pop();
+        document.getElementById('preview-proj-cover').style.display = 'flex';
+      } else {
+        document.getElementById('preview-proj-cover').style.display = 'none';
+      }
+
+      if (p.document && p.document.src) {
+        document.getElementById('proj-doc-src').value = p.document.src;
+        document.getElementById('name-proj-doc').textContent = p.document.src.split('/').pop();
+        document.getElementById('preview-proj-doc').style.display = 'flex';
+      } else {
+        document.getElementById('preview-proj-doc').style.display = 'none';
+      }
+    }
+
+    async function saveProject(e) {
+      e.preventDefault();
+      const payload = {
+        title: document.getElementById('proj-title').value,
+        category: document.getElementById('proj-category').value,
+        accent: document.getElementById('proj-accent').value,
+        coverSrc: document.getElementById('proj-cover-src').value,
+        docSrc: document.getElementById('proj-doc-src').value,
+        description: document.getElementById('proj-desc').value,
+        featured: document.getElementById('proj-featured').checked
+      };
+
+      if (projMode === 'edit' && currentProjId) {
+        payload.id = currentProjId;
+      }
+
+      try {
+        const res = await fetch('/api/projects', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast(data.message || '🎉 Project saved & synced to website!');
+          await loadData();
+          if (projMode === 'edit') {
+            populateProjSelect();
+            document.getElementById('select-proj').value = data.project.id;
+          }
+        } else {
+          showToast(data.error || 'Failed to save', 'error');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    async function deleteProject() {
+      if (!currentProjId) return;
+      if (!confirm('Are you sure you want to permanently delete this project?')) return;
+
+      try {
+        const res = await fetch(`/api/projects/${currentProjId}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (res.ok) {
+          showToast('Project deleted successfully');
+          await loadData();
+          setProjMode('create');
+        } else {
+          showToast(data.error || 'Failed to delete', 'error');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    // ==========================================
+    // 2. EXPERIENCE LOGIC
+    // ==========================================
+    function setExpCover(file) {
+      document.getElementById('exp-cover-src').value = file.path;
+      document.getElementById('thumb-exp-cover').src = `/${file.path}`;
+      document.getElementById('name-exp-cover').textContent = file.name;
+      document.getElementById('preview-exp-cover').style.display = 'flex';
+    }
+
+    function setExpDoc(file) {
+      document.getElementById('exp-doc-src').value = file.path;
+      document.getElementById('name-exp-doc').textContent = file.name;
+      document.getElementById('preview-exp-doc').style.display = 'flex';
+    }
+
+    function setExpMode(mode) {
+      expMode = mode;
+      document.getElementById('btn-exp-mode-create').className = 'mode-btn' + (mode === 'create' ? ' active' : '');
+      document.getElementById('btn-exp-mode-edit').className = 'mode-btn' + (mode === 'edit' ? ' active' : '');
+
+      const selectGroup = document.getElementById('group-select-exp');
+      const delBtn = document.getElementById('btn-del-exp');
+
+      if (mode === 'create') {
+        selectGroup.style.display = 'none';
+        delBtn.style.display = 'none';
+        currentExpId = null;
+        document.getElementById('form-exp').reset();
+        document.getElementById('exp-cover-src').value = '';
+        document.getElementById('exp-doc-src').value = '';
+        document.getElementById('preview-exp-cover').style.display = 'none';
+        document.getElementById('preview-exp-doc').style.display = 'none';
+      } else {
+        selectGroup.style.display = 'flex';
+        delBtn.style.display = 'inline-flex';
+        populateExpSelect();
+      }
+    }
+
+    function populateExpSelect() {
+      const s = document.getElementById('select-exp');
+      s.innerHTML = '<option value="">-- Choose an experience entry --</option>' +
+        (portfolio.experiences || []).map(e => `<option value="${e.id}">${e.organisation} — ${e.title}</option>`).join('');
+    }
+
+    function onSelectExperience() {
+      const id = document.getElementById('select-exp').value;
+      currentExpId = id;
+      if (!id) return;
+
+      const exp = (portfolio.experiences || []).find(x => x.id === id);
+      if (!exp) return;
+
+      document.getElementById('exp-title').value = exp.title || '';
+      document.getElementById('exp-org').value = exp.organisation || '';
+      document.getElementById('exp-category').value = exp.category || exp.orgSub || '';
+      document.getElementById('exp-period').value = exp.period || '';
+      document.getElementById('exp-location').value = exp.location || '';
+      document.getElementById('exp-desc').value = exp.shortDescription || '';
+      document.getElementById('exp-bullets').value = (exp.bulletPoints || []).join('\n');
+
+      if (exp.image && exp.image.src) {
+        document.getElementById('exp-cover-src').value = exp.image.src;
+        document.getElementById('thumb-exp-cover').src = `/${exp.image.src}`;
+        document.getElementById('name-exp-cover').textContent = exp.image.src.split('/').pop();
+        document.getElementById('preview-exp-cover').style.display = 'flex';
+      } else {
+        document.getElementById('preview-exp-cover').style.display = 'none';
+      }
+
+      if (exp.document && exp.document.src) {
+        document.getElementById('exp-doc-src').value = exp.document.src;
+        document.getElementById('name-exp-doc').textContent = exp.document.src.split('/').pop();
+        document.getElementById('preview-exp-doc').style.display = 'flex';
+      } else {
+        document.getElementById('preview-exp-doc').style.display = 'none';
+      }
+    }
+
+    async function saveExperience(e) {
+      e.preventDefault();
+      const payload = {
+        title: document.getElementById('exp-title').value,
+        organisation: document.getElementById('exp-org').value,
+        category: document.getElementById('exp-category').value,
+        period: document.getElementById('exp-period').value,
+        location: document.getElementById('exp-location').value,
+        shortDescription: document.getElementById('exp-desc').value,
+        bulletPoints: document.getElementById('exp-bullets').value,
+        imageSrc: document.getElementById('exp-cover-src').value,
+        documentSrc: document.getElementById('exp-doc-src').value
+      };
+
+      if (expMode === 'edit' && currentExpId) {
+        payload.id = currentExpId;
+      }
+
+      try {
+        const res = await fetch('/api/experience', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast(data.message || '🎉 Experience saved & synced to website!');
+          await loadData();
+          if (expMode === 'edit') {
+            populateExpSelect();
+            document.getElementById('select-exp').value = data.experience.id;
+          }
+        } else {
+          showToast(data.error || 'Failed to save', 'error');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    async function deleteExperience() {
+      if (!currentExpId) return;
+      if (!confirm('Are you sure you want to permanently delete this experience?')) return;
+
+      try {
+        const res = await fetch(`/api/experience/${currentExpId}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (res.ok) {
+          showToast('Experience deleted successfully');
+          await loadData();
+          setExpMode('create');
+        } else {
+          showToast(data.error || 'Failed to delete', 'error');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    // ==========================================
+    // 3. OBSERVATORY LOGIC
+    // ==========================================
+    function setObsImage(file) {
+      document.getElementById('obs-img-src').value = file.path;
+      document.getElementById('thumb-obs-img').src = `/${file.path}`;
+      document.getElementById('name-obs-img').textContent = file.name;
+      document.getElementById('preview-obs-img').style.display = 'flex';
+    }
+
+    function setObsMode(mode) {
+      obsMode = mode;
+      document.getElementById('btn-obs-mode-create').className = 'mode-btn' + (mode === 'create' ? ' active' : '');
+      document.getElementById('btn-obs-mode-edit').className = 'mode-btn' + (mode === 'edit' ? ' active' : '');
+
+      const selectGroup = document.getElementById('group-select-obs');
+      const delBtn = document.getElementById('btn-del-obs');
+
+      if (mode === 'create') {
+        selectGroup.style.display = 'none';
+        delBtn.style.display = 'none';
+        currentObsId = null;
+        document.getElementById('form-obs').reset();
+        document.getElementById('obs-img-src').value = '';
+        document.getElementById('preview-obs-img').style.display = 'none';
+      } else {
+        selectGroup.style.display = 'flex';
+        delBtn.style.display = 'inline-flex';
+        populateObsSelect();
+      }
+    }
+
+    function populateObsSelect() {
+      const s = document.getElementById('select-obs');
+      s.innerHTML = '<option value="">-- Choose an observation --</option>' +
+        (portfolio.observatory || []).map(o => `<option value="${o.id}">${o.title}</option>`).join('');
+    }
+
+    function onSelectObservatory() {
+      const id = document.getElementById('select-obs').value;
+      currentObsId = id;
+      if (!id) return;
+
+      const obs = (portfolio.observatory || []).find(x => x.id === id);
+      if (!obs) return;
+
+      document.getElementById('obs-title').value = obs.title || '';
+      document.getElementById('obs-category').value = obs.category || 'PHOTOGRAPHY';
+      document.getElementById('obs-date').value = obs.date || '';
+      document.getElementById('obs-summary').value = obs.summary || '';
+
+      if (obs.media && obs.media.src) {
+        document.getElementById('obs-img-src').value = obs.media.src;
+        document.getElementById('thumb-obs-img').src = `/${obs.media.src}`;
+        document.getElementById('name-obs-img').textContent = obs.media.src.split('/').pop();
+        document.getElementById('preview-obs-img').style.display = 'flex';
+      } else {
+        document.getElementById('preview-obs-img').style.display = 'none';
+      }
+    }
+
+    async function saveObservatory(e) {
+      e.preventDefault();
+      const payload = {
+        title: document.getElementById('obs-title').value,
+        category: document.getElementById('obs-category').value,
+        date: document.getElementById('obs-date').value,
+        summary: document.getElementById('obs-summary').value,
+        imageSrc: document.getElementById('obs-img-src').value
+      };
+
+      if (obsMode === 'edit' && currentObsId) {
+        payload.id = currentObsId;
+      }
+
+      try {
+        const res = await fetch('/api/observatory', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast(data.message || '🎉 Observation saved & synced to website!');
+          await loadData();
+          if (obsMode === 'edit') {
+            populateObsSelect();
+            document.getElementById('select-obs').value = data.entry.id;
+          }
+        } else {
+          showToast(data.error || 'Failed to save', 'error');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    async function deleteObservatory() {
+      if (!currentObsId) return;
+      if (!confirm('Are you sure you want to delete this observation?')) return;
+
+      try {
+        const res = await fetch(`/api/observatory/${currentObsId}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (res.ok) {
+          showToast('Deleted observation');
+          await loadData();
+          setObsMode('create');
+        } else {
+          showToast(data.error || 'Failed to delete', 'error');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    // Documentary Video Functions
+    function setDocVideo(file) {
+      document.getElementById('doc-video-src').value = file.path;
+      document.getElementById('name-doc-vid').textContent = file.name;
+      document.getElementById('preview-doc-vid').style.display = 'flex';
+    }
+
+    async function saveDocumentaryVideo(e) {
+      e.preventDefault();
+      const payload = {
+        title: document.getElementById('doc-video-title').value,
+        badge: document.getElementById('doc-video-badge').value,
+        meta: document.getElementById('doc-video-meta').value,
+        videoSrc: document.getElementById('doc-video-src').value,
+        description: document.getElementById('doc-video-desc').value
+      };
+
+      try {
+        const res = await fetch('/api/observatory/documentary', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast('🎬 Documentary showcase updated & synced!');
+          await loadData();
+        } else {
+          showToast(data.error || 'Failed to save documentary', 'error');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    // ==========================================
+    // 4. ABOUT ME LOGIC
+    // ==========================================
+    function setAboutImage(file) {
+      document.getElementById('about-img-src').value = file.path;
+      document.getElementById('thumb-about-img').src = `/${file.path}`;
+      document.getElementById('name-about-img').textContent = file.name;
+      document.getElementById('preview-about-img').style.display = 'flex';
+    }
+
+    async function saveAbout(e) {
+      e.preventDefault();
+      const payload = {
+        headline: document.getElementById('about-headline').value,
+        intro: document.getElementById('about-intro').value,
+        curiosity: document.getElementById('about-curiosity').value,
+        imageSrc: document.getElementById('about-img-src').value
+      };
+
+      try {
+        const res = await fetch('/api/about', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast('🎉 About page updated & synced!');
+        } else {
+          showToast(data.error || 'Failed to update', 'error');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    // ==========================================
+    // 5. HOMEPAGE PHOTOS & HERO
+    // ==========================================
+    async function saveHomeHero(e) {
+      e.preventDefault();
+      const payload = {
+        heroStatement: document.getElementById('home-hero-statement').value,
+        tagline: document.getElementById('home-tagline').value
+      };
+
+      try {
+        const res = await fetch('/api/homepage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (res.ok) showToast('🎉 Hero statement saved!');
+        else showToast(data.error, 'error');
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    function renderHomepageSlots() {
+      const grid = document.getElementById('slots-grid');
+      const slots = portfolio.homepage.images || [];
+
+      grid.innerHTML = slots.map(s => {
+        const hasImg = s.src && s.src !== 'null';
+        const srcUrl = hasImg ? (s.src.startsWith('/') ? s.src : '/' + s.src) : '';
+        return `
+          <div class="slot-card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:11px; font-weight:700; color:var(--accent-blue);">${s.id.toUpperCase()}</span>
+              ${hasImg ? `<button type="button" class="btn btn-danger" style="padding:2px 6px; font-size:10px;" onclick="clearSlotPhoto('${s.id}')">Remove ✕</button>` : ''}
+            </div>
+            ${hasImg ? `<img src="${srcUrl}" alt="${s.id}" style="height:120px; object-fit:cover; border-radius:4px;" />` : `<div style="height:120px; background:#19110f; display:flex; align-items:center; justify-content:center; color:rgba(245,239,198,0.4); font-size:11px; border-radius:4px;">No Photo Attached</div>`}
+            <div class="upload-control" style="padding:8px; margin-top:4px;">
+              <input type="file" accept="image/*" onchange="uploadSlotPhoto(event, '${s.id}')" />
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function clearSlotPhoto(slotId) {
+      if (!confirm(`Remove photo from ${slotId}?`)) return;
+      try {
+        const res = await fetch('/api/homepage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slotId, imageSrc: null })
+        });
+        if (res.ok) {
+          showToast(`Photo removed from ${slotId}`);
+          await loadData();
+          renderHomepageSlots();
+        }
+      } catch (err) {
+        showToast('Error removing photo', 'error');
+      }
+    }
+
+    async function uploadSlotPhoto(e, slotId) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      showToast(`Uploading photo for ${slotId}...`);
+      try {
+        const uploaded = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = async (ev) => {
+            const res = await fetch('/api/upload', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ filename: file.name, category: 'home', dataUrl: ev.target.result })
+            });
+            const d = await res.json();
+            if (res.ok) resolve(d.file);
+            else reject(new Error(d.error));
+          };
+          reader.readAsDataURL(file);
+        });
+
+        // Now save to homepage
+        const res = await fetch('/api/homepage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slotId, imageSrc: uploaded.path })
+        });
+
+        if (res.ok) {
+          showToast(`🎉 Photo saved & synced to ${slotId}!`);
+          await loadData();
+          renderHomepageSlots();
+        } else {
+          showToast('Failed to attach photo', 'error');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    // ==========================================
+    // 6. FILE LIBRARY
+    // ==========================================
+    async function refreshFileLibrary() {
+      const cat = document.getElementById('files-cat-select').value;
+      const grid = document.getElementById('library-grid');
+      grid.innerHTML = '<div style="opacity:0.6; font-size:13px;">Scanning files...</div>';
+
+      try {
+        const res = await fetch(`/api/files?category=${cat}`);
+        const data = await res.json();
+
+        if (!data.files || data.files.length === 0) {
+          grid.innerHTML = '<div style="opacity:0.6; font-size:13px;">No files found in this category.</div>';
+          return;
+        }
+
+        grid.innerHTML = data.files.map(f => {
+          const isImg = /\.(jpg|jpeg|png|webp|svg)$/i.test(f.name);
+          return `
+            <div class="file-card">
+              ${isImg ? `<img src="/${f.path}" alt="${f.name}" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'50\\' height=\\'50\\'><text y=\\'25\\' fill=\\'%23A5BCD6\\'>IMG</text></svg>';" />` : `<div style="height:110px; background:#19110f; display:flex; align-items:center; justify-content:center; font-size:32px;">📄</div>`}
+              <div style="font-size:11px; font-weight:600; word-break:break-all;">${f.name}</div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto;">
+                <span style="font-size:10px; opacity:0.6;">${(f.size/1024).toFixed(0)} KB</span>
+                <button class="btn btn-danger" style="padding:3px 8px; font-size:10px;" onclick="deleteFile('${f.path}')">Delete 🗑</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        grid.innerHTML = `<div style="color:#ffb4b4; font-size:13px;">Error: ${err.message}</div>`;
+      }
+    }
+
+    async function deleteFile(p) {
+      if (!confirm(`Delete "${p}"?`)) return;
+      try {
+        const res = await fetch(`/api/files?filePath=${encodeURIComponent(p)}`, { method: 'DELETE' });
+        if (res.ok) {
+          showToast('File deleted');
+          refreshFileLibrary();
+        } else {
+          showToast('Failed to delete', 'error');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    // ==========================================
+    // INITIAL LOAD
+    // ==========================================
+    async function loadData() {
+      try {
+        const res = await fetch('/api/content');
+        if (!res.ok) return;
+        portfolio = await res.json();
+
+        // Populate about
+        if (portfolio.about) {
+          if (portfolio.about.meta) document.getElementById('about-headline').value = portfolio.about.meta.headline || '';
+          if (portfolio.about.whoAmI) {
+            document.getElementById('about-intro').value = portfolio.about.whoAmI.intro || '';
+            document.getElementById('about-curiosity').value = portfolio.about.whoAmI.curiosity || '';
+          }
+        }
+
+        // Populate home hero
+        if (portfolio.homepage && portfolio.homepage.hero) {
+          document.getElementById('home-hero-statement').value = portfolio.homepage.hero.statement || '';
+          document.getElementById('home-tagline').value = portfolio.homepage.hero.tagline || '';
+        }
+
+        // Populate documentary
+        if (portfolio.documentary) {
+          if (portfolio.documentary.title) document.getElementById('doc-video-title').value = portfolio.documentary.title;
+          if (portfolio.documentary.badge) document.getElementById('doc-video-badge').value = portfolio.documentary.badge;
+          if (portfolio.documentary.meta) document.getElementById('doc-video-meta').value = portfolio.documentary.meta;
+          if (portfolio.documentary.description) document.getElementById('doc-video-desc').value = portfolio.documentary.description;
+          if (portfolio.documentary.videoSrc) {
+            document.getElementById('doc-video-src').value = portfolio.documentary.videoSrc;
+            document.getElementById('name-doc-vid').textContent = portfolio.documentary.videoSrc.split('/').pop();
+            document.getElementById('preview-doc-vid').style.display = 'flex';
+          }
+        }
+
+        renderHomepageSlots();
+      } catch (e) {
+        console.warn('Could not load portfolio data:', e);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadData();
+    });
+  </script>
+</body>
+</html>

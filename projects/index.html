@@ -1068,7 +1068,7 @@
       'how-do-colours-influence-consumer-behaviour': {
         title: 'How Do Colours Influence Consumer Behaviour?',
         type: 'pdf',
-        src: '../assets/projects/documents/colours-consumer-behaviour.pdf',
+        src: '../assets/projects/documents/How_do_colours_influence_consumer_behaviour.pdf',
         pages: ['../assets/projects/covers/colours-consumer-behaviour.jpg']
       },
       'primary-research-for-consumer-behaviour': {
@@ -1132,6 +1132,28 @@
         pages: ['../assets/projects/covers/airport-never-the-problem.jpg']
       }
     };
+
+    // Auto-sync dynamic projects & uploaded files from server
+    fetch('/api/content').then(r => r.json()).then(data => {
+      if (data && data.projects) {
+        data.projects.forEach(p => {
+          const docSrc = p.document && p.document.src ? (p.document.src.startsWith('assets') ? '../' + p.document.src : p.document.src) : '';
+          const coverSrc = p.cover && p.cover.src ? (p.cover.src.startsWith('assets') ? '../' + p.cover.src : p.cover.src) : '';
+          if (PROJECT_DOCS[p.id]) {
+            PROJECT_DOCS[p.id].title = p.title || PROJECT_DOCS[p.id].title;
+            if (docSrc) PROJECT_DOCS[p.id].src = docSrc;
+            if (coverSrc) PROJECT_DOCS[p.id].pages = [coverSrc];
+          } else {
+            PROJECT_DOCS[p.id] = {
+              title: p.title,
+              type: (p.document && p.document.type) || 'pdf',
+              src: docSrc,
+              pages: [coverSrc]
+            };
+          }
+        });
+      }
+    }).catch(() => {});
 
     window.openProjectDoc = (id) => {
       const doc = PROJECT_DOCS[id];
