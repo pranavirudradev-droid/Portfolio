@@ -717,9 +717,20 @@
         <!-- ========================================================
              VIEW 0: PROJECTS LANDING PAGE (Reference: media_1791645198373.png)
              ======================================================== -->
-        <section class="folder-content-view active landing-cover" id="view-landing" aria-label="Projects Standalone Cover">
+        <section class="folder-content-view landing-cover" id="view-landing" aria-label="Projects Standalone Cover">
           <div class="landing-cover-body">
             <h1 class="landing-projects-title">Projects</h1>
+            <div style="display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; justify-content: center;">
+              <button type="button" class="folder-tab tab-yellow active" onclick="selectCategory('consumer-behaviour')" style="position: static; padding: 10px 18px; border-radius: 4px; font-size: 11px; cursor: pointer; text-transform: uppercase;">
+                Consumer Behaviour &amp; Psychology (06) →
+              </button>
+              <button type="button" class="folder-tab tab-blue" onclick="selectCategory('market-research')" style="position: static; padding: 10px 18px; border-radius: 4px; font-size: 11px; cursor: pointer; text-transform: uppercase;">
+                Market Research / Case Studies (04) →
+              </button>
+              <button type="button" class="folder-tab tab-red" onclick="selectCategory('product-strategy')" style="position: static; padding: 10px 18px; border-radius: 4px; font-size: 11px; cursor: pointer; text-transform: uppercase;">
+                Product &amp; Brand Strategy (03) →
+              </button>
+            </div>
           </div>
         </section>
 
@@ -1245,11 +1256,11 @@
 
     // Initial load resolution
     const initParams = new URLSearchParams(window.location.search);
-    const initialCat = initParams.get('category') || (window.location.hash ? window.location.hash.replace('#', '') : null);
+    const initialCat = initParams.get('category') || (window.location.hash ? window.location.hash.replace('#', '') : 'consumer-behaviour');
     if (initialCat && VALID_CATEGORIES.includes(initialCat)) {
       window.selectCategory(initialCat, false);
     } else {
-      window.selectCategory(null, false);
+      window.selectCategory('consumer-behaviour', false);
     }
   </script>
 

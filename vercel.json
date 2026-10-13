@@ -1,5 +1,14 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "outputDirectory": ".",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "trailingSlash": true,
+  "rewrites": [
+    { "source": "/about", "destination": "/about/index.html" },
+    { "source": "/experience", "destination": "/experience/index.html" },
+    { "source": "/projects", "destination": "/projects/index.html" },
+    { "source": "/observatory", "destination": "/observatory/index.html" },
+    { "source": "/admin", "destination": "/admin/index.html" },
+    { "source": "/projects/:slug", "destination": "/projects/:slug/index.html" }
+  ]
 }
