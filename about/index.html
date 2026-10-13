@@ -2274,11 +2274,24 @@
               const curEl = document.getElementById('who-am-i-curiosity');
               if (curEl && about.whoAmI.curiosity) curEl.textContent = about.whoAmI.curiosity;
             }
-            if (about.imageSrc) {
-              const frame = document.querySelector('.image-placeholder-frame');
-              if (frame) {
-                const cleanImg = about.imageSrc.startsWith('/') ? about.imageSrc : '/' + about.imageSrc.replace(/^(\.\.\/)+/, '');
+            const frame = document.querySelector('.image-placeholder-frame');
+            if (frame) {
+              if (about.imageSrc && about.imageSrc !== 'null' && about.imageSrc !== '') {
+                let cleanImg = about.imageSrc;
+                if (!cleanImg.startsWith('data:') && !cleanImg.startsWith('http')) {
+                  cleanImg = cleanImg.startsWith('/') ? cleanImg : '/' + cleanImg.replace(/^(\.\.\/)+/, '');
+                }
                 frame.innerHTML = `<img src="${cleanImg}" alt="Pranavi Rudradev" style="width:100%;height:100%;object-fit:cover;border-radius:4px;" />`;
+              } else {
+                frame.innerHTML = `
+                  <div class="image-placeholder-inner" role="img" aria-label="Portrait photograph placeholder">
+                    <svg class="placeholder-sample-icon" width="76" height="56" viewBox="0 0 76 56" fill="none" stroke="#F5EFC6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="56" cy="16" r="7" />
+                      <polygon points="8,48 34,16 60,48" />
+                      <polygon points="34,48 50,26 66,48" />
+                    </svg>
+                  </div>
+                `;
               }
             }
           }

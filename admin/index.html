@@ -781,13 +781,14 @@
             <div class="form-group full">
               <label>Portrait Photograph (Upload to replace placeholder)</label>
               <div class="upload-control">
-                <input type="file" accept="image/*" onchange="handleDirectUpload(event, 'about', setAboutImage)" />
-                <div class="upload-preview" id="preview-about-img" style="display:none;">
-                  <img id="thumb-about-img" src="" alt="about portrait" />
+                <input type="file" id="input-about-img" accept="image/*" onchange="handleDirectUpload(event, 'about', setAboutImage)" />
+                <div class="upload-preview" id="preview-about-img" style="display:none; align-items:center; gap:12px;">
+                  <img id="thumb-about-img" src="" alt="about portrait" style="width:60px; height:60px; object-fit:cover; border-radius:4px;" />
                   <div style="flex:1;">
                     <span class="upload-badge">Portrait Ready</span>
-                    <div id="name-about-img" style="font-size:11px; margin-top:4px; opacity:0.8;"></div>
+                    <div id="name-about-img" style="font-size:11px; margin-top:4px; opacity:0.8; word-break:break-all;"></div>
                   </div>
+                  <button type="button" class="btn btn-danger" style="padding:6px 12px; font-size:11px;" onclick="removeAboutImage(event)">Remove Portrait ✕</button>
                 </div>
               </div>
             </div>
@@ -1432,10 +1433,44 @@
     // 4. ABOUT ME LOGIC
     // ==========================================
     function setAboutImage(file) {
-      document.getElementById('about-img-src').value = file.path;
-      document.getElementById('thumb-about-img').src = file.url || (file.path.startsWith('/') ? file.path : `/${file.path}`);
+      const imgSrc = file.url || (file.path.startsWith('/') ? file.path : `/${file.path}`);
+      document.getElementById('about-img-src').value = imgSrc;
+      document.getElementById('thumb-about-img').src = imgSrc;
       document.getElementById('name-about-img').textContent = file.name;
       document.getElementById('preview-about-img').style.display = 'flex';
+
+      if (!portfolio.about) portfolio.about = {};
+      portfolio.about.imageSrc = imgSrc;
+      saveToLocalStorage();
+      showToast('Portrait image uploaded! Saved to portfolio.');
+    }
+
+    function removeAboutImage(e) {
+      if (e) e.preventDefault();
+      if (!confirm('Remove portrait photograph and restore placeholder?')) return;
+      document.getElementById('about-img-src').value = '';
+      document.getElementById('preview-about-img').style.display = 'none';
+      document.getElementById('thumb-about-img').src = '';
+      document.getElementById('name-about-img').textContent = '';
+      const fileInput = document.getElementById('input-about-img');
+      if (fileInput) fileInput.value = '';
+
+      if (!portfolio.about) portfolio.about = {};
+      portfolio.about.imageSrc = null;
+      saveToLocalStorage();
+
+      fetch('/api/about', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          headline: document.getElementById('about-headline').value,
+          intro: document.getElementById('about-intro').value,
+          curiosity: document.getElementById('about-curiosity').value,
+          imageSrc: null
+        })
+      }).catch(() => {});
+
+      showToast('Portrait removed. Restored original placeholder.');
     }
 
     async function saveAbout(e) {
@@ -1444,7 +1479,7 @@
         headline: document.getElementById('about-headline').value,
         intro: document.getElementById('about-intro').value,
         curiosity: document.getElementById('about-curiosity').value,
-        imageSrc: document.getElementById('about-img-src').value
+        imageSrc: document.getElementById('about-img-src').value || null
       };
 
       try {
@@ -1462,7 +1497,7 @@
           portfolio.about.meta.headline = payload.headline;
           portfolio.about.whoAmI.intro = payload.intro;
           portfolio.about.whoAmI.curiosity = payload.curiosity;
-          if (payload.imageSrc) portfolio.about.imageSrc = payload.imageSrc;
+          portfolio.about.imageSrc = payload.imageSrc;
           saveToLocalStorage();
         } else {
           showToast(data.error || 'Failed to update', 'error');
@@ -1755,6 +1790,19 @@
           if (portfolio.about.whoAmI) {
             document.getElementById('about-intro').value = portfolio.about.whoAmI.intro || '';
             document.getElementById('about-curiosity').value = portfolio.about.whoAmI.curiosity || '';
+          }
+          if (portfolio.about.imageSrc && portfolio.about.imageSrc !== 'null') {
+            document.getElementById('about-img-src').value = portfolio.about.imageSrc;
+            let displaySrc = portfolio.about.imageSrc;
+            if (!displaySrc.startsWith('data:') && !displaySrc.startsWith('http') && !displaySrc.startsWith('/')) {
+              displaySrc = '/' + displaySrc;
+            }
+            document.getElementById('thumb-about-img').src = displaySrc;
+            document.getElementById('name-about-img').textContent = portfolio.about.imageSrc.split('/').pop() || 'Portrait Attached';
+            document.getElementById('preview-about-img').style.display = 'flex';
+          } else {
+            document.getElementById('about-img-src').value = '';
+            document.getElementById('preview-about-img').style.display = 'none';
           }
         }
 

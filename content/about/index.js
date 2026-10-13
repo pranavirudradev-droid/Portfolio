@@ -19,6 +19,7 @@
 import { PALETTE } from '../../config/colors.js';
 
 export const ABOUT_CONTENT = Object.freeze({
+  imageSrc: null,
   meta: {
     kicker: '[01] · WORLD ONE — ABOUT ME',
     sectionTitle: 'ABOUT ME',

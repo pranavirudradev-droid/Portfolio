@@ -781,6 +781,13 @@ export const OBSERVATORY_ENTRIES = ${JSON.stringify(entries, null, 2)};
         if (headline) aboutFile = aboutFile.replace(/headline:\s*['"`](.*?)['"`]/, `headline: ${JSON.stringify(headline)}`);
         if (intro) aboutFile = aboutFile.replace(/intro:\s*['"`](.*?)['"`]/, `intro: ${JSON.stringify(intro)}`);
         if (curiosity) aboutFile = aboutFile.replace(/curiosity:\s*['"`](.*?)['"`]/, `curiosity: ${JSON.stringify(curiosity)}`);
+        if (imageSrc !== undefined) {
+          if (/imageSrc:\s*(null|'[^']*'|"[^"]*")/.test(aboutFile)) {
+            aboutFile = aboutFile.replace(/imageSrc:\s*(null|'[^']*'|"[^"]*")/, `imageSrc: ${imageSrc ? JSON.stringify(imageSrc) : 'null'}`);
+          } else {
+            aboutFile = aboutFile.replace(/export const ABOUT_CONTENT = Object\.freeze\(\{/, `export const ABOUT_CONTENT = Object.freeze({\n  imageSrc: ${imageSrc ? JSON.stringify(imageSrc) : 'null'},`);
+          }
+        }
         fs.writeFileSync(aboutJsPath, aboutFile, 'utf8');
 
         // Update about/index.html
@@ -802,6 +809,12 @@ export const OBSERVATORY_ENTRIES = ${JSON.stringify(entries, null, 2)};
               aboutHtml = aboutHtml.replace(
                 /<div class="image-placeholder-frame">[\s\S]*?<\/div>\s*<\/aside>/,
                 `<div class="image-placeholder-frame">\n              <img src="${relImg}" alt="Pranavi Rudradev" style="width:100%;height:100%;object-fit:cover;border-radius:4px;" />\n            </div>\n          </aside>`
+              );
+            } else if (imageSrc === null || imageSrc === '') {
+              const placeholderSvg = `<div class="image-placeholder-frame">\n              <div class="image-placeholder-inner" role="img" aria-label="Portrait photograph placeholder">\n                <svg class="placeholder-sample-icon" width="76" height="56" viewBox="0 0 76 56" fill="none" stroke="#F5EFC6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">\n                  <circle cx="56" cy="16" r="7" />\n                  <polygon points="8,48 34,16 60,48" />\n                  <polygon points="34,48 50,26 66,48" />\n                </svg>\n              </div>\n            </div>\n          </aside>`;
+              aboutHtml = aboutHtml.replace(
+                /<div class="image-placeholder-frame">[\s\S]*?<\/div>\s*<\/aside>/,
+                placeholderSvg
               );
             }
             fs.writeFileSync(aboutHtmlPath, aboutHtml, 'utf8');
