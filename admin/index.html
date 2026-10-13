@@ -439,6 +439,12 @@
   </header>
 
   <div class="container">
+    <div id="admin-deployed-notice" style="display:none; background: rgba(165, 188, 214, 0.12); border: 1px solid var(--accent-blue); padding: 12px 18px; border-radius: 6px; margin-bottom: 24px; font-size: 12px; line-height: 1.6;">
+      <span style="color:var(--accent-blue); font-weight:700;">LIVE PREVIEW MODE:</span>
+      You are viewing the portfolio registry on Vercel. All 13 existing projects, work experiences, and assets are loaded below.
+      <br/><span style="opacity:0.85;">To save new uploads or update content files permanently on your disk, run <code>npm start</code> on your computer (localhost:8000/admin), then push changes to GitHub.</span>
+    </div>
+
     <div class="nav-tabs">
       <button class="tab-btn active" onclick="switchTab('projects')">1. Projects</button>
       <button class="tab-btn" onclick="switchTab('experience')">2. Experience</button>
@@ -1506,39 +1512,91 @@
     // ==========================================
     // 6. FILE LIBRARY
     // ==========================================
+    const STATIC_ASSET_MANIFEST = {
+      'projects-covers': [
+        'airport-never-the-problem.jpg',
+        'character-analysis-personality.jpg',
+        'colours-consumer-behaviour.jpg',
+        'communication-theory.jpg',
+        'd2c-brands-india.jpg',
+        'forecasting-demand.jpg',
+        'hireficient-market-gap.jpg',
+        'nazakath.jpg',
+        'packaging-brand-recall.jpg',
+        'primary-research-consumer-behaviour.jpg',
+        'primary-study-marketing-insights.jpg',
+        'qualitative-field-fragment.jpg',
+        'retail-marketing-shoppers-stop.jpg',
+        'sustainable-product.jpg'
+      ].map(name => ({ name, path: `assets/projects/covers/${name}`, size: 1024 })),
+      'projects-documents': [
+        'How_do_colours_influence_consumer_behaviour.pdf',
+        'how-do-colours-influence-consumer-behaviour.pdf'
+      ].map(name => ({ name, path: `assets/projects/documents/${name}`, size: 36352986 })),
+      'experience-documents': [
+        'origami-creative-cover.jpg',
+        'experience-three-cover.jpg',
+        'experience-four-cover.jpg',
+        'dhara-magazine-cover.jpg',
+        'avirata-ngo-cover.jpg'
+      ].map(name => ({ name, path: `assets/experience/documents/${name}`, size: 700 })),
+      'observatory-images': [
+        'beetle-macro.jpg',
+        'checkout-rituals.jpg',
+        'informal-signage.jpg',
+        'tactile-friction.jpg'
+      ].map(name => ({ name, path: `assets/observatory/images/${name}`, size: 576 })),
+      'home': [
+        'qualitative-field-fragment.jpg'
+      ].map(name => ({ name, path: `assets/home/${name}`, size: 1024 })),
+      'about': [
+        'about-cover.jpg'
+      ].map(name => ({ name, path: `assets/about/${name}`, size: 1024 }))
+    };
+
     async function refreshFileLibrary() {
       const cat = document.getElementById('files-cat-select').value;
       const grid = document.getElementById('library-grid');
       grid.innerHTML = '<div style="opacity:0.6; font-size:13px;">Scanning files...</div>';
 
+      let files = [];
       try {
         const res = await fetch(`/api/files?category=${cat}`);
-        const data = await res.json();
-
-        if (!data.files || data.files.length === 0) {
-          grid.innerHTML = '<div style="opacity:0.6; font-size:13px;">No files found in this category.</div>';
-          return;
+        if (res.ok) {
+          const data = await res.json();
+          files = data.files || [];
+        } else {
+          files = STATIC_ASSET_MANIFEST[cat] || [];
         }
-
-        grid.innerHTML = data.files.map(f => {
-          const isImg = /\.(jpg|jpeg|png|webp|svg)$/i.test(f.name);
-          return `
-            <div class="file-card">
-              ${isImg ? `<img src="/${f.path}" alt="${f.name}" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'50\\' height=\\'50\\'><text y=\\'25\\' fill=\\'%23A5BCD6\\'>IMG</text></svg>';" />` : `<div style="height:110px; background:#19110f; display:flex; align-items:center; justify-content:center; font-size:32px;">📄</div>`}
-              <div style="font-size:11px; font-weight:600; word-break:break-all;">${f.name}</div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto;">
-                <span style="font-size:10px; opacity:0.6;">${(f.size/1024).toFixed(0)} KB</span>
-                <button class="btn btn-danger" style="padding:3px 8px; font-size:10px;" onclick="deleteFile('${f.path}')">Delete 🗑</button>
-              </div>
-            </div>
-          `;
-        }).join('');
       } catch (err) {
-        grid.innerHTML = `<div style="color:#ffb4b4; font-size:13px;">Error: ${err.message}</div>`;
+        files = STATIC_ASSET_MANIFEST[cat] || [];
       }
+
+      if (!files || files.length === 0) {
+        grid.innerHTML = '<div style="opacity:0.6; font-size:13px;">No files found in this category.</div>';
+        return;
+      }
+
+      grid.innerHTML = files.map(f => {
+        const isImg = /\.(jpg|jpeg|png|webp|svg)$/i.test(f.name);
+        return `
+          <div class="file-card">
+            ${isImg ? `<img src="/${f.path}" alt="${f.name}" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'50\\' height=\\'50\\'><text y=\\'25\\' fill=\\'%23A5BCD6\\'>IMG</text></svg>';" />` : `<div style="height:110px; background:#19110f; display:flex; align-items:center; justify-content:center; font-size:32px;">📄</div>`}
+            <div style="font-size:11px; font-weight:600; word-break:break-all;">${f.name}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto;">
+              <span style="font-size:10px; opacity:0.6;">${(f.size/1024).toFixed(0)} KB</span>
+              <button class="btn btn-danger" style="padding:3px 8px; font-size:10px;" onclick="deleteFile('${f.path}')">Delete 🗑</button>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     async function deleteFile(p) {
+      if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        showToast('Running in cloud mode: File deletion is only available locally via "npm start".', 'error');
+        return;
+      }
       if (!confirm(`Delete "${p}"?`)) return;
       try {
         const res = await fetch(`/api/files?filePath=${encodeURIComponent(p)}`, { method: 'DELETE' });
@@ -1557,10 +1615,51 @@
     // INITIAL LOAD
     // ==========================================
     async function loadData() {
+      // Check if on cloud or local
+      if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        const notice = document.getElementById('admin-deployed-notice');
+        if (notice) notice.style.display = 'block';
+      }
+
       try {
         const res = await fetch('/api/content');
-        if (!res.ok) return;
-        portfolio = await res.json();
+        if (res.ok) {
+          portfolio = await res.json();
+        } else {
+          throw new Error('API route returned status: ' + res.status);
+        }
+      } catch (err) {
+        // Fallback: direct dynamic module import in browser
+        try {
+          const [projMod, expMod, obsMod, aboutMod, homeMod] = await Promise.all([
+            import('../content/projects/index.js'),
+            import('../content/experience/index.js'),
+            import('../content/observatory/index.js'),
+            import('../content/about/index.js'),
+            import('../src/config/homepage.js')
+          ]);
+          portfolio = {
+            projects: projMod.PROJECTS || [],
+            experiences: expMod.EXPERIENCES || [],
+            observatory: obsMod.OBSERVATORY_ENTRIES || [],
+            documentary: obsMod.OBSERVATORY_DOCUMENTARY || {},
+            about: aboutMod.ABOUT_CONTENT || {},
+            homepage: {
+              identity: homeMod.HOMEPAGE_IDENTITY || {},
+              hero: homeMod.HERO_STATEMENT || {},
+              images: homeMod.HOME_IMAGES || []
+            }
+          };
+        } catch (modErr) {
+          console.warn('Could not load portfolio via modules:', modErr);
+        }
+      }
+
+      if (portfolio) {
+        // Populate project select right away!
+        populateProjSelect();
+        if (typeof populateExpSelect === 'function') populateExpSelect();
+        if (typeof populateObsSelect === 'function') populateObsSelect();
 
         // Populate about
         if (portfolio.about) {
@@ -1591,8 +1690,6 @@
         }
 
         renderHomepageSlots();
-      } catch (e) {
-        console.warn('Could not load portfolio data:', e);
       }
     }
 
