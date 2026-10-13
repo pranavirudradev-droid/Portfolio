@@ -113,7 +113,7 @@ export class DocumentViewer {
       downloadEl.style.display = 'none';
     }
 
-    const isPdf = (documentData.type === 'pdf') || (fileSrc && (fileSrc.toLowerCase().endsWith('.pdf') || fileSrc.startsWith('data:application/pdf')));
+    const isPdf = (documentData.type === 'pdf') || (fileSrc && (fileSrc.toLowerCase().includes('.pdf') || fileSrc.startsWith('data:application/pdf')));
 
     if (isPdf && fileSrc) {
       // Direct high-resolution PDF rendering with hardware acceleration and smooth scrolling

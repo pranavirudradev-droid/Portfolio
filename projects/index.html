@@ -1188,9 +1188,10 @@
     window.openProjectDoc = (id) => {
       const doc = PROJECT_DOCS[id];
       if (doc) {
+        const isPdf = Boolean(doc.src && doc.src.toLowerCase().includes('.pdf'));
         viewer.open({
           title: doc.title,
-          type: doc.type,
+          type: isPdf ? 'pdf' : (doc.type || 'pdf'),
           src: doc.src,
           pageCount: 3,
           pages: doc.pages

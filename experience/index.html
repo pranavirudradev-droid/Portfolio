@@ -823,13 +823,17 @@
                 coverSrc = '../' + coverSrc.replace(/^(\.\.\/)+/, '');
               }
               const pages = [coverSrc || docSrc].filter(Boolean);
+              const isPdfDoc = Boolean(docSrc && docSrc.toLowerCase().includes('.pdf'));
               if (DOC_MAP[e.id]) {
                 DOC_MAP[e.id].title = e.title || DOC_MAP[e.id].title;
+                if (docSrc) DOC_MAP[e.id].src = docSrc;
+                if (isPdfDoc) DOC_MAP[e.id].type = 'pdf';
                 if (pages.length) DOC_MAP[e.id].pages = pages;
               } else {
                 DOC_MAP[e.id] = {
                   title: e.title,
-                  type: (e.document && e.document.type) || 'presentation',
+                  type: isPdfDoc ? 'pdf' : ((e.document && e.document.type) || 'presentation'),
+                  src: docSrc,
                   pages: pages
                 };
               }
@@ -864,20 +868,24 @@
     window.openDocById = (id) => {
       const doc = DOC_MAP[id];
       if (doc) {
+        const isPdf = Boolean(doc.src && doc.src.toLowerCase().includes('.pdf'));
         viewer.open({
           title: doc.title,
-          type: doc.type,
-          pageCount: doc.pages.length,
+          type: isPdf ? 'pdf' : (doc.type || 'presentation'),
+          src: doc.src,
+          pageCount: doc.pages ? doc.pages.length : 1,
           pages: doc.pages
         });
       }
     };
 
-    window.openDoc = (title, type, customPages) => {
+    window.openDoc = (title, type, customPages, src) => {
+      const isPdf = Boolean(src && src.toLowerCase().includes('.pdf')) || (type === 'pdf');
       viewer.open({
         title,
-        type: type || 'pdf',
-        pageCount: (customPages && customPages.length) || 3,
+        type: isPdf ? 'pdf' : (type || 'presentation'),
+        src: src,
+        pageCount: (customPages && customPages.length) || 1,
         pages: customPages || [
           '../assets/projects/covers/packaging-brand-recall.jpg',
           '../assets/projects/covers/consumer-behaviour.jpg',

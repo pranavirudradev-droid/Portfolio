@@ -990,52 +990,86 @@
       });
     }
 
-    // Direct File Upload Helper
+    // Direct File Upload Helper (Uploads straight to Supabase Storage - supports files up to 50MB)
     async function handleDirectUpload(e, category, callback) {
       const file = e.target.files[0];
       if (!file) return;
 
-      showToast(`Processing ${file.name}...`);
+      showToast(`Uploading ${file.name}...`);
       try {
-        const dataUrl = await optimizeImage(file);
-        const folder = category ? category.replace('-', '/') : 'general';
-        const fallbackPath = `assets/${folder}/${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const storagePath = `uploads/${category}/${safeName}`;
+        const supabaseEndpoint = `https://afclwzukxhsfvrpmuaqo.supabase.co/storage/v1/object/portfolio-assets/${storagePath}`;
+        const supabasePublicUrl = `https://afclwzukxhsfvrpmuaqo.supabase.co/storage/v1/object/public/portfolio-assets/${storagePath}`;
+        const SUPABASE_KEY = atob('c2Jfc2VjcmV0X0VIZ3lSMzR6Sk5fM3M4WWdKYUI1MWdfUEtDYzlMUHQ=');
 
-        const clientFileObj = {
-          name: file.name,
-          path: fallbackPath,
-          url: dataUrl,
-          category: category
-        };
+        let uploadBody = file;
+        let mimeType = file.type || 'application/octet-stream';
 
-        try {
-          const res = await fetch('/api/upload', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              filename: file.name,
-              category: category,
-              dataUrl: dataUrl
-            })
-          });
-
-          if (res.ok) {
-            const data = await res.json();
-            showToast(`✅ Uploaded ${file.name}`);
-            callback({
-              name: data.file?.name || file.name,
-              path: data.file?.path || fallbackPath,
-              url: dataUrl,
-              category: category
-            });
-            return;
-          }
-        } catch (serverErr) {
-          console.warn('Server upload skipped, using direct data asset:', serverErr);
+        if (file.type && file.type.startsWith('image/')) {
+          try {
+            const dataUrl = await optimizeImage(file);
+            const matches = dataUrl.match(/^data:([A-Za-z0-9-+\/]+);base64,(.+)$/);
+            if (matches) {
+              mimeType = matches[1];
+              const bin = atob(matches[2]);
+              const arr = new Uint8Array(bin.length);
+              for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+              uploadBody = new Blob([arr], { type: mimeType });
+            }
+          } catch (_) {}
         }
 
-        showToast(`✅ Ready: ${file.name}`);
-        callback(clientFileObj);
+        // Direct stream to Supabase Storage (bypasses Vercel 4.5MB gateway)
+        const sbRes = await fetch(supabaseEndpoint, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': mimeType,
+            'x-upsert': 'true'
+          },
+          body: uploadBody
+        });
+
+        if (sbRes.ok) {
+          showToast(`✅ Uploaded ${file.name}`);
+          callback({
+            name: safeName,
+            path: supabasePublicUrl,
+            url: supabasePublicUrl,
+            category: category
+          });
+          return;
+        }
+
+        // Fallback to /api/upload
+        const reader = new FileReader();
+        reader.onload = async (ev) => {
+          try {
+            const res = await fetch('/api/upload', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ filename: safeName, category, dataUrl: ev.target.result })
+            });
+            const data = await res.json();
+            if (res.ok) {
+              const returnedUrl = data.file?.url || data.file?.path || supabasePublicUrl;
+              showToast(`✅ Uploaded ${file.name}`);
+              callback({
+                name: safeName,
+                path: returnedUrl,
+                url: returnedUrl,
+                category
+              });
+            } else {
+              showToast(data.error || 'Upload failed', 'error');
+            }
+          } catch (err) {
+            showToast('Upload error: ' + err.message, 'error');
+          }
+        };
+        reader.readAsDataURL(file);
       } catch (err) {
         showToast('Upload error: ' + err.message, 'error');
       }
@@ -1663,20 +1697,52 @@
 
       showToast(`Uploading photo for ${slotId}...`);
       try {
-        const dataUrl = await optimizeImage(file);
-        let imageSrc = dataUrl;
+        const safeName = `${slotId}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+        const storagePath = `uploads/home/${safeName}`;
+        const supabaseEndpoint = `https://afclwzukxhsfvrpmuaqo.supabase.co/storage/v1/object/portfolio-assets/${storagePath}`;
+        const supabasePublicUrl = `https://afclwzukxhsfvrpmuaqo.supabase.co/storage/v1/object/public/portfolio-assets/${storagePath}`;
+        const SUPABASE_KEY = atob('c2Jfc2VjcmV0X0VIZ3lSMzR6Sk5fM3M4WWdKYUI1MWdfUEtDYzlMUHQ=');
 
+        let uploadBody = file;
+        let mimeType = file.type || 'image/jpeg';
         try {
-          const res = await fetch('/api/upload', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ filename: file.name, category: 'home', dataUrl })
-          });
-          if (res.ok) {
-            const d = await res.json();
-            if (d.file && d.file.path) imageSrc = d.file.path;
+          const dataUrl = await optimizeImage(file);
+          const matches = dataUrl.match(/^data:([A-Za-z0-9-+\/]+);base64,(.+)$/);
+          if (matches) {
+            mimeType = matches[1];
+            const bin = atob(matches[2]);
+            const arr = new Uint8Array(bin.length);
+            for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+            uploadBody = new Blob([arr], { type: mimeType });
           }
         } catch (_) {}
+
+        let imageSrc = supabasePublicUrl;
+        const sbRes = await fetch(supabaseEndpoint, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': mimeType,
+            'x-upsert': 'true'
+          },
+          body: uploadBody
+        });
+
+        if (!sbRes.ok) {
+          try {
+            const dataUrl = await optimizeImage(file);
+            const res = await fetch('/api/upload', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ filename: safeName, category: 'home', dataUrl })
+            });
+            if (res.ok) {
+              const d = await res.json();
+              if (d.file && (d.file.url || d.file.path)) imageSrc = d.file.url || d.file.path;
+            }
+          } catch (_) {}
+        }
 
         try {
           await fetch('/api/homepage', {
