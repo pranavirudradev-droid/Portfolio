@@ -439,12 +439,6 @@
   </header>
 
   <div class="container">
-    <div id="admin-deployed-notice" style="display:none; background: rgba(165, 188, 214, 0.12); border: 1px solid var(--accent-blue); padding: 12px 18px; border-radius: 6px; margin-bottom: 24px; font-size: 12px; line-height: 1.6;">
-      <span style="color:var(--accent-blue); font-weight:700;">LIVE PREVIEW MODE:</span>
-      You are viewing the portfolio registry on Vercel. All 13 existing projects, work experiences, and assets are loaded below.
-      <br/><span style="opacity:0.85;">To save new uploads or update content files permanently on your disk, run <code>npm start</code> on your computer (localhost:8000/admin), then push changes to GitHub.</span>
-    </div>
-
     <div class="nav-tabs">
       <button class="tab-btn active" onclick="switchTab('projects')">1. Projects</button>
       <button class="tab-btn" onclick="switchTab('experience')">2. Experience</button>
@@ -1615,12 +1609,6 @@
     // INITIAL LOAD
     // ==========================================
     async function loadData() {
-      // Check if on cloud or local
-      if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-        const notice = document.getElementById('admin-deployed-notice');
-        if (notice) notice.style.display = 'block';
-      }
-
       try {
         const res = await fetch('/api/content');
         if (res.ok) {
