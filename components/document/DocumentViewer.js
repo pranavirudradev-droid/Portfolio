@@ -116,10 +116,10 @@ export class DocumentViewer {
     const isPdf = (documentData.type === 'pdf') || (fileSrc && (fileSrc.toLowerCase().includes('.pdf') || fileSrc.startsWith('data:application/pdf')));
 
     if (isPdf && fileSrc) {
-      // Direct high-resolution PDF rendering with hardware acceleration and smooth scrolling
+      // Direct high-resolution PDF rendering with immediate loading and smooth scrolling
       this.track.innerHTML = `
-        <div style="width: 100%; max-width: 1120px; height: calc(100vh - 100px); min-height: 600px; background: #FAF7EE; border-radius: 6px; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.6); display: flex; flex-direction: column; transform: translateZ(0); will-change: transform;">
-          <iframe src="${fileSrc}#toolbar=1&navpanes=0&scrollbar=1" class="doc-viewer-frame" style="width: 100%; height: 100%; border: none; display: block;" loading="lazy"></iframe>
+        <div style="width: 100%; max-width: 1120px; height: calc(100vh - 100px); min-height: 600px; background: #FAF7EE; border-radius: 6px; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.6); display: flex; flex-direction: column;">
+          <iframe src="${fileSrc}#toolbar=1&navpanes=0&scrollbar=1" class="doc-viewer-frame" style="width: 100%; height: 100%; border: none; display: block;"></iframe>
         </div>
       `;
     } else if (documentData.pages && documentData.pages.length > 0 && documentData.type !== 'pdf') {

@@ -18,14 +18,15 @@
 .doc-viewer-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(35, 24, 21, 0.94);
-  backdrop-filter: blur(12px);
+  background-color: rgba(25, 17, 15, 0.96);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   z-index: 10000;
   display: flex;
   flex-direction: column;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 350ms ease;
+  transition: opacity 200ms ease;
 }
 
 .doc-viewer-overlay.is-open {

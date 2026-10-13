@@ -1868,21 +1868,21 @@
     // INITIAL LOAD
     // ==========================================
     async function loadData() {
-      const SUPABASE_CDN = 'https://afclwzukxhsfvrpmuaqo.supabase.co/storage/v1/object/public/portfolio-assets/data/portfolio.json';
+      const SUPABASE_CDN = 'https://afclwzukxhsfvrpmuaqo.supabase.co/storage/v1/object/public/portfolio-assets/data/portfolio.json?t=' + Date.now();
       try {
-        const res = await fetch('/api/content');
+        const res = await fetch(SUPABASE_CDN, { cache: 'no-store' });
         if (res.ok) {
           portfolio = await res.json();
         } else {
-          throw new Error('API route returned status: ' + res.status);
+          throw new Error('Supabase CDN returned status: ' + res.status);
         }
       } catch (err) {
         try {
-          const res = await fetch(SUPABASE_CDN + '?t=' + Date.now());
+          const res = await fetch('/api/content');
           if (res.ok) {
             portfolio = await res.json();
           } else {
-            throw new Error('Supabase CDN returned status: ' + res.status);
+            throw new Error('API route returned status: ' + res.status);
           }
         } catch (_) {
           // Fallback: direct dynamic module import in browser

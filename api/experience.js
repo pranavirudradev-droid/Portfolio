@@ -43,7 +43,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Role Title and Organisation are required' });
     }
 
-    const slug = existingId || slugify(`${organisation}-${title}`);
+    const orgMatch = (portfolio.experiences || []).find(e => e.organisation && e.organisation.toLowerCase().trim() === organisation.toLowerCase().trim());
+    const slug = existingId || (orgMatch ? orgMatch.id : slugify(organisation));
     const existing = (portfolio.experiences || []).find(e => e.id === slug) || {};
 
     const updatedExp = {
@@ -60,7 +61,7 @@ export default async function handler(req, res) {
       type: documentSrc ? 'document' : (existing.type || 'narrative'),
       ...(documentSrc ? {
         document: {
-          type: 'presentation',
+          type: (documentSrc && documentSrc.toLowerCase().includes('.pdf')) ? 'pdf' : 'presentation',
           src: documentSrc,
           title: `${organisation} Documentation`,
           downloadable: true

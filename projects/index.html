@@ -1141,13 +1141,13 @@
         if (raw) localData = JSON.parse(raw);
       } catch (e) {}
 
-      const SUPABASE_CDN = 'https://afclwzukxhsfvrpmuaqo.supabase.co/storage/v1/object/public/portfolio-assets/data/portfolio.json';
-      fetch('/api/content')
+      const SUPABASE_CDN = 'https://afclwzukxhsfvrpmuaqo.supabase.co/storage/v1/object/public/portfolio-assets/data/portfolio.json?t=' + Date.now();
+      fetch(SUPABASE_CDN, { cache: 'no-store' })
         .then(r => {
-          if (!r.ok) throw new Error('API non-200');
+          if (!r.ok) throw new Error();
           return r.json();
         })
-        .catch(() => fetch(SUPABASE_CDN + '?t=' + Date.now()).then(r => r.json()))
+        .catch(() => fetch('/api/content').then(r => r.json()))
         .catch(() => ({}))
         .then(data => {
           const projects = (localData && localData.projects) ? localData.projects : (data && data.projects ? data.projects : []);
