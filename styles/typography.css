@@ -1,0 +1,108 @@
+/**
+ * PRANAVI RUDRADEV PORTFOLIO — TYPOGRAPHY STYLES
+ * Powered by Satoshi
+ */
+
+.font-satoshi {
+  font-family: var(--font-primary);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Display scale — monumental editorial statements */
+.text-display {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-black);
+  line-height: var(--line-height-display);
+  letter-spacing: var(--letter-spacing-display);
+  text-transform: none;
+}
+
+/* Primary section and chapter titles */
+.text-h1 {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-heading);
+  letter-spacing: var(--letter-spacing-heading);
+}
+
+/* Project titles and major narrative headers */
+.text-h2 {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-heading);
+}
+
+/* Secondary headings */
+.text-h3 {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-heading);
+}
+
+/* Longform strategy and psychological analysis body copy */
+.text-body {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  letter-spacing: var(--letter-spacing-body);
+}
+
+.text-body-lead {
+  font-family: var(--font-primary);
+  font-size: clamp(1.2rem, 1.8vw, 1.65rem);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+}
+
+/* Captions, index labels, and metadata */
+.text-caption {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-caption);
+  letter-spacing: var(--letter-spacing-uppercase);
+  text-transform: uppercase;
+}
+
+/* Navigation items */
+.text-nav {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-nav);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-nav);
+  text-transform: uppercase;
+}
+
+/* Subdued text variants */
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-subtle {
+  color: var(--text-subtle);
+}
+
+/* Paper text inversion: strictly dark text on Transparent Yellow */
+.surface-paper {
+  background-color: var(--bg-paper);
+  color: var(--text-inverse);
+}
+
+.surface-paper .text-muted {
+  color: rgba(74, 46, 39, 0.72);
+}
+
+.surface-paper .text-subtle {
+  color: rgba(74, 46, 39, 0.45);
+}

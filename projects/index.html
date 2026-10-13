@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects Archive — Pranavi Rudradev</title>
+
+  <link rel="stylesheet" href="../assets/fonts/satoshi.css" />
+  <link rel="stylesheet" href="../styles/reset.css" />
+  <link rel="stylesheet" href="../styles/tokens.css" />
+  <link rel="stylesheet" href="../styles/typography.css" />
+  <link rel="stylesheet" href="../styles/layout.css" />
+  <link rel="stylesheet" href="../styles/documents.css" />
+  <link rel="stylesheet" href="../src/styles/global/fisheye-lens.css" />
+
+  <style>
+    :root {
+      --bg-proj: #231815;
+      --bg-potting: #4A2E27;
+      --text-yellow: #F5EFC6;
+      --accent-blue: #A5BCD6;
+      --accent-red: #4D0E12;
+      --tab-blue: #4F7396;
+      --tab-red: #8C272C;
+      --lens-size: 76px;
+    }
+
+    body {
+      background-color: var(--bg-potting);
+      color: var(--text-yellow);
+      font-family: var(--font-primary, 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Top Navigation Bar */
+    .proj-nav {
+      padding: 24px clamp(24px, 4.5vw, 72px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(245, 239, 198, 0.16);
+      width: 100%;
+      box-sizing: border-box;
+      background-color: var(--bg-potting);
+      position: relative;
+      z-index: 20;
+    }
+
+    .proj-nav-link {
+      color: var(--text-yellow);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      transition: color 200ms ease;
+    }
+
+    .proj-nav-link:hover {
+      color: var(--accent-blue);
+    }
+
+    .proj-nav-section {
+      color: var(--accent-blue);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    /* Main Container */
+    .proj-main-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: clamp(32px, 5vh, 64px) clamp(16px, 4vw, 48px);
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    /* Tactile File Folder System */
+    .folder-system {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Top Layered Folder Tabs Bar */
+    .folder-tabs-bar {
+      display: flex;
+      align-items: flex-end;
+      position: relative;
+      z-index: 10;
+      padding-left: clamp(4px, 1vw, 16px);
+      padding-top: 24px;
+      margin-top: -24px;
+      overflow: visible;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Base Tab Style */
+    .folder-tab {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-primary, 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif);
+      font-size: clamp(10.5px, 0.82vw, 12.5px);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      line-height: 1;
+      white-space: nowrap;
+      position: relative;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      border-radius: 14px 14px 0 0;
+      padding: 14px clamp(16px, 1.8vw, 26px) 12px clamp(16px, 1.8vw, 26px);
+      transition: transform 320ms cubic-bezier(0.2, 0.9, 0.3, 1), 
+                  box-shadow 320ms cubic-bezier(0.2, 0.9, 0.3, 1), 
+                  filter 220ms ease;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      outline: none;
+    }
+
+    .folder-tab:hover {
+      transform: translateY(-4px);
+      filter: brightness(1.06);
+    }
+
+    .folder-tab:hover:not(.active) {
+      z-index: 10;
+    }
+
+    /* Tab 1: Pale Yellow (Consumer Behaviour) */
+    .folder-tab.tab-yellow {
+      background-color: var(--text-yellow);
+      color: #231815;
+      z-index: 3;
+      min-height: 44px;
+      box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Tab 2: Denim Blue (Market Research) */
+    .folder-tab.tab-blue {
+      background-color: var(--tab-blue);
+      color: var(--text-yellow);
+      z-index: 2;
+      min-height: 48px;
+      margin-left: -16px;
+      box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Tab 3: Crimson Red (Product Strategy) */
+    .folder-tab.tab-red {
+      background-color: var(--tab-red);
+      color: var(--text-yellow);
+      z-index: 1;
+      min-height: 52px;
+      margin-left: -16px;
+      box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Deterministic Tab Colors across all states */
+    .folder-tab.tab-yellow,
+    .folder-tab.tab-yellow:hover,
+    .folder-tab.tab-yellow.active {
+      background-color: var(--text-yellow) !important;
+      color: #231815 !important;
+    }
+
+    .folder-tab.tab-blue,
+    .folder-tab.tab-blue:hover,
+    .folder-tab.tab-blue.active {
+      background-color: var(--tab-blue) !important;
+      color: var(--text-yellow) !important;
+    }
+
+    .folder-tab.tab-red,
+    .folder-tab.tab-red:hover,
+    .folder-tab.tab-red.active {
+      background-color: var(--tab-red) !important;
+      color: var(--text-yellow) !important;
+    }
+
+    /* Active State Elevation */
+    .folder-tab.active {
+      transform: translateY(-8px) !important;
+      z-index: 15 !important;
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.45) !important;
+      filter: brightness(1.04);
+    }
+
+    .folder-tab .tab-label {
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      letter-spacing: inherit;
+      color: inherit;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+
+    .folder-tab .tab-count {
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      letter-spacing: inherit;
+      color: inherit;
+      opacity: 0.9;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+      margin-left: clamp(10px, 1.4vw, 20px);
+    }
+
+    /* Connecting Folder Shelf Lip */
+    .folder-shelf-lip {
+      width: 100%;
+      height: 24px;
+      background-color: var(--text-yellow);
+      background: var(--text-yellow);
+      border-radius: 0 16px 0 0;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      position: relative;
+      z-index: 4;
+      margin-top: -2px;
+      transition: background-color 300ms ease;
+    }
+
+    /* Deterministic Shelf Color matching the active folder */
+    .folder-system.active-yellow .folder-shelf-lip {
+      background-color: var(--text-yellow) !important;
+      background: var(--text-yellow) !important;
+    }
+
+    .folder-system.active-blue .folder-shelf-lip {
+      background-color: var(--tab-blue) !important;
+      background: var(--tab-blue) !important;
+    }
+
+    .folder-system.active-red .folder-shelf-lip {
+      background-color: var(--tab-red) !important;
+      background: var(--tab-red) !important;
+    }
+
+    /* Folder Body Card (Java Brown interior) */
+    .folder-body-card {
+      background-color: var(--bg-proj);
+      border: 1px solid rgba(245, 239, 198, 0.14);
+      border-top: none;
+      border-radius: 0 0 20px 20px;
+      padding: clamp(32px, 4.5vw, 64px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+      position: relative;
+      z-index: 3;
+      min-height: 560px;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      transform-origin: top center;
+      will-change: transform, opacity, box-shadow;
+    }
+
+    /* Physical Folder Emergence Animation */
+    @keyframes folderEmerge {
+      0% {
+        transform: translateY(22px) scale(0.985);
+        opacity: 0.75;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      }
+      55% {
+        transform: translateY(-4px) scale(1.004);
+        opacity: 0.98;
+        box-shadow: 0 24px 50px rgba(0, 0, 0, 0.55);
+      }
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+      }
+    }
+
+    .folder-body-card.emerging {
+      animation: folderEmerge 440ms cubic-bezier(0.18, 0.9, 0.3, 1) forwards;
+    }
+
+    /* Folder Interior Header */
+    .folder-body-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .folder-flower-icon {
+      color: var(--text-yellow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .folder-compilation-tag {
+      font-family: var(--font-primary, 'Satoshi', sans-serif);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-yellow);
+      opacity: 0.85;
+    }
+
+    .folder-header-divider {
+      width: 100%;
+      height: 1px;
+      background-color: rgba(245, 239, 198, 0.16);
+      margin-bottom: 28px;
+    }
+
+    /* Content Views */
+    .folder-content-view {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .folder-content-view.active {
+      display: flex;
+    }
+
+    /* Smooth interior reveal with stagger */
+    .folder-content-view.active .cat-title-row {
+      animation: slideDownIn 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .folder-content-view.active .cat-kicker {
+      animation: slideDownIn 400ms cubic-bezier(0.16, 1, 0.3, 1) 40ms both;
+    }
+
+    .folder-content-view.active .proj-list-scrollable {
+      animation: slideUpIn 440ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
+    }
+
+    .folder-content-view.active.landing-cover .landing-projects-title {
+      animation: slideUpIn 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes slideDownIn {
+      from {
+        opacity: 0;
+        transform: translateY(-12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideUpIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* STANDALONE PROJECTS COVER (Reference: media_1791645198373.png) */
+    .landing-cover-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: clamp(36px, 6vh, 64px) 0 clamp(80px, 14vh, 140px) 0;
+    }
+
+    .landing-projects-title {
+      font-family: var(--font-primary, 'Satoshi', sans-serif);
+      font-size: clamp(68px, 9vw, 120px);
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      color: var(--text-yellow);
+      margin: 0;
+      padding: 0;
+    }
+
+    /* CATEGORY VIEW HEADERS */
+    .cat-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .cat-main-title {
+      font-size: clamp(34px, 4.2vw, 56px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: var(--text-yellow);
+      margin: 0;
+    }
+
+    .cat-badge-count {
+      font-size: clamp(24px, 3vw, 42px);
+      font-weight: 700;
+      color: var(--text-yellow);
+      letter-spacing: -0.02em;
+      opacity: 0.9;
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    .cat-kicker {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    /* Independent Vertically Scrollable Project List */
+    .proj-list-scrollable {
+      max-height: 420px;
+      overflow-y: auto;
+      padding-right: 18px;
+      margin-top: 8px;
+      border-top: 1px solid rgba(245, 239, 198, 0.16);
+      scrollbar-width: thin;
+      scrollbar-color: rgba(245, 239, 198, 0.45) rgba(245, 239, 198, 0.08);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .proj-list-scrollable::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .proj-list-scrollable::-webkit-scrollbar-track {
+      background: rgba(245, 239, 198, 0.08);
+      border-radius: 4px;
+    }
+
+    .proj-list-scrollable::-webkit-scrollbar-thumb {
+      background: rgba(245, 239, 198, 0.45);
+      border-radius: 4px;
+    }
+
+    .proj-list-scrollable::-webkit-scrollbar-thumb:hover {
+      background: rgba(245, 239, 198, 0.75);
+    }
+
+    /* Clickable Project Row */
+    .proj-row-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(245, 239, 198, 0.14);
+      background: transparent;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background-color 180ms ease;
+      box-sizing: border-box;
+      text-decoration: none;
+    }
+
+    .proj-row-btn:hover {
+      background-color: rgba(245, 239, 198, 0.03);
+    }
+
+    .proj-row-num {
+      font-family: var(--font-primary, 'Satoshi', sans-serif);
+      font-size: clamp(14px, 1.1vw, 16px);
+      font-weight: 500;
+      color: var(--accent-blue);
+      letter-spacing: 0.04em;
+      min-width: 52px;
+      flex-shrink: 0;
+    }
+
+    .proj-row-title {
+      font-family: var(--font-primary, 'Satoshi', sans-serif);
+      font-size: clamp(15px, 1.25vw, 18px);
+      font-weight: 500;
+      color: var(--text-yellow);
+      line-height: 1.35;
+      flex-grow: 1;
+      padding: 0 16px;
+      margin: 0;
+      transition: color 180ms ease;
+    }
+
+    .proj-row-btn:hover .proj-row-title {
+      color: var(--accent-blue);
+    }
+
+    .proj-row-arrow {
+      color: var(--text-yellow);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 200ms ease, color 180ms ease;
+    }
+
+    .proj-row-btn:hover .proj-row-arrow {
+      transform: translateX(5px);
+      color: var(--accent-blue);
+    }
+
+    /* Back to All Categories Button */
+    .folder-back-row {
+      margin-top: 24px;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .folder-back-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-yellow);
+      font-family: var(--font-primary, 'Satoshi', sans-serif);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 0;
+      opacity: 0.75;
+      transition: opacity 180ms ease, color 180ms ease;
+    }
+
+    .folder-back-btn:hover {
+      opacity: 1;
+      color: var(--accent-blue);
+    }
+
+    /* Footer */
+    .proj-footer {
+      margin-top: auto;
+      padding: 32px clamp(24px, 4.5vw, 72px);
+      border-top: 1px solid rgba(245, 239, 198, 0.16);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: rgba(245, 239, 198, 0.55);
+      width: 100%;
+      box-sizing: border-box;
+      background-color: var(--bg-potting);
+    }
+
+    /* Responsive Adaptations */
+    @media (max-width: 768px) {
+      .folder-tabs-bar {
+        padding-left: 4px;
+      }
+      .folder-tab {
+        padding: 12px 14px;
+        gap: 8px;
+        font-size: 10.5px;
+      }
+      .folder-body-card {
+        padding: 24px 20px;
+        min-height: 480px;
+      }
+      .cat-title-row {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .cat-badge-count {
+        margin-top: 0;
+      }
+      .proj-row-title {
+        padding: 0 10px;
+        font-size: 14.5px;
+      }
+      .proj-list-scrollable {
+        max-height: 380px;
+        padding-right: 10px;
+      }
+    }
+  </style>
+</head>
+<body id="top">
+
+  <!-- =========================================================
+       SVG OPTICAL BARREL DISTORTION DISPLACEMENT ENGINE
+       ========================================================= -->
+  <svg style="position: absolute; width: 0; height: 0; pointer-events: none;" aria-hidden="true">
+    <defs>
+      <filter id="optical-lens-warp" x="-20%" y="-20%" width="140%" height="140%">
+        <feImage id="fe-lens-displacement" href="" result="radialMap" />
+        <feDisplacementMap in="SourceGraphic" in2="radialMap" scale="22" xChannelSelector="R" yChannelSelector="G" result="warped" />
+        <feComposite in="warped" in2="SourceAlpha" operator="in" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Top Navigation Bar -->
+  <nav class="proj-nav" aria-label="Page navigation">
+    <a href="../#sections-stage" class="proj-nav-link">
+      <span>←</span>
+      <span>RETURN TO FOUR WORLDS</span>
+    </a>
+    <span class="proj-nav-section">[03] PROJECTS</span>
+  </nav>
+
+  <!-- Main Folder Interface -->
+  <main class="proj-main-wrapper">
+    <div class="folder-system" id="folder-system">
+
+      <!-- Top Layered Folder Tabs -->
+      <div class="folder-tabs-bar" role="tablist" aria-label="Project Categories">
+        <button 
+          type="button" 
+          class="folder-tab tab-yellow" 
+          id="tab-consumer-behaviour" 
+          role="tab" 
+          aria-selected="false"
+          onclick="selectCategory('consumer-behaviour')"
+          data-lens
+        >
+          <span class="tab-label">CONSUMER BEHAVIOUR &amp; PSYCHOLOGY</span>
+          <span class="tab-count">(06)</span>
+        </button>
+
+        <button 
+          type="button" 
+          class="folder-tab tab-blue" 
+          id="tab-market-research" 
+          role="tab" 
+          aria-selected="false"
+          onclick="selectCategory('market-research')"
+          data-lens
+        >
+          <span class="tab-label">MARKET RESEARCH / CASE STUDIES</span>
+          <span class="tab-count">(04)</span>
+        </button>
+
+        <button 
+          type="button" 
+          class="folder-tab tab-red" 
+          id="tab-product-strategy" 
+          role="tab" 
+          aria-selected="false"
+          onclick="selectCategory('product-strategy')"
+          data-lens
+        >
+          <span class="tab-label">PRODUCT &amp; BRAND STRATEGY</span>
+          <span class="tab-count">(03)</span>
+        </button>
+      </div>
+
+      <!-- Connecting Folder Lip -->
+      <div class="folder-shelf-lip"></div>
+
+      <!-- Folder Main Body Card -->
+      <div class="folder-body-card" id="folder-body-card">
+        
+        <!-- Folder Header (Flower Asterisk + Volume Tag) -->
+        <div class="folder-body-header">
+          <div class="folder-flower-icon" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 38 38" fill="currentColor">
+              <g transform="translate(19, 19)">
+                <ellipse cx="0" cy="-11" rx="3.4" ry="7.2" transform="rotate(0)" />
+                <ellipse cx="0" cy="-11" rx="3.4" ry="7.2" transform="rotate(45)" />
+                <ellipse cx="0" cy="-11" rx="3.4" ry="7.2" transform="rotate(90)" />
+                <ellipse cx="0" cy="-11" rx="3.4" ry="7.2" transform="rotate(135)" />
+                <ellipse cx="0" cy="-11" rx="3.4" ry="7.2" transform="rotate(180)" />
+                <ellipse cx="0" cy="-11" rx="3.4" ry="7.2" transform="rotate(225)" />
+                <ellipse cx="0" cy="-11" rx="3.4" ry="7.2" transform="rotate(270)" />
+                <ellipse cx="0" cy="-11" rx="3.4" ry="7.2" transform="rotate(315)" />
+                <circle cx="0" cy="0" r="4.2" />
+              </g>
+            </svg>
+          </div>
+          <span class="folder-compilation-tag">PROJECT COMPILATION · VOL. 1</span>
+        </div>
+
+        <div class="folder-header-divider"></div>
+
+        <!-- ========================================================
+             VIEW 0: PROJECTS LANDING PAGE (Reference: media_1791645198373.png)
+             ======================================================== -->
+        <section class="folder-content-view active landing-cover" id="view-landing" aria-label="Projects Standalone Cover">
+          <div class="landing-cover-body">
+            <h1 class="landing-projects-title">Projects</h1>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             VIEW 1: CONSUMER BEHAVIOUR & PSYCHOLOGY (06) (Reference: media_1791645222290.png)
+             ======================================================== -->
+        <section class="folder-content-view" id="view-consumer-behaviour" aria-label="Consumer Behaviour and Psychology Projects">
+          <div class="cat-title-row">
+            <h1 class="cat-main-title">Consumer Behaviour<br/>&amp; Psychology</h1>
+            <span class="cat-badge-count">(06)</span>
+          </div>
+
+          <span class="cat-kicker">PROJECTS / 01</span>
+
+          <!-- Vertically Scrollable Project List -->
+          <div class="proj-list-scrollable" role="region" aria-label="Consumer Behaviour Projects List">
+            
+            <!-- [01] -->
+            <button 
+              type="button" 
+              class="proj-row-btn" 
+              onclick="openProjectDoc('does-packaging-alone-trigger-brand-recall')"
+              aria-label="Open project PDF: Does Packaging Alone Trigger Brand Recall?"
+              data-lens
+            >
+              <span class="proj-row-num">[01]</span>
+              <p class="proj-row-title">Does Packaging Alone Trigger Brand Recall?</p>
+              <span class="proj-row-arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </button>
+
+            <!-- [02] -->
+            <button 
+              type="button" 
+              class="proj-row-btn" 
+              onclick="openProjectDoc('communication-theory-and-marketing-insights')"
+              aria-label="Open project PDF: Communication Theory & Marketing Insights"
+              data-lens
+            >
+              <span class="proj-row-num">[02]</span>
+              <p class="proj-row-title">Communication Theory &amp; Marketing Insights</p>
+              <span class="proj-row-arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </button>
+
+            <!-- [03] -->
+            <button 
+              type="button" 
+              class="proj-row-btn" 
+              onclick="openProjectDoc('how-do-colours-influence-consumer-behaviour')"
+              aria-label="Open project PDF: How Do Colours Influence Consumer Behaviour?"
+              data-lens
+            >
+              <span class="proj-row-num">[03]</span>
+              <p class="proj-row-title">How Do Colours Influence Consumer Behaviour?</p>
+              <span class="proj-row-arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </button>
+
+            <!-- [04] -->
+            <button 
+              type="button" 
+              class="proj-row-btn" 
+              onclick="openProjectDoc('primary-research-for-consumer-behaviour')"
+              aria-label="Open project PDF: Primary Research for Consumer Behaviour"
+              data-lens
+            >
+              <span class="proj-row-num">[04]</span>
+              <p class="proj-row-title">Primary Research for Consumer Behaviour</p>
+              <span class="proj-row-arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </button>
+
+            <!-- [05] -->
+            <button 
+              type="button" 
+              class="proj-row-btn" 
+              onclick="openProjectDoc('primary-study-and-marketing-insights')"
+              aria-label="Open project PDF: Primary Study & Marketing Insights"
+              data-lens
+            >
+              <span class="proj-row-num">[05]</span>
+              <p class="proj-row-title">Primary Study &amp; Marketing Insights</p>
+              <span class="proj-row-arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </button>
+
+            <!-- [06] -->
+            <button 
+              type="button" 
+              class="proj-row-btn" 
+              onclick="openProjectDoc('character-analysis-personality-psychology-and-marketing')"
+              aria-label="Open project PDF: Character Analysis, Personality Psychology & Marketing"
+              data-lens
+            >
+              <span class="proj-row-num">[06]</span>
+              <p class="proj-row-title">Character Analysis, Personality Psychology &amp; Marketing</p>
+              <span class="proj-row-arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </button>
+
+          </div>
+
+          <div class="folder-back-row">
+            <button type="button" class="folder-back-btn" onclick="selectCategory(null)" aria-label="Return to Projects Cover" data-lens>
+              <span>←</span>
+              <span>RETURN TO PROJECTS COVER</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             VIEW 2: MARKET RESEARCH / CASE STUDIES (04) (Reference: media_1791645193331.jpg Panel 1)
+             ======================================================== -->
+        <section class="folder-content-view" id="view-market-research" aria-label="Market Research and Case Studies Projects">
+          <div class="cat-title-row">
+            <h1 class="cat-main-title">Market Research /<br/>Case Studies</h1>
+            <span class="cat-badge-count">(04)</span>
+          </div>
+
+          <span class="cat-kicker">PROJECTS / 02</span>
+
+          <!-- Vertically Scrollable Project List -->
+          <div class="proj-list-scrollable" role="region" aria-label="Market Research Projects List">
+            
+            <!-- [01] -->
+            <button 
+              type="button" 
+              class="proj-row-btn" 
+              onclick="openProjectDoc('retail-marketing-insight-shoppers-stop')"
+              aria-label="Open project PDF: Retail Marketing Insight in Shoppers Stop"
+              data-lens
+            >
+              <span class="proj-row-num">[01]</span>
+              <p class="proj-row-title">Retail Marketing Insight in Shoppers Stop</p>
+              <span class="proj-row-arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </button>
+
+            <!-- [02] -->
+            <button 
+              type="button" 
+              class="proj-row-btn" 
+              onclick="openProjectDoc('hireficient-from-market-gap-to-viable-venture')"
+              aria-label="Open project PDF: HireFicient: From Market Gap to Viable Venture"
+              data-lens
+            >
+              <span class="proj-row-num">[02]</span>
+              <p class="proj-row-title">HireFicient: From Market Gap to Viable Venture</p>
+              <span class="proj-row-arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </button>
+
+            <!-- [03] -->
+            <button 
+              type="button" 
+              class="proj-row-btn" 
+              onclick="openProjectDoc('d2c-brands-in-india-and-their-marketing-strategies')"
+              aria-label="Open project PDF: D2C Brands in India & Their Marketing Strategies"
+              data-lens
+            >
+              <span class="proj-row-num">[03]</span>
+              <p class="proj-row-title">D2C Brands in India &amp; Their Marketing Strategies</p>
+              <span class="proj-row-arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </button>
+
+            <!-- [04] -->
+            <button 
+              type="button" 
+              class="proj-row-btn" 
+              onclick="openProjectDoc('forecasting-demand')"
+              aria-label="Open project PDF: Forecasting Demand"
+              data-lens
+            >
+              <span class="proj-row-num">[04]</span>
+              <p class="proj-row-title">Forecasting Demand</p>
+              <span class="proj-row-arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </button>
+
+          </div>
+
+          <div class="folder-back-row">
+            <button type="button" class="folder-back-btn" onclick="selectCategory(null)" aria-label="Return to Projects Cover" data-lens>
+              <span>←</span>
+              <span>RETURN TO PROJECTS COVER</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             VIEW 3: PRODUCT & BRAND STRATEGY (03) (Reference: media_1791645193331.jpg Panel 2)
+             ======================================================== -->
+        <section class="folder-content-view" id="view-product-strategy" aria-label="Product and Brand Strategy Projects">
+          <div class="cat-title-row">
+            <h1 class="cat-main-title">Product &amp;<br/>Brand Strategy</h1>
+            <span class="cat-badge-count">(03)</span>
+          </div>
+
+          <span class="cat-kicker">PROJECTS / 03</span>
+
+          <!-- Vertically Scrollable Project List -->
+          <div class="proj-list-scrollable" role="region" aria-label="Product Strategy Projects List">
+            
+            <!-- [01] -->
+            <button 
+              type="button" 
+              class="proj-row-btn" 
+              onclick="openProjectDoc('a-sustainable-product')"
+              aria-label="Open project PDF: A Sustainable Product"
+              data-lens
+            >
+              <span class="proj-row-num">[01]</span>
+              <p class="proj-row-title">A Sustainable Product</p>
+              <span class="proj-row-arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </button>
+
+            <!-- [02] -->
+            <button 
+              type="button" 
+              class="proj-row-btn" 
+              onclick="openProjectDoc('nazakath')"
+              aria-label="Open project PDF: NAZAKATH"
+              data-lens
+            >
+              <span class="proj-row-num">[02]</span>
+              <p class="proj-row-title">NAZAKATH</p>
+              <span class="proj-row-arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </button>
+
+            <!-- [03] -->
+            <button 
+              type="button" 
+              class="proj-row-btn" 
+              onclick="openProjectDoc('the-airport-was-never-the-problem')"
+              aria-label="Open project PDF: The Airport Was Never the Problem"
+              data-lens
+            >
+              <span class="proj-row-num">[03]</span>
+              <p class="proj-row-title">The Airport Was Never the Problem</p>
+              <span class="proj-row-arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </button>
+
+          </div>
+
+          <div class="folder-back-row">
+            <button type="button" class="folder-back-btn" onclick="selectCategory(null)" aria-label="Return to Projects Cover" data-lens>
+              <span>←</span>
+              <span>RETURN TO PROJECTS COVER</span>
+            </button>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="proj-footer">
+    <span>PRANAVI RUDRADEV · BRAND STRATEGY · CONSUMER PSYCHOLOGY · QUALITATIVE THINKING</span>
+    <a href="#top" class="proj-nav-link" style="font-size: 10.5px;">BACK TO TOP ↑</a>
+  </footer>
+
+  <!-- Script: Document Viewer & Dynamic Folder Navigation -->
+  <script type="module">
+    import { DocumentViewer } from '../components/document/DocumentViewer.js';
+    import { FisheyeCursor } from '../src/components/lens-cursor/FisheyeCursor.js';
+
+    // 1. Mount Shared Fisheye Lens
+    const lens = new FisheyeCursor();
+    lens.mount();
+
+    // 2. Universal Document Viewer
+    const viewer = new DocumentViewer();
+
+    // 3. Document Map for all 13 Projects
+    const PROJECT_DOCS = {
+      'does-packaging-alone-trigger-brand-recall': {
+        title: 'Does Packaging Alone Trigger Brand Recall?',
+        type: 'pdf',
+        src: '../assets/projects/documents/does-packaging-alone-trigger-brand-recall.pdf',
+        pages: ['../assets/projects/covers/packaging-brand-recall.jpg']
+      },
+      'communication-theory-and-marketing-insights': {
+        title: 'Communication Theory & Marketing Insights',
+        type: 'presentation',
+        src: '../assets/projects/documents/communication-theory-marketing-insights.pdf',
+        pages: ['../assets/projects/covers/communication-theory.jpg']
+      },
+      'how-do-colours-influence-consumer-behaviour': {
+        title: 'How Do Colours Influence Consumer Behaviour?',
+        type: 'pdf',
+        src: '../assets/projects/documents/colours-consumer-behaviour.pdf',
+        pages: ['../assets/projects/covers/colours-consumer-behaviour.jpg']
+      },
+      'primary-research-for-consumer-behaviour': {
+        title: 'Primary Research for Consumer Behaviour',
+        type: 'pdf',
+        src: '../assets/projects/documents/primary-research-consumer-behaviour.pdf',
+        pages: ['../assets/projects/covers/primary-research-consumer-behaviour.jpg']
+      },
+      'primary-study-and-marketing-insights': {
+        title: 'Primary Study & Marketing Insights',
+        type: 'pdf',
+        src: '../assets/projects/documents/primary-study-marketing-insights.pdf',
+        pages: ['../assets/projects/covers/primary-study-marketing-insights.jpg']
+      },
+      'character-analysis-personality-psychology-and-marketing': {
+        title: 'Character Analysis, Personality Psychology & Marketing',
+        type: 'pdf',
+        src: '../assets/projects/documents/character-analysis-personality.pdf',
+        pages: ['../assets/projects/covers/character-analysis-personality.jpg']
+      },
+      'retail-marketing-insight-shoppers-stop': {
+        title: 'Retail Marketing Insight in Shoppers Stop',
+        type: 'pdf',
+        src: '../assets/projects/documents/retail-marketing-shoppers-stop.pdf',
+        pages: ['../assets/projects/covers/retail-marketing-shoppers-stop.jpg']
+      },
+      'hireficient-from-market-gap-to-viable-venture': {
+        title: 'HireFicient: From Market Gap to Viable Venture',
+        type: 'presentation',
+        src: '../assets/projects/documents/hireficient-market-gap.pdf',
+        pages: ['../assets/projects/covers/hireficient-market-gap.jpg']
+      },
+      'd2c-brands-in-india-and-their-marketing-strategies': {
+        title: 'D2C Brands in India & Their Marketing Strategies',
+        type: 'pdf',
+        src: '../assets/projects/documents/d2c-brands-india.pdf',
+        pages: ['../assets/projects/covers/d2c-brands-india.jpg']
+      },
+      'forecasting-demand': {
+        title: 'Forecasting Demand',
+        type: 'pdf',
+        src: '../assets/projects/documents/forecasting-demand.pdf',
+        pages: ['../assets/projects/covers/forecasting-demand.jpg']
+      },
+      'a-sustainable-product': {
+        title: 'A Sustainable Product',
+        type: 'pdf',
+        src: '../assets/projects/documents/sustainable-product.pdf',
+        pages: ['../assets/projects/covers/sustainable-product.jpg']
+      },
+      'nazakath': {
+        title: 'NAZAKATH',
+        type: 'pdf',
+        src: '../assets/projects/documents/nazakath.pdf',
+        pages: ['../assets/projects/covers/nazakath.jpg']
+      },
+      'the-airport-was-never-the-problem': {
+        title: 'The Airport Was Never the Problem',
+        type: 'presentation',
+        src: '../assets/projects/documents/airport-never-the-problem.pdf',
+        pages: ['../assets/projects/covers/airport-never-the-problem.jpg']
+      }
+    };
+
+    window.openProjectDoc = (id) => {
+      const doc = PROJECT_DOCS[id];
+      if (doc) {
+        viewer.open({
+          title: doc.title,
+          type: doc.type,
+          src: doc.src,
+          pageCount: 3,
+          pages: doc.pages
+        });
+      }
+    };
+
+    // 4. Folder Category Selection & Tab Switching
+    const VALID_CATEGORIES = ['consumer-behaviour', 'market-research', 'product-strategy'];
+
+    window.selectCategory = (catId, pushState = true) => {
+      const folderSystem = document.getElementById('folder-system');
+      const bodyCard = document.getElementById('folder-body-card');
+      const allViews = document.querySelectorAll('.folder-content-view');
+      const allTabs = document.querySelectorAll('.folder-tab');
+
+      // Trigger physical folder emergence animation
+      if (bodyCard) {
+        bodyCard.classList.remove('emerging');
+        void bodyCard.offsetWidth; // Force reflow for clean retriggering
+        bodyCard.classList.add('emerging');
+      }
+
+      // Clear active states
+      allViews.forEach(v => v.classList.remove('active'));
+      allTabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      folderSystem.classList.remove('active-blue', 'active-red', 'active-yellow');
+
+      if (VALID_CATEGORIES.includes(catId)) {
+        const targetView = document.getElementById(`view-${catId}`);
+        const targetTab = document.getElementById(`tab-${catId}`);
+
+        if (targetView) targetView.classList.add('active');
+        if (targetTab) {
+          targetTab.classList.add('active');
+          targetTab.setAttribute('aria-selected', 'true');
+        }
+
+        if (catId === 'consumer-behaviour') {
+          folderSystem.classList.add('active-yellow');
+        } else if (catId === 'market-research') {
+          folderSystem.classList.add('active-blue');
+        } else if (catId === 'product-strategy') {
+          folderSystem.classList.add('active-red');
+        }
+
+        // Reset scroll within the active list so it starts fresh at [01]
+        const scrollable = targetView ? targetView.querySelector('.proj-list-scrollable') : null;
+        if (scrollable) scrollable.scrollTop = 0;
+
+        if (pushState) {
+          const newUrl = new URL(window.location);
+          newUrl.searchParams.set('category', catId);
+          window.history.pushState({ category: catId }, '', newUrl.toString());
+        }
+      } else {
+        // Landing Page Standalone Cover View
+        const landingView = document.getElementById('view-landing');
+        if (landingView) landingView.classList.add('active');
+
+        if (pushState) {
+          const newUrl = new URL(window.location);
+          newUrl.searchParams.delete('category');
+          window.history.pushState({ category: null }, '', newUrl.pathname);
+        }
+      }
+
+      if (window.__fisheyeLens && typeof window.__fisheyeLens.syncScene === 'function') {
+        window.__fisheyeLens.syncScene();
+      }
+    };
+
+    // Browser back/forward history handling
+    window.addEventListener('popstate', (e) => {
+      const params = new URLSearchParams(window.location.search);
+      const cat = params.get('category') || (window.location.hash ? window.location.hash.replace('#', '') : null);
+      window.selectCategory(cat, false);
+    });
+
+    // Initial load resolution
+    const initParams = new URLSearchParams(window.location.search);
+    const initialCat = initParams.get('category') || (window.location.hash ? window.location.hash.replace('#', '') : null);
+    if (initialCat && VALID_CATEGORIES.includes(initialCat)) {
+      window.selectCategory(initialCat, false);
+    } else {
+      window.selectCategory(null, false);
+    }
+  </script>
+
+  <!-- =========================================================
+       LAYER 100: TRUE OPTICAL FISHEYE LENS (76px)
+       ========================================================= -->
+  <div class="fisheye-lens-loupe" id="fisheye" aria-hidden="true">
+    <div class="fisheye-lens-warp-container" id="fisheyeWarpContainer">
+      <div class="fisheye-lens-mirror-stage" id="fisheyeMirrorStage"></div>
+    </div>
+    <div class="fisheye-lens-glass-overlay"></div>
+    <div class="fisheye-lens-rim"></div>
+  </div>
+
+</body>
+</html>

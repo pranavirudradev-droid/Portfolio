@@ -1,0 +1,127 @@
+/**
+ * PRANAVI RUDRADEV PORTFOLIO — CSS DESIGN TOKENS
+ * Generated from config/tokens.js
+ */
+
+:root {
+  /* ==================== COLOUR PALETTE ==================== */
+  --color-potting-soil: #4A2E27;       /* Primary colour */
+  --color-transparent-yellow: #F5EFC6; /* Light text, paper, highlights */
+  --color-cerulean-blue: #A5BCD6;      /* Muted cerebral blue */
+  --color-sceptre-red: #4D0E12;        /* Deep editorial crimson */
+  --color-java-brown: #231815;         /* Deep grounding espresso */
+
+  /* ==================== SEMANTIC COLOURS ==================== */
+  --bg-primary: var(--color-potting-soil);
+  --bg-paper: var(--color-transparent-yellow);
+  --bg-deep: var(--color-java-brown);
+  --bg-overlay: rgba(35, 24, 21, 0.88);
+
+  /* Primary light text against dark Potting Soil */
+  --text-primary: var(--color-transparent-yellow);
+
+  /* High contrast dark text when on Transparent Yellow surfaces (NEVER use white text on yellow) */
+  --text-inverse: var(--color-potting-soil);
+  --text-inverse-deep: var(--color-java-brown);
+  --text-muted: rgba(245, 239, 198, 0.72);
+  --text-subtle: rgba(245, 239, 198, 0.45);
+
+  /* ==================== SECTION ACCENT LOGIC ==================== */
+  /* ABOUT ME: Sceptre Red */
+  --accent-about: var(--color-sceptre-red);
+  
+  /* WORK EXPERIENCE: Cerulean Blue */
+  --accent-experience: var(--color-cerulean-blue);
+  
+  /* PROJECTS: Cerulean Blue + Sceptre Red */
+  --accent-projects-blue: var(--color-cerulean-blue);
+  --accent-projects-red: var(--color-sceptre-red);
+  
+  /* THE OBSERVATORY: Java Brown + small Sceptre Red interventions */
+  --accent-observatory-bg: var(--color-java-brown);
+  --accent-observatory-red: var(--color-sceptre-red);
+
+  /* ==================== TYPOGRAPHY TOKENS (SATOSHI) ==================== */
+  --font-primary: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Fluid Scales */
+  --font-size-display: clamp(3.75rem, 8.5vw, 9.5rem);
+  --font-size-h1: clamp(2.5rem, 5.2vw, 5.5rem);
+  --font-size-h2: clamp(1.75rem, 3.4vw, 3.25rem);
+  --font-size-h3: clamp(1.35rem, 2.2vw, 2.1rem);
+  --font-size-body: clamp(1rem, 1.25vw, 1.3rem);
+  --font-size-caption: clamp(0.75rem, 0.9vw, 0.875rem);
+  --font-size-nav: clamp(0.85rem, 1vw, 1rem);
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  /* Line Heights */
+  --line-height-display: 0.92;
+  --line-height-heading: 1.08;
+  --line-height-tight: 1.25;
+  --line-height-body: 1.62;
+  --line-height-caption: 1.4;
+
+  /* Letter Spacing */
+  --letter-spacing-display: -0.035em;
+  --letter-spacing-heading: -0.02em;
+  --letter-spacing-body: -0.01em;
+  --letter-spacing-nav: 0.04em;
+  --letter-spacing-uppercase: 0.08em;
+  --letter-spacing-mono: 0.02em;
+
+  /* ==================== SPACING TOKENS ==================== */
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 36px;
+  --space-xl: 54px;
+  --space-xxl: 80px;
+  --space-section: clamp(80px, 12vw, 180px);
+  --space-gutter: clamp(16px, 3.5vw, 48px);
+  --space-margin: clamp(20px, 5vw, 80px);
+
+  /* ==================== GRID TOKENS ==================== */
+  --grid-columns: 12;
+  --grid-max-width: 1720px;
+
+  /* ==================== IMAGE TOKENS ==================== */
+  --image-radius: 0px; /* Strict: no rounded corners */
+  --image-border: none; /* Strict: no generic borders */
+  --image-transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), filter 420ms ease;
+
+  /* ==================== BORDER & SHADOW ==================== */
+  --border-subtle: 1px solid rgba(245, 239, 198, 0.16);
+  --border-accent-blue: 1px solid var(--color-cerulean-blue);
+  --border-accent-red: 1px solid var(--color-sceptre-red);
+  --shadow-subtle: 0 8px 30px rgba(35, 24, 21, 0.12);
+  --shadow-document: 0 24px 60px rgba(35, 24, 21, 0.28);
+  --shadow-paper: 0 4px 18px rgba(0, 0, 0, 0.16);
+
+  /* ==================== INTERACTION & THE LENS ==================== */
+  --lens-size: 76px;
+  --lens-distortion: 0.12;
+  --lens-magnification: 1.08;
+  --hover-scale: 1.025;
+  --hover-duration: 380ms;
+  --hover-easing: cubic-bezier(0.22, 1, 0.36, 1);
+  --page-transition-speed: 600ms;
+  --page-transition-easing: cubic-bezier(0.16, 1, 0.3, 1);
+  --scroll-speed: 1.0;
+  --parallax-strength: 0.16;
+
+  /* ==================== BREAKPOINTS ==================== */
+  --bp-mobile: 360px;
+  --bp-phablet: 576px;
+  --bp-tablet: 768px;
+  --bp-laptop: 1024px;
+  --bp-desktop: 1440px;
+  --bp-wide: 1920px;
+}

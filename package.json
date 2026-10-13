@@ -1,0 +1,22 @@
+{
+  "name": "pranavi-rudradev-portfolio",
+  "version": "1.0.0",
+  "description": "Long-term professional portfolio system for Pranavi Rudradev — Brand Strategy, Consumer Psychology, Qualitative Thinking.",
+  "author": "Pranavi Rudradev",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "ruby -run -e httpd . -p 8000",
+    "test": "ruby tests/verify_system.rb",
+    "test:content": "ruby tests/content/verify_content.rb",
+    "test:components": "ruby tests/components/verify_components.rb"
+  },
+  "keywords": [
+    "brand-strategy",
+    "consumer-psychology",
+    "qualitative-thinking",
+    "portfolio",
+    "editorial-design"
+  ]
+}

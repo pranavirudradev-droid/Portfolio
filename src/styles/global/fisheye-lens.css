@@ -1,0 +1,147 @@
+/**
+ * PRANAVI RUDRADEV PORTFOLIO — CANONICAL OPTICAL FISHEYE LENS (76px)
+ * 
+ * Reusable across the entire website:
+ * - Homepage (index.html)
+ * - About Me (about/index.html)
+ * - Work Experience (experience/index.html)
+ * - Projects archive (projects/index.html)
+ * - All project category & case study pages (projects/*)
+ * - The Observatory (observatory/index.html)
+ * 
+ * Target size: 76px compact optical loupe
+ * Characteristics:
+ * - Small circular lens following cursor (canonical optical loupe)
+ * - Magnifies content underneath cursor by 1.08x
+ * - True optical fisheye radial curvature & barrel distortion via SVG feDisplacementMap
+ * - Live scene mirror portal bending typography, images, and backgrounds
+ * - Authentic optical convex glass appearance, subtle specular highlights, and refraction rim
+ * - Smooth lerp tracking with responsive inertia (smoothing: 0.18)
+ * - NO label, NO text, NO icon, NO crosshair
+ * - Cleanly disabled on touch/mobile devices
+ * - Explicit z-index: 100
+ */
+
+.fisheye-lens-loupe,
+.fisheye-lens-cursor,
+.fisheye-lens {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--lens-size, 76px);
+  height: var(--lens-size, 76px);
+  border-radius: 50%;
+  pointer-events: none !important;
+  z-index: 100;
+  transform: translate3d(-50%, -50%, 0);
+  opacity: 0;
+  transition: opacity var(--lens-transition-speed, 180ms) ease;
+  will-change: left, top, opacity;
+  overflow: hidden;
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.25),
+    0 2px 8px rgba(0, 0, 0, 0.14);
+}
+
+.fisheye-lens-loupe.is-active,
+.fisheye-lens-cursor.is-active,
+.fisheye-lens.is-active {
+  opacity: var(--lens-opacity, 1.0);
+}
+
+/* Warped Scene Container with SVG Barrel Distortion */
+.fisheye-lens-warp-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  filter: url(#optical-lens-warp);
+  pointer-events: none !important;
+}
+
+/* Cloned Scene Mirror Stage positioned under cursor */
+.fisheye-lens-mirror-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  min-height: 100vh;
+  transform-origin: 0 0;
+  pointer-events: none !important;
+  will-change: transform;
+}
+
+.fisheye-lens-mirror-stage * {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+/* Page Root Wrapper inside Mirror Stage for Full Document Coverage */
+.fisheye-mirror-page-root {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  min-height: 100vh;
+  transform-origin: 0 0;
+  pointer-events: none !important;
+  user-select: none !important;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure handwriting font is preserved in mirror */
+.fisheye-mirror-page-root .hit-handwritten {
+  font-family: 'Caveat', 'Noteworthy', 'Bradley Hand', 'Segoe Print', cursive !important;
+}
+
+/* Optical Glass Surface Overlay: Specular highlight, convex shading, subtle reflection */
+.fisheye-lens-glass-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none !important;
+  background: radial-gradient(
+    circle at 35% 30%,
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(255, 255, 255, 0.10) 45%,
+    rgba(0, 0, 0, 0.04) 75%,
+    rgba(0, 0, 0, 0.22) 100%
+  );
+  box-shadow:
+    inset 0 0 8px rgba(255, 255, 255, 0.24),
+    inset 0 1.5px 3.5px rgba(255, 255, 255, 0.40);
+  backdrop-filter: contrast(108%) brightness(104%);
+  -webkit-backdrop-filter: contrast(108%) brightness(104%);
+}
+
+/* Physical Glass Rim / Refraction Edge */
+.fisheye-lens-rim {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.30);
+  box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.5);
+  pointer-events: none !important;
+}
+
+/* Touch & Mobile: Cleanly disabled */
+@media (pointer: coarse), (hover: none) {
+  .fisheye-lens-loupe,
+  .fisheye-lens-cursor,
+  .fisheye-lens {
+    display: none !important;
+  }
+}
+
+/* Motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .fisheye-lens-loupe,
+  .fisheye-lens-cursor,
+  .fisheye-lens {
+    display: none !important;
+  }
+}

@@ -1,0 +1,221 @@
+/**
+ * PRANAVI RUDRADEV PORTFOLIO — HOMEPAGE PROJECT FIELD DATA
+ * 
+ * Strict Homepage Rules:
+ * - Cover images ONLY
+ * - No titles, descriptions, case study content, or PDFs on homepage
+ * - Asymmetric, layered spatial positioning
+ * - Hover: ONLY image scales
+ * - Click: One-click to permanent project page
+ */
+
+export const HOMEPAGE_PROJECTS = [
+  {
+    id: "does-packaging-alone-trigger-brand-recall",
+    cover: "assets/projects/covers/packaging-brand-recall.jpg",
+    alt: "Does Packaging Alone Trigger Brand Recall cover",
+    href: "projects/does-packaging-alone-trigger-brand-recall/",
+    spatial: {
+      left: "8%",
+      top: "90vh",
+      width: "420px",
+      aspectRatio: "4/5",
+      rotation: -0.8,
+      zIndex: 2,
+      parallaxSpeed: 0.12,
+      mobileOrder: 1
+    }
+  },
+  {
+    id: "communication-theory-and-marketing-insights",
+    cover: "assets/projects/covers/communication-theory.jpg",
+    alt: "Communication Theory & Marketing Insights cover",
+    href: "projects/communication-theory-and-marketing-insights/",
+    spatial: {
+      left: "58%",
+      top: "125vh",
+      width: "540px",
+      aspectRatio: "16/10",
+      rotation: 1.1,
+      zIndex: 1,
+      parallaxSpeed: 0.22,
+      mobileOrder: 2
+    }
+  },
+  {
+    id: "how-do-colours-influence-consumer-behaviour",
+    cover: "assets/projects/covers/colours-consumer-behaviour.jpg",
+    alt: "How Do Colours Influence Consumer Behaviour cover",
+    href: "projects/how-do-colours-influence-consumer-behaviour/",
+    spatial: {
+      left: "22%",
+      top: "175vh",
+      width: "380px",
+      aspectRatio: "1/1",
+      rotation: -1.2,
+      zIndex: 3,
+      parallaxSpeed: 0.08,
+      mobileOrder: 3
+    }
+  },
+  {
+    id: "primary-research-for-consumer-behaviour",
+    cover: "assets/projects/covers/primary-research-consumer-behaviour.jpg",
+    alt: "Primary Research for Consumer Behaviour cover",
+    href: "projects/primary-research-for-consumer-behaviour/",
+    spatial: {
+      left: "64%",
+      top: "220vh",
+      width: "460px",
+      aspectRatio: "3/4",
+      rotation: 0.6,
+      zIndex: 2,
+      parallaxSpeed: 0.18,
+      mobileOrder: 4
+    }
+  },
+  {
+    id: "primary-study-and-marketing-insights",
+    cover: "assets/projects/covers/primary-study-marketing-insights.jpg",
+    alt: "Primary Study & Marketing Insights cover",
+    href: "projects/primary-study-and-marketing-insights/",
+    spatial: {
+      left: "10%",
+      top: "260vh",
+      width: "520px",
+      aspectRatio: "16/9",
+      rotation: -0.5,
+      zIndex: 1,
+      parallaxSpeed: 0.24,
+      mobileOrder: 5
+    }
+  },
+  {
+    id: "character-analysis-personality-psychology-and-marketing",
+    cover: "assets/projects/covers/character-analysis-personality.jpg",
+    alt: "Character Analysis — Personality Psychology & Marketing cover",
+    href: "projects/character-analysis-personality-psychology-and-marketing/",
+    spatial: {
+      left: "52%",
+      top: "310vh",
+      width: "440px",
+      aspectRatio: "4/5",
+      rotation: 1.3,
+      zIndex: 3,
+      parallaxSpeed: 0.10,
+      mobileOrder: 6
+    }
+  },
+  {
+    id: "retail-marketing-insight-shoppers-stop",
+    cover: "assets/projects/covers/retail-marketing-shoppers-stop.jpg",
+    alt: "Retail Marketing Insight — Shoppers Stop cover",
+    href: "projects/retail-marketing-insight-shoppers-stop/",
+    spatial: {
+      left: "16%",
+      top: "365vh",
+      width: "680px",
+      aspectRatio: "16/10",
+      rotation: -0.4,
+      zIndex: 2,
+      parallaxSpeed: 0.14,
+      mobileOrder: 7
+    }
+  },
+  {
+    id: "hireficient-from-market-gap-to-viable-venture",
+    cover: "assets/projects/covers/hireficient-market-gap.jpg",
+    alt: "HireFicient — From Market Gap to Viable Venture cover",
+    href: "projects/hireficient-from-market-gap-to-viable-venture/",
+    spatial: {
+      left: "62%",
+      top: "415vh",
+      width: "410px",
+      aspectRatio: "4/5",
+      rotation: 0.9,
+      zIndex: 2,
+      parallaxSpeed: 0.19,
+      mobileOrder: 8
+    }
+  },
+  {
+    id: "d2c-brands-in-india-and-their-marketing-strategies",
+    cover: "assets/projects/covers/d2c-brands-india.jpg",
+    alt: "D2C Brands in India & Their Marketing Strategies cover",
+    href: "projects/d2c-brands-in-india-and-their-marketing-strategies/",
+    spatial: {
+      left: "8%",
+      top: "460vh",
+      width: "460px",
+      aspectRatio: "1/1",
+      rotation: -1.0,
+      zIndex: 1,
+      parallaxSpeed: 0.21,
+      mobileOrder: 9
+    }
+  },
+  {
+    id: "forecasting-demand",
+    cover: "assets/projects/covers/forecasting-demand.jpg",
+    alt: "Forecasting Demand cover",
+    href: "projects/forecasting-demand/",
+    spatial: {
+      left: "48%",
+      top: "505vh",
+      width: "540px",
+      aspectRatio: "16/9",
+      rotation: 0.7,
+      zIndex: 2,
+      parallaxSpeed: 0.16,
+      mobileOrder: 10
+    }
+  },
+  {
+    id: "a-sustainable-product",
+    cover: "assets/projects/covers/sustainable-product.jpg",
+    alt: "A Sustainable Product cover",
+    href: "projects/a-sustainable-product/",
+    spatial: {
+      left: "12%",
+      top: "555vh",
+      width: "480px",
+      aspectRatio: "3/4",
+      rotation: -0.85,
+      zIndex: 2,
+      parallaxSpeed: 0.13,
+      mobileOrder: 11
+    }
+  },
+  {
+    id: "nazakath",
+    cover: "assets/projects/covers/nazakath.jpg",
+    alt: "NAZAKATH cover",
+    href: "projects/nazakath/",
+    spatial: {
+      left: "56%",
+      top: "605vh",
+      width: "490px",
+      aspectRatio: "4/5",
+      rotation: 1.15,
+      zIndex: 3,
+      parallaxSpeed: 0.15,
+      mobileOrder: 12
+    }
+  },
+  {
+    id: "the-airport-was-never-the-problem",
+    cover: "assets/projects/covers/airport-never-the-problem.jpg",
+    alt: "The Airport Was Never the Problem cover",
+    href: "projects/the-airport-was-never-the-problem/",
+    spatial: {
+      left: "20%",
+      top: "660vh",
+      width: "740px",
+      aspectRatio: "16/9",
+      rotation: -0.3,
+      zIndex: 2,
+      parallaxSpeed: 0.17,
+      mobileOrder: 13
+    }
+  }
+];

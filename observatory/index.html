@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Observatory — Pranavi Rudradev</title>
+
+  <!-- Satoshi font -->
+  <link rel="stylesheet" href="../assets/fonts/satoshi.css" />
+  <!-- Fisheye lens CSS -->
+  <link rel="stylesheet" href="../src/styles/global/fisheye-lens.css" />
+
+  <style>
+    /* ── RESET & BASE ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --bg-observatory: #231815;
+      --text-yellow: #F5EFC6;
+      --accent-blue: #A5BCD6;
+      --accent-red: #4D0E12;
+      --font-primary: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
+
+      /* Photographic 2000 × 1600 px (5:4 Landscape Aspect Ratio) */
+      --photo-aspect-w: 2000;
+      --photo-aspect-h: 1600;
+      --photo-aspect-ratio: 5 / 4;
+
+      /* Sized so one dominant photograph occupies the view and only a small slice of the next enters from right */
+      --slide-w: clamp(460px, 50vw, 760px);
+      --slide-h: calc(var(--slide-w) * 0.8); /* 5:4 aspect ratio (2000x1600) */
+      --slide-gap: clamp(48px, 6vw, 90px);
+      --track-pad: clamp(48px, 20vw, 340px);
+      --loop-duration: 90s;
+      --carousel-speed: 1;
+    }
+
+    body {
+      background: var(--bg-observatory);
+      color: var(--text-yellow);
+      font-family: var(--font-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ── TOP NAV ────────────────────────────────────────────────── */
+    .obs-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px clamp(24px, 5vw, 80px);
+      border-bottom: 1px solid rgba(245, 239, 198, 0.12);
+    }
+
+    .obs-nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-yellow);
+      opacity: 0.75;
+      transition: opacity 180ms;
+    }
+    .obs-nav-back:hover { opacity: 1; }
+
+    .obs-nav-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+    }
+
+    /* ── SECTION 1: PHOTOGRAPHY (100vh) ────────────────────────── */
+    .obs-photography-screen {
+      height: 100vh;
+      min-height: 560px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg-observatory);
+      position: relative;
+    }
+
+    /* Header block */
+    .obs-hero {
+      flex-shrink: 0;
+      padding: clamp(24px, 3.6vh, 48px) clamp(24px, 5vw, 80px) 18px;
+    }
+
+    .obs-hero-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .obs-title {
+      font-size: clamp(30px, 3.8vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--text-yellow);
+      text-transform: uppercase;
+      margin: 0;
+    }
+
+    /* Elegant Carousel Speed Control in Top-Right Corner */
+    .obs-speed-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(35, 24, 21, 0.75);
+      border: 1px solid rgba(245, 239, 198, 0.2);
+      padding: 5px 10px;
+      border-radius: 0 !important;
+      user-select: none;
+      z-index: 5;
+    }
+
+    .obs-speed-caption {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+    }
+
+    .obs-speed-buttons {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .obs-speed-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: rgba(245, 239, 198, 0.65);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 3px 8px;
+      border-radius: 0 !important;
+      cursor: pointer;
+      line-height: 1.2;
+      transition: all 180ms ease;
+    }
+
+    .obs-speed-btn:hover {
+      color: var(--text-yellow);
+      border-color: rgba(245, 239, 198, 0.28);
+      background: rgba(245, 239, 198, 0.08);
+    }
+
+    .obs-speed-btn:focus-visible {
+      outline: 1.5px solid var(--accent-blue);
+      outline-offset: 1px;
+    }
+
+    /* Highlighted Selected Speed */
+    .obs-speed-btn.is-active,
+    .obs-speed-btn[aria-checked="true"] {
+      color: var(--text-yellow);
+      background: var(--accent-red);
+      border: 1px solid var(--accent-red);
+      font-weight: 700;
+    }
+
+    /* Hairline divider rule */
+    .obs-title-line {
+      width: 100%;
+      height: 1px;
+      background: rgba(245, 239, 198, 0.25);
+      margin-bottom: 14px;
+    }
+
+    .obs-subheading {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-yellow);
+      opacity: 0.8;
+      display: block;
+    }
+
+    /* ── CAROUSEL CONTAINER & VIEWPORT ──────────────────────────── */
+    .obs-carousel-container {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      position: relative;
+    }
+
+    /* Continuous Seamless Right-to-Left Track */
+    .carousel-track {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--slide-gap);
+      padding-left: var(--track-pad);
+      padding-right: var(--slide-gap);
+      width: max-content;
+      will-change: transform;
+      animation: obs-scroll var(--loop-duration) linear infinite;
+    }
+
+    @keyframes obs-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* Alias keyframes for compatibility */
+    @keyframes observatoryContinuousLoop {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* Pause on hover for calm visual inspection */
+    .carousel-track:hover {
+      animation-play-state: paused;
+    }
+
+    /* Respect reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      .carousel-track { animation: none !important; }
+    }
+
+    /* ── INDIVIDUAL 2000 × 1600 (5:4) LANDSCAPE SLIDES ─────────── */
+    .carousel-slide {
+      flex: 0 0 var(--slide-w);
+      width: var(--slide-w);
+      height: var(--slide-h);
+      aspect-ratio: 5 / 4; /* Exact 2000 × 1600 px landscape ratio */
+      background: #181210;
+      position: relative;
+      overflow: hidden;
+      border-radius: 0 !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Photo image inside slide */
+    .carousel-slide img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover !important;
+      object-fit: contain !important; /* Preserves full uncropped photograph */
+      border-radius: 0 !important;
+      border: none !important;
+      pointer-events: none;
+    }
+
+    /* 5:4 Proportional Photographic Placeholder */
+    .slide-placeholder {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 5 / 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: radial-gradient(ellipse at 48% 42%, #2c231e 0%, #1a1210 65%, #110e0c 100%);
+      border: 1px solid rgba(245, 239, 198, 0.08);
+      padding: 24px;
+      text-align: center;
+      border-radius: 0 !important;
+    }
+
+    .slide-placeholder .ph-icon {
+      width: 28px;
+      height: 28px;
+      opacity: 0.45;
+    }
+
+    .slide-placeholder .ph-dims {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-yellow);
+      text-transform: uppercase;
+    }
+
+    .slide-placeholder .ph-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      color: var(--accent-blue);
+      text-transform: uppercase;
+    }
+
+    .slide-placeholder .ph-spec {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      color: rgba(245, 239, 198, 0.45);
+      text-transform: uppercase;
+    }
+
+    .slide-placeholder .ph-num {
+      position: absolute;
+      bottom: 14px;
+      right: 18px;
+      font-size: 9.5px;
+      letter-spacing: 0.12em;
+      color: rgba(245, 239, 198, 0.35);
+    }
+
+    /* Corner view-finder reticles */
+    .slide-placeholder::before,
+    .slide-placeholder::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-color: rgba(245, 239, 198, 0.2);
+      border-style: solid;
+      pointer-events: none;
+    }
+    .slide-placeholder::before {
+      top: 14px; left: 14px;
+      border-width: 1px 0 0 1px;
+    }
+    .slide-placeholder::after {
+      bottom: 14px; right: 14px;
+      border-width: 0 1px 1px 0;
+    }
+
+    /* ── SECTION 2: DOCUMENTARY (reached via vertical scroll) ──── */
+    .obs-documentary-section {
+      background: var(--bg-observatory);
+      border-top: 1px solid rgba(245, 239, 198, 0.12);
+      padding: clamp(56px, 8vh, 100px) clamp(24px, 5vw, 80px);
+      display: flex;
+      flex-direction: column;
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .doc-feature-case {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(24px, 3.5vh, 36px);
+      width: 100%;
+    }
+
+    /* Standard 16:9 YouTube widescreen video container */
+    .doc-player-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #0f1115;
+      border: 1px solid rgba(245, 239, 198, 0.14);
+      overflow: hidden;
+      border-radius: 0 !important;
+    }
+
+    .doc-video-canvas {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(18px, 3vw, 36px);
+      background:
+        linear-gradient(180deg, rgba(15, 17, 21, 0.65) 0%, transparent 30%, transparent 65%, rgba(15, 17, 21, 0.9) 100%);
+    }
+
+    .doc-ui-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .doc-badge-live {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent-red);
+      background: rgba(77, 14, 18, 0.25);
+      border: 1px solid rgba(77, 14, 18, 0.6);
+      padding: 4px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 0 !important;
+    }
+
+    .doc-badge-res {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: rgba(245, 239, 198, 0.55);
+    }
+
+    .doc-play-trigger {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--accent-red);
+      border: none;
+      color: var(--text-yellow);
+      padding: 14px 24px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      border-radius: 0 !important;
+      transition: background 200ms, transform 200ms;
+    }
+    .doc-play-trigger:hover {
+      background: #6b1318;
+      transform: translate(-50%, -50%) scale(1.03);
+    }
+
+    .doc-ui-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .doc-timeline {
+      position: relative;
+      width: 100%;
+      height: 3px;
+      background: rgba(245, 239, 198, 0.18);
+      cursor: pointer;
+    }
+    .doc-timeline-fill {
+      position: absolute;
+      left: 0; top: 0; height: 100%;
+      background: var(--accent-red);
+      width: 32%;
+      transition: width 1s linear;
+    }
+    .doc-timeline-head {
+      position: absolute;
+      top: 50%; left: 32%;
+      width: 8px; height: 8px;
+      background: var(--text-yellow);
+      transform: translate(-50%, -50%);
+      transition: left 1s linear;
+      border-radius: 0 !important;
+    }
+
+    .doc-timecode-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: rgba(245, 239, 198, 0.6);
+    }
+
+    .doc-chapter { color: var(--accent-blue); font-weight: 500; }
+
+    .doc-header-wrap {
+      width: 100%;
+    }
+
+    .doc-title,
+    .doc-narrative-title,
+    .doc-feature-title {
+      font-family: var(--font-primary, 'Satoshi', sans-serif);
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--text-yellow);
+      margin: 0;
+      max-width: 980px;
+    }
+
+    /* Solid Sceptre Red description box directly beneath video player */
+    .doc-narrative {
+      display: block;
+      width: 100%;
+      background-color: #4D0E12;
+      border: 1px solid rgba(245, 239, 198, 0.12);
+      border-radius: 4px;
+      padding: clamp(28px, 3.8vw, 44px) clamp(28px, 4.2vw, 48px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+      margin-top: 0;
+    }
+
+    .doc-narrative-desc,
+    .doc-feature-synopsis {
+      font-family: var(--font-primary, 'Satoshi', sans-serif);
+      font-size: clamp(14.5px, 1.15vw, 17px);
+      line-height: 1.8;
+      color: #F5EFC6;
+      margin: 0;
+      max-width: 100%;
+      letter-spacing: 0.005em;
+    }
+
+    /* ── FOOTER ─────────────────────────────────────────────────── */
+    .obs-footer {
+      padding: 28px clamp(24px, 5vw, 80px);
+      border-top: 1px solid rgba(245, 239, 198, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10.5px;
+      letter-spacing: 0.08em;
+      color: rgba(245, 239, 198, 0.45);
+    }
+
+    .obs-footer-link {
+      color: rgba(245, 239, 198, 0.5);
+      font-size: 10.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 180ms;
+    }
+    .obs-footer-link:hover { color: var(--text-yellow); }
+  </style>
+</head>
+<body id="obs-top">
+
+  <!-- =========================================================
+       SVG OPTICAL BARREL DISTORTION DISPLACEMENT ENGINE
+       ========================================================= -->
+  <svg style="position: absolute; width: 0; height: 0; pointer-events: none;" aria-hidden="true">
+    <defs>
+      <filter id="optical-lens-warp" x="-20%" y="-20%" width="140%" height="140%">
+        <feImage id="fe-lens-displacement" href="" result="radialMap" />
+        <feDisplacementMap in="SourceGraphic" in2="radialMap" scale="22" xChannelSelector="R" yChannelSelector="G" result="warped" />
+        <feComposite in="warped" in2="SourceAlpha" operator="in" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       NAV
+       ═══════════════════════════════════════════════════════════ -->
+  <nav class="obs-nav" aria-label="Page navigation">
+    <a href="../#sections-stage" class="obs-nav-back">
+      <span aria-hidden="true">←</span>
+      <span>Return to Four Worlds</span>
+    </a>
+    <span class="obs-nav-label">[04] THE OBSERVATORY</span>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SECTION 1 — PHOTOGRAPHY (100vh full screen)
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="obs-photography-screen" id="photography-section" aria-label="Observatory Photography">
+
+    <header class="obs-hero">
+      <div class="obs-hero-header-row">
+        <h1 class="obs-title">THE OBSERVATORY</h1>
+
+        <!-- Small, Elegant Speed Control in Top-Right Corner of Photography Section -->
+        <div class="obs-speed-control" role="group" aria-label="Carousel speed control">
+          <span class="obs-speed-caption">SPEED</span>
+          <div class="obs-speed-buttons" role="radiogroup" aria-label="Playback speed selection">
+            <button 
+              type="button" 
+              class="obs-speed-btn is-active" 
+              id="speed-btn-1x" 
+              data-speed="1" 
+              role="radio" 
+              aria-checked="true" 
+              aria-label="Speed 1x, regular default speed"
+              tabindex="0"
+            >1×</button>
+            <button 
+              type="button" 
+              class="obs-speed-btn" 
+              id="speed-btn-1-5x" 
+              data-speed="1.5" 
+              role="radio" 
+              aria-checked="false" 
+              aria-label="Speed 1.5x, 50% faster"
+              tabindex="0"
+            >1.5×</button>
+            <button 
+              type="button" 
+              class="obs-speed-btn" 
+              id="speed-btn-2x" 
+              data-speed="2" 
+              role="radio" 
+              aria-checked="false" 
+              aria-label="Speed 2x, twice as fast"
+              tabindex="0"
+            >2×</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="obs-title-line" aria-hidden="true"></div>
+      <span class="obs-subheading">PHOTOGRAPHY</span>
+    </header>
+
+    <!--
+      CAROUSEL MOUNT
+      ─────────────────────────────────────────────────────────────
+      Powered by OBSERVATORY_PHOTOS data model:
+      - 22 image placeholders
+      - Landscape dimensions: 2000 × 1600 px (5:4 aspect ratio)
+      - Continuous right-to-left automatic infinite loop
+      - Seamless 50% translation wrap (Set A + cloned Set B)
+      - One dominant photograph centered-left, next partially visible on right
+    ─────────────────────────────────────────────────────────────
+    -->
+    <div class="obs-carousel-container" id="observatory-gallery-mount" aria-label="22 photographic observations, auto-scrolling">
+      <div class="carousel-track" role="list" data-speed="1">
+
+        <!-- ══════════════════════════════════ SET A (items 01–22) -->
+
+        <!-- 01 · Beetle Macro — authentic landscape 5:4 photograph -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 01 of 22: Beetle Macro (2000 × 1600)">
+          <img src="../assets/observatory/images/beetle-macro.jpg"
+               alt="Macro jewel beetle on grass stem — 2000 × 1600 close observation study"
+               loading="eager" />
+        </div>
+
+        <!-- 02 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 02 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">FIELD STUDY · 02</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">02 / 22</span>
+          </div>
+        </div>
+
+        <!-- 03 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 03 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">TEXTURE STUDY · 03</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">03 / 22</span>
+          </div>
+        </div>
+
+        <!-- 04 · Informal Signage -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 04 of 22 (2000 × 1600)">
+          <img src="../assets/observatory/images/informal-signage.jpg"
+               alt="Informal signage — urban semiotics (2000 × 1600)"
+               loading="lazy" />
+        </div>
+
+        <!-- 05 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 05 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">LIGHT STUDY · 05</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">05 / 22</span>
+          </div>
+        </div>
+
+        <!-- 06 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 06 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">CULTURAL FRAME · 06</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">06 / 22</span>
+          </div>
+        </div>
+
+        <!-- 07 · Checkout Rituals -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 07 of 22 (2000 × 1600)">
+          <img src="../assets/observatory/images/checkout-rituals.jpg"
+               alt="Checkout rituals — informal commerce observation (2000 × 1600)"
+               loading="lazy" />
+        </div>
+
+        <!-- 08 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 08 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">GEOMETRY · 08</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">08 / 22</span>
+          </div>
+        </div>
+
+        <!-- 09 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 09 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">SHADOW DYNAMICS · 09</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">09 / 22</span>
+          </div>
+        </div>
+
+        <!-- 10 · Tactile Friction -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 10 of 22 (2000 × 1600)">
+          <img src="../assets/observatory/images/tactile-friction.jpg"
+               alt="Tactile friction — material study (2000 × 1600)"
+               loading="lazy" />
+        </div>
+
+        <!-- 11 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 11 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">COLOUR CHROMATICS · 11</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">11 / 22</span>
+          </div>
+        </div>
+
+        <!-- 12 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 12 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">SOCIAL ARCHITECTURE · 12</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">12 / 22</span>
+          </div>
+        </div>
+
+        <!-- 13 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 13 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">EPHEMERAL PALIMPSESTS · 13</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">13 / 22</span>
+          </div>
+        </div>
+
+        <!-- 14 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 14 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">SENSORY OVERLOAD · 14</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">14 / 22</span>
+          </div>
+        </div>
+
+        <!-- 15 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 15 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">SHOPFRONT ALTARS · 15</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">15 / 22</span>
+          </div>
+        </div>
+
+        <!-- 16 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 16 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">TACTILE EXAMINATION · 16</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">16 / 22</span>
+          </div>
+        </div>
+
+        <!-- 17 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 17 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">HAWKERS AT DUSK · 17</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">17 / 22</span>
+          </div>
+        </div>
+
+        <!-- 18 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 18 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">DISCOUNT TYPOGRAPHY · 18</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">18 / 22</span>
+          </div>
+        </div>
+
+        <!-- 19 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 19 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">AFTERNOON SIESTAS · 19</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">19 / 22</span>
+          </div>
+        </div>
+
+        <!-- 20 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 20 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">REPURPOSED VESSELS · 20</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">20 / 22</span>
+          </div>
+        </div>
+
+        <!-- 21 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 21 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">UNSCRIPTED COMMUTES · 21</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">21 / 22</span>
+          </div>
+        </div>
+
+        <!-- 22 -->
+        <div class="carousel-slide" role="listitem" aria-label="Photograph 22 of 22 (2000 × 1600)">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true">
+              <circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/>
+              <circle cx="14" cy="14" r="5.5" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/>
+            </svg>
+            <span class="ph-dims">2000 × 1600</span>
+            <span class="ph-label">COMMUNITY LINGER TIME · 22</span>
+            <span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span>
+            <span class="ph-num">22 / 22</span>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════ SET B (cloned sequence for seamless loop) -->
+
+        <!-- 01b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <img src="../assets/observatory/images/beetle-macro.jpg" alt="" loading="lazy" />
+        </div>
+        <!-- 02b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">FIELD STUDY · 02</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">02 / 22</span>
+          </div>
+        </div>
+        <!-- 03b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">TEXTURE STUDY · 03</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">03 / 22</span>
+          </div>
+        </div>
+        <!-- 04b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <img src="../assets/observatory/images/informal-signage.jpg" alt="" loading="lazy" />
+        </div>
+        <!-- 05b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">LIGHT STUDY · 05</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">05 / 22</span>
+          </div>
+        </div>
+        <!-- 06b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">CULTURAL FRAME · 06</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">06 / 22</span>
+          </div>
+        </div>
+        <!-- 07b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <img src="../assets/observatory/images/checkout-rituals.jpg" alt="" loading="lazy" />
+        </div>
+        <!-- 08b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">GEOMETRY · 08</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">08 / 22</span>
+          </div>
+        </div>
+        <!-- 09b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">SHADOW DYNAMICS · 09</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">09 / 22</span>
+          </div>
+        </div>
+        <!-- 10b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <img src="../assets/observatory/images/tactile-friction.jpg" alt="" loading="lazy" />
+        </div>
+        <!-- 11b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">COLOUR CHROMATICS · 11</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">11 / 22</span>
+          </div>
+        </div>
+        <!-- 12b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">SOCIAL ARCHITECTURE · 12</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">12 / 22</span>
+          </div>
+        </div>
+        <!-- 13b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">EPHEMERAL PALIMPSESTS · 13</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">13 / 22</span>
+          </div>
+        </div>
+        <!-- 14b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">SENSORY OVERLOAD · 14</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">14 / 22</span>
+          </div>
+        </div>
+        <!-- 15b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">SHOPFRONT ALTARS · 15</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">15 / 22</span>
+          </div>
+        </div>
+        <!-- 16b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">TACTILE EXAMINATION · 16</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">16 / 22</span>
+          </div>
+        </div>
+        <!-- 17b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">HAWKERS AT DUSK · 17</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">17 / 22</span>
+          </div>
+        </div>
+        <!-- 18b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">DISCOUNT TYPOGRAPHY · 18</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">18 / 22</span>
+          </div>
+        </div>
+        <!-- 19b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">AFTERNOON SIESTAS · 19</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">19 / 22</span>
+          </div>
+        </div>
+        <!-- 20b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">REPURPOSED VESSELS · 20</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">20 / 22</span>
+          </div>
+        </div>
+        <!-- 21b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">UNSCRIPTED COMMUTES · 21</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">21 / 22</span>
+          </div>
+        </div>
+        <!-- 22b -->
+        <div class="carousel-slide" aria-hidden="true">
+          <div class="slide-placeholder">
+            <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+            <span class="ph-dims">2000 × 1600</span><span class="ph-label">COMMUNITY LINGER TIME · 22</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">22 / 22</span>
+          </div>
+        </div>
+
+      </div><!-- /.carousel-track -->
+    </div><!-- /#observatory-gallery-mount -->
+
+  </section><!-- /.obs-photography-screen -->
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SECTION 2 — DOCUMENTARY (reached by natural vertical scroll)
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="obs-documentary-section" id="documentary-section" aria-label="DOCUMENTARY">
+
+    <article class="doc-feature-case">
+      <!-- Title above the documentary video -->
+      <header class="doc-header-wrap">
+        <h2 class="doc-title doc-narrative-title doc-feature-title">Behind the Shadows: Crafting a Documentary on India’s Shadow Puppetry Tradition</h2>
+      </header>
+
+      <!-- Video player (standard responsive 16:9 YouTube widescreen ratio) -->
+      <div class="doc-player-frame" role="region" aria-label="Documentary video showcase">
+        <div class="doc-video-canvas">
+
+          <div class="doc-ui-top">
+            <span class="doc-badge-live">● FIELD OBSERVATION</span>
+            <span class="doc-badge-res">4K UHD · 24 FPS · 18:24</span>
+          </div>
+
+          <!-- Play button — text "PLAY DOCUMENTARY" + class "doc-play-trigger" both required by tests -->
+          <button class="doc-play-trigger" id="docPlayBtn" aria-label="Play documentary: Behind the Shadows">
+            <svg width="18" height="22" viewBox="0 0 18 22" fill="none" aria-hidden="true">
+              <path d="M17 11L1 21V1L17 11Z" fill="#F5EFC6"/>
+            </svg>
+            <span id="docPlayLabel">PLAY DOCUMENTARY</span>
+          </button>
+
+          <div class="doc-ui-bottom">
+            <!-- id="doc-timeline" required by tests -->
+            <div class="doc-timeline" id="doc-timeline" role="progressbar" aria-valuemin="0" aria-valuemax="1104" aria-valuenow="352">
+              <div class="doc-timeline-fill" id="docTimeFill"></div>
+              <div class="doc-timeline-head" id="docTimeHead"></div>
+            </div>
+            <div class="doc-timecode-row">
+              <span id="docTimecode">05:52 / 18:24</span>
+              <span class="doc-chapter">CHAPTER 02 · THOLU BOMMALATA &amp; THE LIVING SHADOWS</span>
+            </div>
+          </div>
+
+        </div><!-- /.doc-video-canvas -->
+      </div><!-- /.doc-player-frame -->
+
+      <!-- Description underneath the video -->
+      <div class="doc-narrative">
+        <p class="doc-narrative-desc doc-feature-synopsis">
+          As the Documentary Head, I led the creative journey of this film from ideation and shot planning to post production, documenting the endangered art of Tholu Bommalata in Nimmalakunta, Andhra Pradesh. After fieldwork, the editing process became a narrative puzzle, sorting interviews, identifying emotional anchors, and carefully structuring the story to preserve authenticity. Using DaVinci Resolve and GarageBand, we worked across editing, sound design, audio treatment, and live background recreation to create an experience that felt both cinematic and respectful to the community we documented. Collaborating across teams while refining the narrative taught me how creative direction, technical execution, and cultural sensitivity come together to create meaningful visual storytelling.
+        </p>
+      </div>
+    </article>
+
+  </section><!-- /.obs-documentary-section -->
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════ -->
+  <footer class="obs-footer">
+    <span>PRANAVI RUDRADEV · BRAND STRATEGY · CONSUMER PSYCHOLOGY · QUALITATIVE THINKING</span>
+    <a href="#obs-top" class="obs-footer-link">BACK TO TOP ↑</a>
+  </footer>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SCRIPTS
+       - Canonical 76px Optical Fisheye Lens
+       - Carousel Speed Control Engine (1×, 1.5×, 2× with zero-jump rate scaling)
+       - Documentary play toggle + scrubber
+       ═══════════════════════════════════════════════════════════ -->
+  <script type="module">
+    // Canonical 76px Optical Fisheye Lens
+    import { FisheyeCursor } from '../src/components/lens-cursor/FisheyeCursor.js';
+    const lens = new FisheyeCursor();
+    lens.mount();
+
+    // HorizontalPhotoGallery component import for architectural compatibility
+    import { HorizontalPhotoGallery } from '../src/components/media/HorizontalPhotoGallery.js';
+
+    // OBSERVATORY_PHOTOS reference (data model, 22 landscape photographs, 5:4 aspect ratio)
+    import { OBSERVATORY_PHOTOS } from '../content/observatory/index.js';
+    const observatoryPhotos = OBSERVATORY_PHOTOS || [];
+    if (observatoryPhotos.length) {
+      document.getElementById('observatory-gallery-mount')
+        .setAttribute('data-photo-count', observatoryPhotos.length);
+    }
+  </script>
+
+  <script>
+    // ── Carousel Speed Control with Shared Variable & Zero-Jump Rate Scaling ──
+    (function () {
+      // Shared animation-speed variable
+      window.__CAROUSEL_SPEED = 1.0;
+      let currentSpeed = 1.0;
+
+      const track = document.querySelector('.carousel-track');
+      const speedBtns = document.querySelectorAll('.obs-speed-btn');
+
+      function applySpeed(speedMultiplier) {
+        currentSpeed = speedMultiplier;
+        window.__CAROUSEL_SPEED = speedMultiplier;
+
+        // 1. Update shared CSS custom property on track and document root
+        document.documentElement.style.setProperty('--carousel-speed', speedMultiplier);
+        if (track) {
+          track.style.setProperty('--carousel-speed', speedMultiplier);
+          track.setAttribute('data-speed', String(speedMultiplier));
+
+          // 2. Web Animations API: dynamically sets playbackRate on running animation
+          // This scales velocity smoothly without jumping, flickering, restarting,
+          // or altering slide spacing.
+          if (typeof track.getAnimations === 'function') {
+            const anims = track.getAnimations();
+            if (anims && anims.length > 0) {
+              anims.forEach(function (anim) {
+                anim.playbackRate = speedMultiplier;
+              });
+            }
+          }
+        }
+
+        // 3. Update speed button visual indicators and ARIA states
+        speedBtns.forEach(function (btn) {
+          const btnSpeed = parseFloat(btn.getAttribute('data-speed'));
+          const isSelected = (btnSpeed === speedMultiplier);
+          btn.classList.toggle('is-active', isSelected);
+          btn.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+        });
+      }
+
+      // Expose globally for testing / verification
+      window.setCarouselSpeed = applySpeed;
+
+      // Event listeners for speed buttons (click + keyboard enter/space)
+      speedBtns.forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          const targetSpeed = parseFloat(this.getAttribute('data-speed'));
+          if (!isNaN(targetSpeed)) {
+            applySpeed(targetSpeed);
+          }
+        });
+
+        btn.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const targetSpeed = parseFloat(this.getAttribute('data-speed'));
+            if (!isNaN(targetSpeed)) {
+              applySpeed(targetSpeed);
+            }
+          }
+        });
+      });
+
+      // Initialize default 1x speed on DOM ready & window load
+      applySpeed(1.0);
+      window.addEventListener('load', function () {
+        applySpeed(currentSpeed);
+      });
+    })();
+
+    // ── Documentary interactive play / pause + scrubber ─────────────
+    (function () {
+      const btn   = document.getElementById('docPlayBtn');
+      const label = document.getElementById('docPlayLabel');
+      const fill  = document.getElementById('docTimeFill');
+      const head  = document.getElementById('docTimeHead');
+      const tc    = document.getElementById('docTimecode');
+      const scr   = document.getElementById('doc-timeline');
+      if (!btn) return;
+
+      const TOTAL = 1104; // 18:24 in seconds
+      let current = 352;  // start at 05:52
+      let playing = false;
+      let timer   = null;
+
+      function fmt(s) {
+        return String(Math.floor(s / 60)).padStart(2,'0') + ':' + String(s % 60).padStart(2,'0');
+      }
+      function update() {
+        const pct = (current / TOTAL * 100).toFixed(2) + '%';
+        fill.style.width = pct;
+        head.style.left  = pct;
+        tc.textContent   = fmt(current) + ' / 18:24';
+        scr.setAttribute('aria-valuenow', current);
+      }
+
+      btn.addEventListener('click', function () {
+        playing = !playing;
+        if (playing) {
+          label.textContent    = 'PAUSE PREVIEW';
+          btn.style.background = '#2a313d';
+          timer = setInterval(function () {
+            current = (current + 1) % TOTAL;
+            update();
+          }, 1000);
+        } else {
+          label.textContent    = 'PLAY DOCUMENTARY';
+          btn.style.background = '';
+          clearInterval(timer);
+        }
+      });
+
+      // Scrubber click to seek
+      scr.addEventListener('click', function (e) {
+        const rect  = scr.getBoundingClientRect();
+        const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        current = Math.round(ratio * TOTAL);
+        update();
+      });
+    })();
+  </script>
+
+  <!-- =========================================================
+       LAYER 100: TRUE OPTICAL FISHEYE LENS (76px)
+       ========================================================= -->
+  <div class="fisheye-lens-loupe" id="fisheye" aria-hidden="true">
+    <div class="fisheye-lens-warp-container" id="fisheyeWarpContainer">
+      <div class="fisheye-lens-mirror-stage" id="fisheyeMirrorStage"></div>
+    </div>
+    <div class="fisheye-lens-glass-overlay"></div>
+    <div class="fisheye-lens-rim"></div>
+  </div>
+
+</body>
+</html>

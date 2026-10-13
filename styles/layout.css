@@ -1,0 +1,105 @@
+/**
+ * PRANAVI RUDRADEV PORTFOLIO — SPATIAL & EDITORIAL LAYOUT SYSTEM
+ * 
+ * Embodies:
+ * - spatial composition
+ * - asymmetric layouts
+ * - strong negative space
+ * - floating imagery
+ * - cardless editorial flow
+ * - creative-agency art direction
+ */
+
+.site-container {
+  width: 100%;
+  max-width: var(--grid-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-margin);
+  padding-right: var(--space-margin);
+}
+
+.site-section {
+  padding-top: var(--space-section);
+  padding-bottom: var(--space-section);
+  position: relative;
+}
+
+/* 12-column asymmetric editorial grid */
+.grid-editorial {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--space-gutter);
+  row-gap: clamp(32px, 6vw, 96px);
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .grid-editorial {
+    grid-template-columns: 1fr;
+    row-gap: 48px;
+  }
+}
+
+/* Column spans */
+.col-span-12 { grid-column: span 12 / span 12; }
+.col-span-11 { grid-column: span 11 / span 11; }
+.col-span-10 { grid-column: span 10 / span 10; }
+.col-span-9  { grid-column: span 9 / span 9; }
+.col-span-8  { grid-column: span 8 / span 8; }
+.col-span-7  { grid-column: span 7 / span 7; }
+.col-span-6  { grid-column: span 6 / span 6; }
+.col-span-5  { grid-column: span 5 / span 5; }
+.col-span-4  { grid-column: span 4 / span 4; }
+.col-span-3  { grid-column: span 3 / span 3; }
+
+/* Column starts */
+.col-start-1  { grid-column-start: 1; }
+.col-start-2  { grid-column-start: 2; }
+.col-start-3  { grid-column-start: 3; }
+.col-start-4  { grid-column-start: 4; }
+.col-start-5  { grid-column-start: 5; }
+.col-start-6  { grid-column-start: 6; }
+.col-start-7  { grid-column-start: 7; }
+.col-start-8  { grid-column-start: 8; }
+.col-start-9  { grid-column-start: 9; }
+.col-start-10 { grid-column-start: 10; }
+
+@media (max-width: 768px) {
+  .col-span-12, .col-span-11, .col-span-10, .col-span-9,
+  .col-span-8, .col-span-7, .col-span-6, .col-span-5,
+  .col-span-4, .col-span-3 {
+    grid-column: 1 / -1 !important;
+  }
+  .col-start-1, .col-start-2, .col-start-3, .col-start-4,
+  .col-start-5, .col-start-6, .col-start-7, .col-start-8,
+  .col-start-9, .col-start-10 {
+    grid-column-start: 1 !important;
+  }
+}
+
+/* Negative Space Sculptors */
+.negative-space-sm { height: clamp(24px, 4vw, 48px); }
+.negative-space-md { height: clamp(48px, 8vw, 96px); }
+.negative-space-lg { height: clamp(80px, 14vw, 160px); }
+
+/* Editorial Placed Object — CARDLESS, floating, asymmetric */
+.editorial-placed-item {
+  position: relative;
+  transition: transform var(--hover-duration) var(--hover-easing);
+  will-change: transform;
+}
+
+.editorial-placed-item:hover {
+  transform: translateY(-4px) scale(var(--hover-scale));
+}
+
+/* Hairline divider */
+.hairline-divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(245, 239, 198, 0.16);
+  border: none;
+  margin-top: var(--space-xl);
+  margin-bottom: var(--space-xl);
+}

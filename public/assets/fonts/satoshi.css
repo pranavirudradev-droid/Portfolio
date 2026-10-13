@@ -1,0 +1,17 @@
+/**
+ * PRANAVI RUDRADEV PORTFOLIO — SATOSHI FONT SYSTEM
+ * 
+ * Primary typeface across headings, body, navigation, labels, metadata, captions.
+ * Loaded from Fontshare CDN with full weights (300, 400, 500, 700, 900)
+ * and robust system sans-serif fallback stack.
+ */
+
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400,300&display=swap');
+
+/* Fallback local font declarations if offline */
+@font-face {
+  font-family: 'Satoshi Fallback';
+  src: local('Helvetica Neue'), local('Arial'), local('sans-serif');
+  font-weight: 300 900;
+  font-display: swap;
+}

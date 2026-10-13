@@ -1,0 +1,181 @@
+/**
+ * PRANAVI RUDRADEV PORTFOLIO — DOCUMENT & PDF VIEWER STYLES
+ * 
+ * Reusable system for:
+ * - PDF documents
+ * - PPT presentation exports
+ * - Image sequences
+ * 
+ * Features:
+ * - Vertical continuous scrolling
+ * - Responsive page rendering
+ * - High resolution container
+ * - Tactile paper texture
+ * - Lazy loading sheet states
+ * - Mobile responsive scaling
+ */
+
+.doc-viewer-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(35, 24, 21, 0.94);
+  backdrop-filter: blur(12px);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 350ms ease;
+}
+
+.doc-viewer-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Document Top Control Bar */
+.doc-viewer-header {
+  height: 64px;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-margin);
+  background-color: var(--color-java-brown);
+  border-bottom: 1px solid rgba(245, 239, 198, 0.16);
+  color: var(--color-transparent-yellow);
+}
+
+.doc-viewer-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.doc-viewer-title {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-nav);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-uppercase);
+  text-transform: uppercase;
+}
+
+.doc-viewer-badge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-cerulean-blue);
+  background: rgba(165, 188, 214, 0.12);
+  padding: 3px 8px;
+  border: 1px solid rgba(165, 188, 214, 0.25);
+}
+
+.doc-viewer-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.doc-viewer-btn {
+  font-family: var(--font-primary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-transparent-yellow);
+  padding: 8px 16px;
+  border: 1px solid rgba(245, 239, 198, 0.24);
+  background: transparent;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.doc-viewer-btn:hover {
+  background-color: var(--color-transparent-yellow);
+  color: var(--color-potting-soil);
+}
+
+.doc-viewer-btn-close {
+  border-color: rgba(77, 14, 18, 0.6);
+  color: var(--color-transparent-yellow);
+}
+
+.doc-viewer-btn-close:hover {
+  background-color: var(--color-sceptre-red);
+  color: var(--color-transparent-yellow);
+}
+
+/* Vertical Scroll Track */
+.doc-viewer-track {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: clamp(32px, 5vw, 64px) var(--space-margin);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(24px, 4vw, 48px);
+  scroll-behavior: smooth;
+}
+
+/* Tactile Document Sheet (Paper container) */
+.doc-sheet {
+  width: 100%;
+  max-width: 980px;
+  background-color: #F8F5EB; /* Crisp tactile off-white paper */
+  color: var(--color-potting-soil); /* Strictly dark text on light paper */
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+  border-radius: 0;
+  border: 1px solid rgba(245, 239, 198, 0.2);
+  position: relative;
+  overflow: hidden;
+  transition: transform 300ms ease;
+}
+
+.doc-sheet-presentation {
+  aspect-ratio: 16 / 9;
+}
+
+.doc-sheet-portrait {
+  aspect-ratio: 1 / 1.414; /* A4 aspect ratio */
+}
+
+/* Lazy loading placeholder sheet */
+.doc-sheet.is-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 480px;
+  background: #2D1A16;
+  color: var(--color-transparent-yellow);
+}
+
+.doc-sheet-page-indicator {
+  position: absolute;
+  bottom: 14px;
+  right: 18px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: rgba(74, 46, 39, 0.65);
+  letter-spacing: 0.05em;
+}
+
+/* Native Iframe PDF / Object Fallback */
+.doc-viewer-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .doc-viewer-header {
+    height: auto;
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .doc-viewer-track {
+    padding: 20px 12px;
+    gap: 20px;
+  }
+}

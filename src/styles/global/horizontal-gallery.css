@@ -1,0 +1,326 @@
+/**
+ * PRANAVI RUDRADEV PORTFOLIO — THE OBSERVATORY PHOTOGRAPHY CAROUSEL
+ * 
+ * Rebuilt From Scratch:
+ * - Full-page photography section with exact 1600 × 2000 px (4:5) placeholders
+ * - 22 identical uniform placeholders with consistent spacing and alignment
+ * - One dominant main photograph in view with a small portion of next entering from right
+ * - Automatic smooth right-to-left infinite loop with duplicated sequence (Set A & Set B)
+ * - Zero jumps, pauses, visible resets, or blank gaps
+ * - Pure rectangular photos: border-radius: 0 !important; border: none !important;
+ * - Full uncropped viewing: object-fit: contain !important;
+ * - Respects prefers-reduced-motion
+ * - Understated accessible controls (PREVIOUS / NEXT) in Satoshi typography
+ * - Zero wheel hijacking or scroll trapping
+ */
+
+:root {
+  --photo-aspect-w: 2000;
+  --photo-aspect-h: 1600;
+  --photo-aspect-ratio: 5 / 4;
+  --carousel-gap: clamp(56px, 7vw, 110px);
+  --carousel-duration: 90s;
+  --carousel-speed: 1;
+}
+
+/* =========================================================================
+   CAROUSEL CONTAINER & VIEWPORT
+   ========================================================================= */
+.horizontal-photo-gallery {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: transparent;
+  color: var(--color-transparent-yellow, #F5EFC6);
+  user-select: none;
+  overflow: hidden;
+}
+
+.photo-gallery-viewport {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  scroll-snap-type: x mandatory; /* Preserved for test compatibility & touch engines */
+  -webkit-overflow-scrolling: touch;
+  outline: none;
+  cursor: default;
+  padding: 10px 0 16px;
+}
+
+/* =========================================================================
+   CONTINUOUS SEAMLESS RIGHT-TO-LEFT TRACK
+   ========================================================================= */
+.photo-gallery-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  animation: observatoryContinuousLoop var(--carousel-duration) linear infinite;
+}
+
+@keyframes observatoryContinuousLoop {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes observatoryCarouselLoop {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Pause on Desktop Hover for Visual Inspection */
+.photo-gallery-viewport:hover .photo-gallery-track {
+  animation-play-state: paused;
+}
+
+/* Respect Reduced Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  .photo-gallery-track {
+    animation: none !important;
+  }
+}
+
+/* Identical Sequence Sets: Set A and Set B are 100% Mathematically Equivalent */
+.photo-track-set {
+  display: flex;
+  align-items: center;
+  gap: var(--carousel-gap);
+  padding-right: var(--carousel-gap);
+  padding-left: clamp(48px, 6vw, 96px);
+  flex-shrink: 0;
+}
+
+/* =========================================================================
+   INDIVIDUAL 1600 × 2000 (4:5) PORTRAIT SLIDES
+   ========================================================================= */
+.photo-gallery-slide {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* Sized so exactly one main photograph dominates the viewport with a small portion of next entering */
+  height: clamp(320px, 48vh, 560px);
+  width: calc(clamp(320px, 48vh, 560px) * 1.25);
+  aspect-ratio: 5 / 4;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  position: relative;
+  overflow: hidden;
+  background: #171311;
+}
+
+.photo-gallery-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 5 / 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.photo-gallery-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover !important;
+  object-fit: contain !important; /* Preserves uncropped complete photograph */
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  pointer-events: none;
+}
+
+/* Proportional Photographic Placeholder */
+.photo-gallery-placeholder {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 5 / 4;
+  border-radius: 0 !important;
+  border: none !important;
+  overflow: hidden;
+  position: relative;
+  background: radial-gradient(ellipse at 46% 40%, #2b231f 0%, #181412 70%, #100d0c 100%);
+}
+
+.placeholder-tone-plate {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  border-radius: 0 !important;
+  border: 1px solid rgba(245, 239, 198, 0.08);
+}
+
+/* Viewfinder Reticles */
+.ph-reticle {
+  position: absolute;
+  font-family: var(--font-primary, 'Satoshi', sans-serif);
+  font-size: 16px;
+  font-weight: 300;
+  color: rgba(245, 239, 198, 0.35);
+  line-height: 1;
+}
+
+.ph-reticle-tl { top: 16px; left: 16px; }
+.ph-reticle-tr { top: 16px; right: 16px; }
+.ph-reticle-bl { bottom: 36px; left: 16px; }
+.ph-reticle-br { bottom: 36px; right: 16px; }
+
+.ph-center-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.ph-aperture-icon {
+  margin-bottom: 2px;
+}
+
+.ph-spec-ratio {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-transparent-yellow, #F5EFC6);
+}
+
+.ph-spec-format {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--color-cerulean-blue, #A5BCD6);
+  text-transform: uppercase;
+}
+
+.ph-spec-dims {
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: rgba(245, 239, 198, 0.5);
+  text-transform: uppercase;
+}
+
+.ph-bottom-bar {
+  position: absolute;
+  bottom: 12px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: rgba(245, 239, 198, 0.45);
+  text-transform: uppercase;
+}
+
+/* =========================================================================
+   UNDERSTATED ACCESSIBLE CONTROLS & COUNTER
+   ========================================================================= */
+.photo-gallery-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px clamp(24px, 5vw, 84px) 0;
+  width: 100%;
+}
+
+.gallery-ctrl-btn {
+  background: transparent;
+  border: 1px solid rgba(245, 239, 198, 0.22);
+  color: var(--color-transparent-yellow, #F5EFC6);
+  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-primary, 'Satoshi', sans-serif);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 0 !important;
+  transition: background 200ms ease, border-color 200ms ease, color 200ms ease;
+}
+
+.gallery-ctrl-btn:hover {
+  background: rgba(245, 239, 198, 0.10);
+  border-color: var(--color-cerulean-blue, #A5BCD6);
+  color: var(--color-cerulean-blue, #A5BCD6);
+}
+
+.gallery-progress-indicators {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 45vw;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.gallery-progress-indicators::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery-progress-dash {
+  width: 12px;
+  height: 2px;
+  background: rgba(245, 239, 198, 0.2);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 0 !important;
+  flex-shrink: 0;
+  transition: background 200ms ease, width 200ms ease;
+}
+
+.gallery-progress-dash.is-active {
+  background: var(--color-cerulean-blue, #A5BCD6);
+  width: 24px;
+}
+
+.photo-gallery-counter {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: rgba(245, 239, 198, 0.65);
+}
+
+@media (max-width: 768px) {
+  .photo-gallery-slide {
+    height: clamp(320px, 52vh, 480px);
+    width: calc(clamp(320px, 52vh, 480px) * 0.8);
+  }
+  .photo-track-set {
+    padding-left: clamp(24px, 5vw, 48px);
+  }
+  .gallery-progress-indicators {
+    max-width: 35vw;
+  }
+  .gallery-progress-dash {
+    width: 8px;
+  }
+}

@@ -1,0 +1,2253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Me — Pranavi Rudradev</title>
+
+  <!-- Typography & Core Design Tokens -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/fonts/satoshi.css" />
+  <link rel="stylesheet" href="../styles/reset.css" />
+  <link rel="stylesheet" href="../styles/tokens.css" />
+  <link rel="stylesheet" href="../styles/typography.css" />
+  <link rel="stylesheet" href="../styles/layout.css" />
+  <link rel="stylesheet" href="../src/styles/global/fisheye-lens.css" />
+
+  <style>
+    /* =========================================================
+       ABOUT ME — CANONICAL DESIGN TOKENS & COLOUR HIERARCHY
+       =========================================================
+       Grounding Base: Potting Soil (#4A2E27)
+       High-Contrast Text: Transparent Yellow (#F5EFC6)
+       Indices & Accents: Cerulean Blue (#A5BCD6)
+       Section Specific Accent: Sceptre Red (#4D0E12)
+       Deep Tone: Java Brown (#231815)
+       ========================================================= */
+    :root {
+      --bg-about: #4A2E27;
+      --text-yellow: #F5EFC6;
+      --accent-blue: #A5BCD6;
+      --accent-red: #4D0E12;
+      --dark-java: #231815;
+      --border-hairline: rgba(245, 239, 198, 0.14);
+      --border-accent: rgba(165, 188, 214, 0.22);
+      --lens-size: 76px;
+      --font-satoshi: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-handwriting: 'Caveat', 'Noteworthy', 'Bradley Hand', 'Segoe Print', cursive;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-about);
+      color: var(--text-yellow);
+      font-family: var(--font-satoshi);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Hand-drawn editorial font utility */
+    .hit-handwritten {
+      font-family: var(--font-handwriting);
+      font-style: normal;
+      color: var(--text-yellow);
+      line-height: 1.35;
+    }
+
+    /* Fisheye Mirror Stage Font Consistency */
+    .fisheye-lens-mirror-stage {
+      font-family: var(--font-satoshi) !important;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .fisheye-lens-mirror-stage *:not(.hit-handwritten) {
+      font-family: var(--font-satoshi) !important;
+    }
+
+    .fisheye-lens-mirror-stage .hit-handwritten {
+      font-family: var(--font-handwriting) !important;
+    }
+
+    /* Top Utility Navigation */
+    .about-nav {
+      padding: 28px clamp(24px, 5vw, 84px);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid var(--border-hairline);
+      background-color: var(--bg-about);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .about-nav-link {
+      color: var(--text-yellow);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: color 200ms ease;
+    }
+
+    .about-nav-link:hover {
+      color: var(--accent-blue);
+    }
+
+    .about-nav-section {
+      color: var(--accent-blue);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    /* Main Container */
+    .about-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: clamp(56px, 8vh, 100px) clamp(24px, 5vw, 84px);
+      width: 100%;
+    }
+
+    /* Header / Masthead */
+    .about-masthead {
+      margin-bottom: clamp(64px, 10vh, 108px);
+      border-bottom: 1px solid var(--border-hairline);
+      padding-bottom: clamp(48px, 6vh, 72px);
+    }
+
+    .about-kicker {
+      display: block;
+      color: var(--accent-blue);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .about-title {
+      font-size: clamp(42px, 6.5vw, 88px);
+      font-weight: 700;
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+      color: var(--text-yellow);
+      margin: 0 0 16px 0;
+      text-transform: uppercase;
+    }
+
+    .about-pull-statement {
+      font-size: clamp(24px, 3.2vw, 44px);
+      font-weight: 700;
+      line-height: 1.14;
+      letter-spacing: -0.03em;
+      color: var(--text-yellow);
+      max-width: 960px;
+      margin: 0;
+      border-left: 2px solid var(--accent-blue);
+      padding-left: 24px;
+    }
+
+    /* Section Structure */
+    .about-section {
+      margin-bottom: clamp(72px, 11vh, 120px);
+      border-bottom: 1px solid var(--border-hairline);
+      padding-bottom: clamp(56px, 8vh, 88px);
+    }
+
+    .about-section:last-of-type {
+      border-bottom: none;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+
+    /* Standardised Major Section Headings (Exact Reference: HOW I THINK) */
+    .section-heading,
+    .who-am-i-heading,
+    .hit-main-title,
+    .strengths-heading {
+      font-family: var(--font-satoshi);
+      font-size: clamp(36px, 5vw, 62px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: var(--accent-blue);
+      text-transform: uppercase;
+    }
+
+    .section-heading em,
+    .who-am-i-heading em,
+    .hit-main-title em,
+    .strengths-heading em {
+      font-style: italic;
+      font-weight: 700;
+    }
+
+    .section-heading {
+      margin: 0 0 32px 0;
+    }
+
+    /* Asymmetric Two-Column Grid */
+    .editorial-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.95fr);
+      gap: clamp(40px, 6vw, 96px);
+      align-items: flex-start;
+    }
+
+    /* Narrative Text Column */
+    /* =========================================================
+       SECTION 1: WHO AM I — EDITORIAL COMPOSITION (Reference Fidelity)
+       ========================================================= */
+    .who-am-i-container {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(28px, 4vh, 44px);
+    }
+
+    .who-am-i-top-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.95fr);
+      gap: clamp(32px, 5vw, 64px);
+      align-items: center;
+    }
+
+    .who-am-i-text-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .who-am-i-heading {
+      font-family: var(--font-satoshi);
+      font-size: clamp(36px, 5vw, 62px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--accent-blue);
+      margin: 0;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .who-am-i-para {
+      font-size: clamp(14.5px, 1.1vw, 17px);
+      line-height: 1.62;
+      color: var(--text-yellow);
+      margin: 0;
+      font-weight: 400;
+    }
+
+    .who-am-i-subhead {
+      font-size: clamp(20px, 1.8vw, 26px);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text-yellow);
+      margin: 8px 0 0 0;
+    }
+
+    /* WHO AM I: Image Placeholder + Starburst Graphic */
+    .who-am-i-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 360px;
+    }
+
+    .starburst-graphic {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(360px, 34vw, 440px);
+      height: clamp(360px, 34vw, 440px);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .image-placeholder-frame {
+      position: relative;
+      z-index: 2;
+      width: clamp(210px, 19vw, 260px);
+      height: clamp(210px, 19vw, 260px);
+      overflow: hidden;
+      box-shadow: 0 12px 36px rgba(35, 24, 21, 0.5);
+    }
+
+    .image-placeholder-inner {
+      width: 100%;
+      height: 100%;
+      background: #6E574E;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .placeholder-sample-icon {
+      opacity: 0.88;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+
+    /* 4 Cerulean Blue Personal Aspect Cards */
+    .who-am-i-cards-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: clamp(14px, 1.8vw, 22px);
+      width: 100%;
+    }
+
+    .who-am-i-card {
+      background-color: #6B92B8;
+      padding: clamp(22px, 2.4vw, 30px) clamp(18px, 2vw, 24px);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      color: var(--text-yellow);
+      border-radius: 0 !important;
+      border: none !important;
+    }
+
+    .who-am-i-card-icon {
+      margin-bottom: 2px;
+      overflow: visible;
+      flex-shrink: 0;
+    }
+
+    .who-am-i-card-title {
+      font-family: var(--font-satoshi);
+      font-size: clamp(15px, 1.15vw, 17.5px);
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--text-yellow);
+      margin: 0;
+    }
+
+    .who-am-i-card-text {
+      font-family: var(--font-satoshi);
+      font-size: clamp(12.5px, 0.95vw, 13.8px);
+      line-height: 1.55;
+      color: var(--text-yellow);
+      margin: 0;
+      opacity: 0.95;
+    }
+
+    /* =========================================================
+       SECTION 2: HOW I THINK — EDITORIAL COGNITIVE ARCHITECTURE
+       Exact reproduction of user reference diagram
+       ========================================================= */
+    .hit-section-container {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(48px, 6vh, 72px);
+      position: relative;
+    }
+
+    /* Header Group */
+    .hit-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+      gap: clamp(32px, 5vw, 64px);
+      align-items: flex-start;
+    }
+
+    .hit-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .hit-title-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .hit-main-title {
+      font-family: var(--font-satoshi);
+      font-size: clamp(36px, 5vw, 62px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--accent-blue);
+      margin: 0;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .hit-main-title em,
+    .who-am-i-heading em,
+    .strengths-heading em {
+      font-style: italic;
+      font-weight: 700;
+    }
+
+    .hit-doodle-star {
+      color: var(--text-yellow);
+      animation: hitStarTwinkle 4s ease-in-out infinite alternate;
+      flex-shrink: 0;
+    }
+
+    @keyframes hitStarTwinkle {
+      0% { transform: scale(0.95) rotate(-4deg); opacity: 0.85; }
+      100% { transform: scale(1.08) rotate(4deg); opacity: 1; }
+    }
+
+    .hit-lead-text {
+      font-size: clamp(15px, 1.2vw, 18px);
+      line-height: 1.6;
+      color: var(--text-yellow);
+      max-width: 580px;
+      margin: 0;
+    }
+
+    /* Occam's Razor Quote Card (Top Right) */
+    .hit-quote-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      position: relative;
+    }
+
+    .hit-scrap-card {
+      background-color: var(--accent-red);
+      color: var(--text-yellow);
+      padding: clamp(18px, 2.5vw, 24px) clamp(20px, 3vw, 28px);
+      transform: rotate(-1.5deg);
+      box-shadow: 0 8px 24px rgba(35, 24, 21, 0.45);
+      position: relative;
+      clip-path: polygon(
+        0% 3px, 4px 0%, 98% 2px, 100% 6px,
+        99% 94%, 97% 99%, 3% 97%, 0% 93%
+      );
+      transition: transform 300ms ease;
+    }
+
+    .hit-scrap-card:hover {
+      transform: rotate(-0.5deg) scale(1.01);
+    }
+
+    .hit-quote-text {
+      font-size: clamp(15px, 1.25vw, 19px);
+      font-weight: 600;
+      line-height: 1.4;
+      margin: 0 0 12px 0;
+      color: var(--text-yellow);
+    }
+
+    .hit-quote-author {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(245, 239, 198, 0.9);
+    }
+
+    .hit-squiggle {
+      overflow: visible;
+    }
+
+    .hit-quote-annotation-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: 8px;
+    }
+
+    .hit-quote-note {
+      font-size: clamp(17px, 1.35vw, 21px);
+      color: var(--text-yellow);
+      max-width: 280px;
+      line-height: 1.3;
+      transform: rotate(1deg);
+    }
+
+    /* =========================================================
+       THREE PILLARS GRID
+       ========================================================= */
+    .hit-pillars-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) minmax(0, 1fr);
+      gap: clamp(24px, 3.5vw, 44px);
+      position: relative;
+      align-items: stretch;
+    }
+
+    .hit-pillar {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Pillar Top Header */
+    .hit-pillar-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .hit-num-circle-wrap {
+      position: relative;
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hit-hand-circle {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hit-pillar-num {
+      font-size: 24px;
+      font-weight: 700;
+      font-style: italic;
+      color: var(--text-yellow);
+      line-height: 1;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hit-pillar-titles {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-grow: 1;
+    }
+
+    .hit-pillar-title {
+      font-size: clamp(18px, 1.5vw, 24px);
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      color: var(--text-yellow);
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    .hit-red-bar {
+      width: 100%;
+      height: 3px;
+      background-color: var(--accent-red);
+      margin: 4px 0;
+    }
+
+    .hit-pillar-desc {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      line-height: 1.45;
+      text-transform: uppercase;
+      color: rgba(245, 239, 198, 0.85);
+    }
+
+    /* Pillar 1 Content */
+    .hit-pillar-1-body {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+    }
+
+    .hit-observe-group {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .hit-observe-note {
+      font-size: clamp(17px, 1.35vw, 20px);
+      line-height: 1.25;
+      transform: rotate(-3deg);
+      max-width: 180px;
+    }
+
+    .hit-questions-card {
+      background-color: var(--accent-red);
+      padding: clamp(16px, 2vw, 22px);
+      transform: rotate(1deg);
+      box-shadow: 0 6px 20px rgba(35, 24, 21, 0.4);
+      clip-path: polygon(
+        1% 2px, 98% 0%, 100% 96%, 98% 99%,
+        2% 98%, 0% 95%
+      );
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hit-card-q {
+      font-family: var(--font-satoshi) !important;
+      font-size: clamp(13.5px, 1.02vw, 15px);
+      font-weight: 500;
+      margin: 0;
+      line-height: 1.5;
+      color: var(--text-yellow);
+    }
+
+    .hit-center-arrow-down {
+      display: flex;
+      justify-content: center;
+      margin: 8px 0;
+    }
+
+    .hit-pillar-explainer {
+      font-size: clamp(14px, 1.05vw, 16px);
+      line-height: 1.6;
+      color: rgba(245, 239, 198, 0.9);
+      margin: 0;
+    }
+
+    /* Swoop Arrow from 'I start with an...' towards the Venn diagram */
+    .hit-arrow-from-explainer-to-venn {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
+      margin-right: -16px;
+      pointer-events: none;
+    }
+
+    /* Pillar 2 Content */
+    .hit-pillar-2-body {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+    }
+
+    .hit-elim-list-box {
+      background: rgba(35, 24, 21, 0.55);
+      border: 1px solid var(--border-hairline);
+      padding: clamp(16px, 2vw, 22px);
+    }
+
+    .hit-elim-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hit-elim-list li {
+      font-family: var(--font-satoshi) !important;
+      font-size: clamp(13.5px, 1.02vw, 15px);
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--text-yellow);
+    }
+
+    .hit-list-num {
+      font-weight: 700;
+      margin-right: 4px;
+    }
+
+    /* 4-Circle Venn Diagram & Annotation Coordinated Composition */
+    .hit-venn-composition {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: 6px;
+      width: 100%;
+    }
+
+    .hit-venn-diagram-wrap {
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+    }
+
+    .hit-venn-svg {
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .venn-text {
+      font-family: var(--font-satoshi) !important;
+      font-size: 13px;
+      font-weight: 600;
+      fill: var(--text-yellow);
+      letter-spacing: 0.01em;
+    }
+
+    /* Coordinated Annotation placed on the right-hand side of the diagram */
+    .hit-venn-side-group {
+      position: absolute;
+      left: calc(100% - 52px);
+      bottom: 44px;
+      width: clamp(180px, 15vw, 220px);
+      display: block;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .hit-venn-side-note {
+      font-family: var(--font-handwriting) !important;
+      font-size: clamp(16px, 1.22vw, 19px);
+      line-height: 1.35;
+      color: var(--text-yellow);
+      margin: 0;
+      transform: rotate(-1.5deg);
+      display: block;
+      width: 100%;
+    }
+
+    /* Swoop Arrow from Pillar 2 to 3 */
+    .hit-swoop-arrow-2-3 {
+      position: absolute;
+      top: 56%;
+      right: -24px;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    /* Pillar 3 Content */
+    .hit-pillar-3-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 14px;
+      padding-top: 14px;
+      position: relative;
+    }
+
+    .hit-insight-note-box {
+      max-width: 270px;
+      margin: 0 auto;
+    }
+
+    .hit-insight-note {
+      font-size: clamp(19px, 1.5vw, 24px);
+      line-height: 1.4;
+      color: var(--text-yellow);
+      display: block;
+      transform: rotate(0.5deg);
+    }
+
+    .hit-center-arrow-down {
+      display: flex;
+      justify-content: center;
+      margin: 4px 0;
+    }
+
+    /* Sceptre Red Result Statement Box with subtly irregular hand-drawn edges */
+    .hit-result-card {
+      background-color: var(--accent-red, #4D0E12);
+      color: var(--text-yellow, #F5EFC6);
+      padding: clamp(18px, 2vw, 24px) clamp(20px, 2.2vw, 26px);
+      clip-path: polygon(
+        0% 3px, 4px 0%, 98% 2px, 100% 5px,
+        99% 95%, 97% 99%, 3% 97%, 0% 93%
+      );
+      box-shadow: 0 8px 24px rgba(35, 24, 21, 0.45);
+      max-width: 320px;
+      width: 100%;
+      margin: 0 auto;
+      position: relative;
+      box-sizing: border-box;
+      transition: transform 300ms ease;
+    }
+
+    .hit-result-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .hit-result-text {
+      font-family: var(--font-satoshi, 'Satoshi', sans-serif);
+      font-size: clamp(13.5px, 0.98vw, 15px);
+      font-weight: 500;
+      line-height: 1.6;
+      color: var(--text-yellow, #F5EFC6);
+      margin: 0;
+      text-align: left;
+    }
+
+    /* =========================================================
+       BOTTOM SECTION: SIX-STEP PROCESS ROW (Tight, clean alignment)
+       ========================================================= */
+    .hit-process-block {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: clamp(24px, 3vh, 36px);
+      padding-top: clamp(20px, 2.5vh, 28px);
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    .hit-process-header-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 2px;
+    }
+
+    .hit-process-badge {
+      background-color: var(--accent-red);
+      color: var(--text-yellow);
+      padding: 8px 16px;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 2px;
+      transform: rotate(-1deg);
+      box-shadow: 0 4px 14px rgba(35, 24, 21, 0.35);
+      flex-shrink: 0;
+      clip-path: polygon(
+        1% 2px, 99% 0%, 100% 96%, 98% 99%,
+        1% 98%, 0% 94%
+      );
+    }
+
+    .hit-badge-title {
+      font-family: var(--font-satoshi);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-yellow);
+    }
+
+    .hit-badge-sub {
+      font-family: var(--font-satoshi);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(245, 239, 198, 0.85);
+    }
+
+    .hit-process-rule {
+      height: 1px;
+      background: var(--border-hairline);
+      flex-grow: 1;
+    }
+
+    /* 6 Steps Grid — Equal column widths, proportional spacing, clean shared alignment system */
+    .hit-process-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr auto 1fr auto 1fr;
+      align-items: start;
+      column-gap: clamp(8px, 1.2vw, 16px);
+      width: 100%;
+    }
+
+    .hit-step-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-width: 0;
+      width: 100%;
+    }
+
+    /* Region 1: Step Top (Number + Icon, shared 44px height and shared horizontal baseline) */
+    .hit-step-top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      width: 100%;
+      height: 44px;
+      margin-bottom: 14px;
+    }
+
+    .hit-step-num {
+      font-family: var(--font-satoshi);
+      font-size: clamp(20px, 1.8vw, 26px);
+      font-style: italic;
+      font-weight: 700;
+      color: var(--text-yellow);
+      line-height: 1;
+      margin: 0;
+      display: block;
+    }
+
+    .hit-step-icon-wrap {
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      height: 40px;
+      width: 48px;
+      flex-shrink: 0;
+    }
+
+    .hit-step-icon {
+      overflow: visible;
+      flex-shrink: 0;
+      display: block;
+    }
+
+    /* Region 2: Heading (Explicit consistent height so 2-line Occam's Razor never shifts subsequent elements) */
+    .hit-step-title-wrap {
+      width: 100%;
+      height: 38px;
+      min-height: 38px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      margin: 0;
+    }
+
+    .hit-step-name {
+      font-family: var(--font-satoshi);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-yellow);
+      margin: 0;
+      line-height: 1.25;
+    }
+
+    /* Region 3: Divider Line (Shared exact vertical position across all 6 steps) */
+    .hit-step-underline {
+      width: 100%;
+      height: 1.5px;
+      background-color: var(--text-yellow);
+      opacity: 0.75;
+      margin-top: 8px;
+      margin-bottom: 12px;
+    }
+
+    /* Region 4: Description (Directly below divider at identical vertical coordinate) */
+    .hit-step-desc {
+      font-family: var(--font-satoshi);
+      font-size: 11.5px;
+      line-height: 1.5;
+      color: rgba(245, 239, 198, 0.88);
+      margin: 0;
+      width: 100%;
+    }
+
+    /* Connecting Arrows (Aligned with the top 44px icon/number row) */
+    .hit-step-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 44px;
+      width: 22px;
+      color: var(--text-yellow);
+      opacity: 0.85;
+      flex-shrink: 0;
+    }
+
+    /* =========================================================
+       SECTION 3: MY STRENGTHS — DUAL SPINNING WHEELS (Reference Fidelity)
+       ========================================================= */
+    .strengths-heading {
+      font-family: var(--font-satoshi);
+      font-size: clamp(36px, 5vw, 62px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--accent-blue);
+      margin: 0 0 16px 0;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .strengths-quote {
+      font-size: clamp(18px, 1.8vw, 24px);
+      font-weight: 700;
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+      color: var(--text-yellow);
+      margin: 0 0 16px 0;
+      font-style: normal;
+    }
+
+    .strengths-intro {
+      font-size: clamp(14.5px, 1.1vw, 17px);
+      line-height: 1.62;
+      color: var(--text-yellow);
+      margin: 0 0 clamp(40px, 6vh, 64px) 0;
+      max-width: 960px;
+      font-weight: 400;
+    }
+
+    .strengths-wheels-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: clamp(32px, 5vw, 64px);
+      flex-wrap: wrap;
+      margin: 0 auto;
+      max-width: 1040px;
+      position: relative;
+    }
+
+    .wheel-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      flex: 1 1 360px;
+      max-width: 440px;
+      width: 100%;
+      user-select: none;
+    }
+
+    .wheel-svg {
+      width: 100%;
+      height: auto;
+      max-width: 440px;
+      aspect-ratio: 1 / 1;
+      overflow: visible;
+      filter: drop-shadow(0 10px 24px rgba(35, 24, 21, 0.45));
+      display: block;
+    }
+
+    .wheel-svg text {
+      font-family: var(--font-satoshi, 'Satoshi', sans-serif);
+      user-select: none;
+    }
+
+    .wheel-rotor {
+      transform-box: view-box;
+      transform-origin: 200px 200px;
+      will-change: transform;
+    }
+
+    /* Result Note Revealed on Scroll */
+    .wheel-result-note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(14px, 2vw, 24px);
+      margin-top: clamp(36px, 5vh, 56px);
+      opacity: 0;
+      transform: translateY(24px) scale(0.96);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      text-align: center;
+      width: 100%;
+    }
+
+    .wheel-result-note.is-revealed {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .wheel-result-text {
+      font-family: var(--font-handwriting) !important;
+      font-size: clamp(24px, 2.5vw, 36px);
+      font-weight: 600;
+      color: var(--text-yellow);
+      line-height: 1.2;
+      letter-spacing: 0.02em;
+    }
+
+    .result-burst {
+      flex-shrink: 0;
+      overflow: visible;
+    }
+
+    .wheel-result-note.is-revealed .result-burst-left {
+      animation: burstPulseLeft 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    .wheel-result-note.is-revealed .result-burst-right {
+      animation: burstPulseRight 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    @keyframes burstPulseLeft {
+      0% { transform: scale(0.4) translateX(12px); opacity: 0; }
+      60% { transform: scale(1.15) translateX(-3px); opacity: 1; }
+      100% { transform: scale(1) translateX(0); opacity: 1; }
+    }
+
+    @keyframes burstPulseRight {
+      0% { transform: scale(0.4) translateX(-12px); opacity: 0; }
+      60% { transform: scale(1.15) translateX(3px); opacity: 1; }
+      100% { transform: scale(1) translateX(0); opacity: 1; }
+    }
+
+    /* Cross-Navigation Bar */
+    .cross-worlds-nav {
+      margin-top: clamp(64px, 10vh, 100px);
+      padding-top: 48px;
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    .cross-worlds-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      margin-bottom: 24px;
+    }
+
+    .cross-worlds-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .cross-link-card {
+      padding: 20px;
+      background: rgba(35, 24, 21, 0.4);
+      border: 1px solid var(--border-hairline);
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: border-color 200ms ease, transform 200ms ease;
+    }
+
+    .cross-link-card:hover {
+      border-color: var(--accent-blue);
+      transform: translateY(-2px);
+    }
+
+    .cross-link-idx {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--accent-blue);
+      letter-spacing: 0.14em;
+    }
+
+    .cross-link-name {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--text-yellow);
+    }
+
+    /* Footer */
+    .about-footer {
+      margin-top: auto;
+      padding: 36px clamp(24px, 5vw, 84px);
+      border-top: 1px solid var(--border-hairline);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: rgba(245, 239, 198, 0.55);
+    }
+
+    /* =========================================================
+       RESPONSIVE ADAPTATIONS
+       ========================================================= */
+    @media (max-width: 1080px) {
+      .who-am-i-cards-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .hit-pillars-grid {
+        grid-template-columns: 1fr;
+        gap: 56px;
+      }
+      .hit-swoop-arrow-1-2,
+      .hit-swoop-arrow-2-3 {
+        display: none;
+      }
+      .hit-process-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .hit-step-arrow {
+        display: none;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .who-am-i-top-grid {
+        grid-template-columns: 1fr;
+      }
+      .editorial-grid {
+        grid-template-columns: 1fr;
+      }
+      .hit-header {
+        grid-template-columns: 1fr;
+      }
+      .starburst-graphic {
+        width: 320px;
+        height: 320px;
+      }
+      .image-placeholder-frame {
+        width: 200px;
+        height: 200px;
+      }
+      .who-am-i-visual {
+        min-height: 300px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .who-am-i-cards-row {
+        grid-template-columns: 1fr;
+      }
+      .hit-process-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+      .hit-step-card {
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border-hairline);
+      }
+      .hit-step-card:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .hit-step-title-wrap {
+        height: auto;
+        min-height: 0;
+      }
+      .hit-venn-side-group {
+        position: static;
+        margin-top: 16px;
+        align-self: center;
+        text-align: center;
+        width: 100%;
+        max-width: 280px;
+      }
+      .hit-venn-side-note {
+        text-align: center;
+        transform: none;
+      }
+      .hit-result-card {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+  </style>
+</head>
+<body id="top">
+
+  <!-- =========================================================
+       SVG OPTICAL BARREL DISTORTION DISPLACEMENT ENGINE
+       ========================================================= -->
+  <svg style="position: absolute; width: 0; height: 0; pointer-events: none;" aria-hidden="true">
+    <defs>
+      <filter id="optical-lens-warp" x="-20%" y="-20%" width="140%" height="140%">
+        <feImage id="fe-lens-displacement" href="" result="radialMap" />
+        <feDisplacementMap in="SourceGraphic" in2="radialMap" scale="22" xChannelSelector="R" yChannelSelector="G" result="warped" />
+        <feComposite in="warped" in2="SourceAlpha" operator="in" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Top Navigation Bar -->
+  <nav class="about-nav" aria-label="Page navigation">
+    <a href="../#sections-stage" class="about-nav-link">
+      <span>&#8592;</span>
+      <span>RETURN TO FOUR WORLDS</span>
+    </a>
+    <span class="about-nav-section">[01] WORLD ONE &#8212; ABOUT ME</span>
+  </nav>
+
+  <!-- Main Narrative Flow -->
+  <main class="about-container">
+
+    <!-- Masthead -->
+    <header class="about-masthead">
+      <span class="about-kicker">[01] &#183; WORLD ONE &#8212; ABOUT ME</span>
+      <h1 class="about-title">PRANAVI RUDRADEV</h1>
+      <blockquote class="about-pull-statement">
+        Curious by nature. Strategic by interest.
+      </blockquote>
+    </header>
+
+    <!-- =========================================================
+         SECTION 1: WHO AM I (Exact match to reference image)
+         ========================================================= -->
+    <section class="about-section" id="who-am-i">
+      <div class="who-am-i-container">
+
+        <!-- Top Block: Text Narrative (Left) & Starburst Placeholder (Right) -->
+        <div class="who-am-i-top-grid">
+          <div class="who-am-i-text-col">
+            <h2 class="section-heading who-am-i-heading">WHO AM <em>I</em></h2>
+            <p class="who-am-i-para">
+              Hello, I'm Pranavi Rudradev, a Marketing major and Psychology minor (BBA) from FLAME University.
+            </p>
+            <p class="who-am-i-para">
+              I've always been curious about people, what catches our attention, shapes our choices, and makes certain things stay with us? These questions are also what draw me to brands. There's something fascinating about looking beyond the obvious and discovering the little things that shape how people think, feel, and connect with the world around them.
+            </p>
+            <h3 class="who-am-i-subhead">A few things that make me, me.</h3>
+          </div>
+
+          <!-- Starburst Graphic with Square Image Placeholder -->
+          <aside class="who-am-i-visual" aria-label="Portrait placeholder">
+            <!-- Angular irregular Starburst in Sceptre Red -->
+            <svg class="starburst-graphic" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon
+                points="110,65 170,145 240,40 285,135 440,55 350,175 480,225 365,270 460,370 340,335 390,455 285,360 230,470 185,350 95,445 140,305 25,285 130,230 40,165 155,155"
+                fill="#4D0E12"
+              />
+            </svg>
+
+            <!-- Centered Square Image Placeholder with Sample Landscape Icon -->
+            <div class="image-placeholder-frame">
+              <div class="image-placeholder-inner" role="img" aria-label="Portrait photograph placeholder">
+                <svg class="placeholder-sample-icon" width="76" height="56" viewBox="0 0 76 56" fill="none" stroke="#F5EFC6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="56" cy="16" r="7" />
+                  <polygon points="8,48 34,16 60,48" />
+                  <polygon points="34,48 50,26 66,48" />
+                </svg>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Bottom Block: 4 Cerulean Blue Aspect Cards -->
+        <div class="who-am-i-cards-row">
+          <!-- Card 1: Water -->
+          <div class="who-am-i-card">
+            <svg class="who-am-i-card-icon" width="46" height="28" viewBox="0 0 46 28" fill="none" stroke="#F5EFC6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 22 C 14 22, 18 10, 26 8 C 34 6, 38 12, 36 18 C 34 22, 28 20, 30 16" />
+            </svg>
+            <h4 class="who-am-i-card-title">Water feels like home.</h4>
+            <p class="who-am-i-card-text">
+              Swimming has been a meaningful part of my life, including representing my state in competitions. I love consuming and being in the water, and feel equally drawn to the outdoors.
+            </p>
+          </div>
+
+          <!-- Card 2: Clouds -->
+          <div class="who-am-i-card">
+            <svg class="who-am-i-card-icon" width="42" height="28" viewBox="0 0 42 28" fill="none" stroke="#F5EFC6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 22 L 32 22 C 37 22, 40 18, 38 13 C 36 8, 30 8, 28 10 C 26 4, 16 4, 14 10 C 8 10, 6 16, 10 22 Z" />
+            </svg>
+            <h4 class="who-am-i-card-title">Occasionally, the clouds have my attention.</h4>
+            <p class="who-am-i-card-text">
+              I can get distracted by a good sky, an interesting shadow, or the way sunlight falls on something ordinary. I love being outdoors, exploring, and finding reasons to take the longer way around.
+            </p>
+          </div>
+
+          <!-- Card 3: Animals -->
+          <div class="who-am-i-card">
+            <svg class="who-am-i-card-icon" width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="#F5EFC6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="8" cy="10" rx="3" ry="4" />
+              <ellipse cx="14" cy="6" rx="3" ry="4" />
+              <ellipse cx="20" cy="6" rx="3" ry="4" />
+              <ellipse cx="26" cy="10" rx="3" ry="4" />
+              <path d="M11 26 C 8 22, 9 17, 14 16 C 17 15, 20 16, 23 17 C 26 19, 26 23, 23 26 C 20 28, 14 28, 11 26 Z" />
+            </svg>
+            <h4 class="who-am-i-card-title">I think I can befriend any animal.</h4>
+            <p class="who-am-i-card-text">
+              This confidence may be my biggest red flag. So far, optimism remains undefeated.
+            </p>
+          </div>
+
+          <!-- Card 4: Coffee & Lyrics -->
+          <div class="who-am-i-card">
+            <svg class="who-am-i-card-icon" width="36" height="34" viewBox="0 0 36 34" fill="none" stroke="#F5EFC6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4 Q 13 7, 11 10 M 16 3 Q 18 6, 16 9 M 21 4 Q 23 7, 21 10" />
+              <path d="M6 13 L 26 13 C 26 21, 22 25, 16 25 C 10 25, 6 21, 6 13 Z" />
+              <path d="M26 15 C 31 15, 31 22, 25 22" />
+              <path d="M4 27 L 28 27" />
+            </svg>
+            <h4 class="who-am-i-card-title">Coffee connoisseur. Questionable lyricist.</h4>
+            <p class="who-am-i-card-text">
+              I love coffee and singing. My commitment to the melody is usually stronger than my commitment to the actual lyrics.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================
+         SECTION 2: HOW I THINK
+         (Exact recreation of reference diagram)
+         ========================================================= -->
+    <section class="about-section" id="how-i-think">
+      <div class="hit-section-container">
+
+        <!-- Top Header & Occam's Razor Quote Group -->
+        <div class="hit-header">
+          <div class="hit-title-group">
+            <div class="hit-title-row">
+              <h2 class="section-heading hit-main-title">HOW I <em>THINK.</em></h2>
+              <!-- Hand-drawn Star Doodle -->
+              <svg class="hit-doodle-star" width="34" height="34" viewBox="0 0 40 40" fill="none" stroke="#F5EFC6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 3 L22 15 L35 13 L24 22 L31 35 L20 27 L9 35 L16 22 L5 13 L18 15 Z" />
+                <path d="M20 9 L20 31 M9 20 L31 20" opacity="0.35" />
+              </svg>
+            </div>
+            <p class="hit-lead-text">
+              I start with curiosity, explore what could be true, strip away what doesn't fit, and arrive at the simplest, most meaningful explanation, one that actually helps us move forward.
+            </p>
+          </div>
+
+          <!-- Occam's Razor Red Scrap Card & Annotation -->
+          <div class="hit-quote-col">
+            <div class="hit-scrap-card">
+              <p class="hit-quote-text">“The simplest explanation is usually the right one.”</p>
+              <div class="hit-quote-author">
+                <span>— OCCAM’S RAZOR</span>
+                <!-- Hand-drawn squiggle underline -->
+                <svg class="hit-squiggle" width="105" height="8" viewBox="0 0 105 8" fill="none" stroke="#F5EFC6" stroke-width="1.4">
+                  <path d="M2 4 Q 20 1, 40 5 T 80 3 T 103 4" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="hit-quote-annotation-row">
+              <svg width="42" height="32" viewBox="0 0 42 32" fill="none" stroke="#F5EFC6" stroke-width="1.4" stroke-linecap="round">
+                <path d="M38 6 C 26 5, 12 11, 8 24" />
+                <path d="M5 16 L 8 24 L 16 22" />
+              </svg>
+              <span class="hit-handwritten hit-quote-note">
+                Not the simplest idea, but the simplest that explains the most.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Three Pillars Columns -->
+        <div class="hit-pillars-grid">
+
+          <!-- Pillar 1: ABDUCTIVE REASONING -->
+          <div class="hit-pillar hit-pillar-1">
+            <div class="hit-pillar-header">
+              <div class="hit-num-circle-wrap">
+                <svg class="hit-hand-circle" viewBox="0 0 54 54" fill="none" stroke="#F5EFC6" stroke-width="1.5">
+                  <path d="M27 5 C 40 4, 50 14, 49 28 C 48 42, 38 50, 24 49 C 10 48, 4 36, 6 22 C 8 8, 20 4, 30 5" />
+                </svg>
+                <span class="hit-pillar-num">1.</span>
+              </div>
+              <div class="hit-pillar-titles">
+                <h3 class="hit-pillar-title">ABDUCTIVE<br/>REASONING</h3>
+                <div class="hit-red-bar"></div>
+                <span class="hit-pillar-desc">FROM OBSERVATION<br/>TO POSSIBLE EXPLANATIONS.</span>
+              </div>
+            </div>
+
+            <div class="hit-pillar-1-body">
+              <!-- Handwritten note with downward-right arrow -->
+              <div class="hit-observe-group">
+                <span class="hit-handwritten hit-observe-note">Notice something intersting (or unexpected).</span>
+                <svg width="44" height="40" viewBox="0 0 44 40" fill="none" stroke="#F5EFC6" stroke-width="1.4" stroke-linecap="round">
+                  <path d="M6 6 C 12 20, 22 28, 36 32" />
+                  <path d="M28 32 L 36 32 L 34 24" />
+                </svg>
+              </div>
+
+              <!-- Red Questions Scrap Card (Satoshi font) -->
+              <div class="hit-questions-card">
+                <p class="hit-card-q">What could explain this?</p>
+                <p class="hit-card-q">What else might be going on?</p>
+                <p class="hit-card-q">Are there deeper reasons?</p>
+                <p class="hit-card-q">Could there be a different perspective?</p>
+              </div>
+
+              <!-- Downward Arrow (Hand-drawn curved arrow matching existing illustration system) -->
+              <div class="hit-center-arrow-down">
+                <svg width="34" height="48" viewBox="0 0 34 48" fill="none" stroke="#F5EFC6" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M15 4 C 21 16, 12 30, 16 42" />
+                  <path d="M9 34 C 12 38, 15 41, 16 42" />
+                  <path d="M25 34 C 22 36, 18 40, 16 42" />
+                </svg>
+              </div>
+
+              <!-- Explanatory paragraph in Satoshi -->
+              <p class="hit-pillar-explainer">
+                I start with an observation and explore multiple plausible explanations, rather than jumping to the obvious one.
+              </p>
+
+              <!-- Swoop arrow from 'I start with an...' towards the Venn diagram on its right side -->
+              <div class="hit-arrow-from-explainer-to-venn">
+                <svg width="76" height="44" viewBox="0 0 76 44" fill="none" stroke="#F5EFC6" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 14 C 26 42, 54 44, 68 20" />
+                  <path d="M60 24 L 68 20 L 66 30" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pillar 2: ELIMINATION (USING OCCAM'S RAZOR) -->
+          <div class="hit-pillar hit-pillar-2">
+            <div class="hit-pillar-header">
+              <div class="hit-num-circle-wrap">
+                <svg class="hit-hand-circle" viewBox="0 0 54 54" fill="none" stroke="#F5EFC6" stroke-width="1.5">
+                  <path d="M25 5 C 42 5, 51 16, 48 30 C 45 44, 34 50, 20 48 C 7 46, 4 34, 6 20 C 8 7, 21 4, 32 6" />
+                </svg>
+                <span class="hit-pillar-num">2.</span>
+              </div>
+              <div class="hit-pillar-titles">
+                <h3 class="hit-pillar-title">ELIMINATION<br/>(USING OCCAM’S RAZOR)</h3>
+                <div class="hit-red-bar"></div>
+                <span class="hit-pillar-desc">TESTING, NARROWING,<br/>AND FINDING THE SIMPLEST<br/>PLAUSIBLE EXPLANATION.</span>
+              </div>
+            </div>
+
+            <div class="hit-pillar-2-body">
+              <!-- Numbered List Card -->
+              <div class="hit-elim-list-box">
+                <ol class="hit-elim-list">
+                  <li><span class="hit-list-num">1.</span> List the possibilities.</li>
+                  <li><span class="hit-list-num">2.</span> Test against evidence<br/>&nbsp;&nbsp;&nbsp;(data, research, human behaviour),</li>
+                  <li><span class="hit-list-num">3.</span> Eliminate what doesn't fit.</li>
+                  <li><span class="hit-list-num">4.</span> Apply Occam's Razor<br/>&nbsp;&nbsp;&nbsp;prefer the simplest explanation that accounts for the most.</li>
+                </ol>
+              </div>
+
+              <!-- 4-Circle Venn Diagram & Annotation Coordinated Composition -->
+              <div class="hit-venn-composition">
+                <div class="hit-venn-diagram-wrap">
+                  <svg class="hit-venn-svg" viewBox="0 0 460 410" xmlns="http://www.w3.org/2000/svg" aria-label="4-circle elimination Venn diagram">
+                    <!-- 4 Intersecting Circles scaled proportionally -->
+                    <!-- Top Circle -->
+                    <circle cx="230" cy="130" r="90" fill="rgba(35, 24, 21, 0.45)" stroke="#F5EFC6" stroke-width="1.3" />
+                    <!-- Bottom Circle -->
+                    <circle cx="230" cy="280" r="90" fill="rgba(35, 24, 21, 0.45)" stroke="#F5EFC6" stroke-width="1.3" />
+                    <!-- Left Circle -->
+                    <circle cx="155" cy="205" r="90" fill="rgba(35, 24, 21, 0.45)" stroke="#F5EFC6" stroke-width="1.3" />
+                    <!-- Right Circle -->
+                    <circle cx="305" cy="205" r="90" fill="rgba(35, 24, 21, 0.45)" stroke="#F5EFC6" stroke-width="1.3" />
+
+                    <!-- Central Intersection in Sceptre Red -->
+                    <path d="M 230 190 C 237 197, 241 200, 245 205 C 241 210, 237 213, 230 220 C 223 213, 219 210, 215 205 C 219 200, 223 197, 230 190 Z" fill="#4D0E12" stroke="#F5EFC6" stroke-width="0.8" />
+
+                    <!-- Labels in Circles — completely clear of circle lines and center intersection -->
+                    <!-- Top -->
+                    <text x="230" y="80" class="venn-text" text-anchor="middle">Does this</text>
+                    <text x="230" y="98" class="venn-text" text-anchor="middle">fit the evidence?</text>
+
+                    <!-- Left -->
+                    <text x="110" y="188" class="venn-text" text-anchor="middle">Is it</text>
+                    <text x="110" y="206" class="venn-text" text-anchor="middle">unnecessarily</text>
+                    <text x="110" y="224" class="venn-text" text-anchor="middle">complex?</text>
+
+                    <!-- Right -->
+                    <text x="350" y="188" class="venn-text" text-anchor="middle">Does it align</text>
+                    <text x="350" y="206" class="venn-text" text-anchor="middle">with human</text>
+                    <text x="350" y="224" class="venn-text" text-anchor="middle">behaviour?</text>
+
+                    <!-- Bottom -->
+                    <text x="230" y="312" class="venn-text" text-anchor="middle">Does it actually</text>
+                    <text x="230" y="330" class="venn-text" text-anchor="middle">help us move</text>
+                    <text x="230" y="348" class="venn-text" text-anchor="middle">forward?</text>
+                  </svg>
+                </div>
+
+                <!-- Annotation on the right side of the enlarged Venn diagram -->
+                <div class="hit-venn-side-group">
+                  <p class="hit-handwritten hit-venn-side-note">
+                    Keep what explains the most with the fewest assumptions.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Swoop arrow to pillar 3 -->
+            <div class="hit-swoop-arrow-2-3">
+              <svg width="60" height="42" viewBox="0 0 60 42" fill="none" stroke="#F5EFC6" stroke-width="1.4" stroke-linecap="round">
+                <path d="M4 32 C 24 34, 44 26, 52 8" />
+                <path d="M44 12 L 52 8 L 54 18" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Pillar 3: INSIGHT & DIRECTION -->
+          <div class="hit-pillar hit-pillar-3">
+            <div class="hit-pillar-header">
+              <div class="hit-num-circle-wrap">
+                <svg class="hit-hand-circle" viewBox="0 0 54 54" fill="none" stroke="#F5EFC6" stroke-width="1.5">
+                  <path d="M26 6 C 40 5, 49 14, 48 28 C 47 41, 37 49, 23 48 C 11 47, 5 37, 6 24 C 7 11, 18 6, 29 6" />
+                </svg>
+                <span class="hit-pillar-num">3.</span>
+              </div>
+              <div class="hit-pillar-titles">
+                <h3 class="hit-pillar-title">INSIGHT<br/>&amp; DIRECTION</h3>
+                <div class="hit-red-bar"></div>
+                <span class="hit-pillar-desc">FROM A SIMPLER EXPLANATION<br/>TO STRATEGIC POSSIBILITIES.</span>
+              </div>
+            </div>
+
+            <div class="hit-pillar-3-body">
+              <!-- Center-aligned handwritten insight block -->
+              <div class="hit-insight-note-box">
+                <span class="hit-handwritten hit-insight-note">
+                  A clearer understanding that leads to better questions, sharper strategy and more meaningful ideas.
+                </span>
+              </div>
+
+              <!-- Downward curved arrow -->
+              <div class="hit-center-arrow-down">
+                <svg width="28" height="52" viewBox="0 0 28 52" fill="none" stroke="#F5EFC6" stroke-width="1.5" stroke-linecap="round">
+                  <path d="M14 6 C 20 20, 18 34, 14 44" />
+                  <path d="M8 38 L 14 44 L 20 38" />
+                </svg>
+              </div>
+
+              <!-- Result statement inside Sceptre Red card with hand-drawn edges -->
+              <div class="hit-result-card">
+                <p class="hit-result-text">
+                  The result is a clearer, more meaningful understanding that can inform strategy, creative directions, or further exploration.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom Six-Step Process Block -->
+        <div class="hit-process-block">
+          <div class="hit-process-header-bar">
+            <div class="hit-process-badge">
+              <span class="hit-badge-title">MY THINKING</span>
+              <span class="hit-badge-sub">PROCESS, STEP BY STEP.</span>
+            </div>
+            <div class="hit-process-rule"></div>
+          </div>
+
+          <!-- 6 Steps Connected by Arrows -->
+          <div class="hit-process-grid">
+
+            <!-- Step 01: OBSERVE -->
+            <div class="hit-step-card">
+              <div class="hit-step-top">
+                <span class="hit-step-num">01</span>
+                <div class="hit-step-icon-wrap">
+                  <!-- Eye Icon SVG -->
+                  <svg class="hit-step-icon" width="46" height="32" viewBox="0 0 46 32" fill="none" stroke="#F5EFC6" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 8 C 14 8, 6 16, 6 16 C 6 16, 14 24, 23 24 C 32 24, 40 16, 40 16 C 40 16, 32 8, 23 8 Z" />
+                    <circle cx="23" cy="16" r="4.5" fill="#F5EFC6" />
+                    <path d="M23 2 L 23 5 M 15 4 L 16 7 M 31 4 L 30 7 M 8 11 L 11 12 M 38 11 L 35 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="hit-step-title-wrap">
+                <h4 class="hit-step-name">OBSERVE</h4>
+              </div>
+              <div class="hit-step-underline"></div>
+              <p class="hit-step-desc">Notice behaviours, patterns, contradictions or anything that catches my attention.</p>
+            </div>
+
+            <!-- Arrow 01 -> 02 -->
+            <div class="hit-step-arrow">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#F5EFC6" stroke-width="1.5" stroke-linecap="round">
+                <path d="M4 11 L 18 11 M 12 5 L 18 11 L 12 17" />
+              </svg>
+            </div>
+
+            <!-- Step 02: QUESTION -->
+            <div class="hit-step-card">
+              <div class="hit-step-top">
+                <span class="hit-step-num">02</span>
+                <div class="hit-step-icon-wrap">
+                  <!-- Question Mark Icon SVG -->
+                  <svg class="hit-step-icon" width="30" height="32" viewBox="0 0 30 32" fill="none" stroke="#F5EFC6" stroke-width="1.8" stroke-linecap="round">
+                    <path d="M10 10 C 10 5, 20 5, 20 11 C 20 16, 15 18, 15 22" />
+                    <circle cx="15" cy="27" r="1.5" fill="#F5EFC6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="hit-step-title-wrap">
+                <h4 class="hit-step-name">QUESTION</h4>
+              </div>
+              <div class="hit-step-underline"></div>
+              <p class="hit-step-desc">Ask what could be driving this. Challenge the obvious explanation.</p>
+            </div>
+
+            <!-- Arrow 02 -> 03 -->
+            <div class="hit-step-arrow">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#F5EFC6" stroke-width="1.5" stroke-linecap="round">
+                <path d="M4 11 L 18 11 M 12 5 L 18 11 L 12 17" />
+              </svg>
+            </div>
+
+            <!-- Step 03: EXPLORE -->
+            <div class="hit-step-card">
+              <div class="hit-step-top">
+                <span class="hit-step-num">03</span>
+                <div class="hit-step-icon-wrap">
+                  <!-- 3 Overlapping Rings Icon SVG with Red Center -->
+                  <svg class="hit-step-icon" width="40" height="34" viewBox="0 0 40 34" fill="none" stroke="#F5EFC6" stroke-width="1.3">
+                    <circle cx="20" cy="11" r="9" fill="rgba(35, 24, 21, 0.4)" />
+                    <circle cx="13" cy="22" r="9" fill="rgba(35, 24, 21, 0.4)" />
+                    <circle cx="27" cy="22" r="9" fill="rgba(35, 24, 21, 0.4)" />
+                    <circle cx="20" cy="18" r="3.5" fill="#4D0E12" stroke="none" />
+                  </svg>
+                </div>
+              </div>
+              <div class="hit-step-title-wrap">
+                <h4 class="hit-step-name">EXPLORE</h4>
+              </div>
+              <div class="hit-step-underline"></div>
+              <p class="hit-step-desc">Generate multiple plausible explanations (abductive reasoning).</p>
+            </div>
+
+            <!-- Arrow 03 -> 04 -->
+            <div class="hit-step-arrow">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#F5EFC6" stroke-width="1.5" stroke-linecap="round">
+                <path d="M4 11 L 18 11 M 12 5 L 18 11 L 12 17" />
+              </svg>
+            </div>
+
+            <!-- Step 04: ELIMINATE -->
+            <div class="hit-step-card">
+              <div class="hit-step-top">
+                <span class="hit-step-num">04</span>
+                <div class="hit-step-icon-wrap">
+                  <!-- Funnel / Filter with Sparkle SVG -->
+                  <svg class="hit-step-icon" width="36" height="34" viewBox="0 0 36 34" fill="none" stroke="#F5EFC6" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 8 L 26 8 L 19 18 L 19 28 L 15 26 L 15 18 Z" />
+                    <path d="M28 3 L 29 5 L 31 6 L 29 7 L 28 9 L 27 7 L 25 6 L 27 5 Z" fill="#F5EFC6" stroke="none" />
+                  </svg>
+                </div>
+              </div>
+              <div class="hit-step-title-wrap">
+                <h4 class="hit-step-name">ELIMINATE</h4>
+              </div>
+              <div class="hit-step-underline"></div>
+              <p class="hit-step-desc">Test each possibility against evidence and strip away what doesn't fit.</p>
+            </div>
+
+            <!-- Arrow 04 -> 05 -->
+            <div class="hit-step-arrow">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#F5EFC6" stroke-width="1.5" stroke-linecap="round">
+                <path d="M4 11 L 18 11 M 12 5 L 18 11 L 12 17" />
+              </svg>
+            </div>
+
+            <!-- Step 05: SIMPLIFY -->
+            <div class="hit-step-card">
+              <div class="hit-step-top">
+                <span class="hit-step-num">05</span>
+                <div class="hit-step-icon-wrap">
+                  <!-- Feather / Leaf SVG (Occam's razor feather) -->
+                  <svg class="hit-step-icon" width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="#F5EFC6" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M26 6 C 18 8, 10 16, 8 26 C 18 24, 24 16, 26 6 Z" />
+                    <path d="M12 22 L 22 10" />
+                    <path d="M6 28 L 10 24" />
+                  </svg>
+                </div>
+              </div>
+              <div class="hit-step-title-wrap">
+                <h4 class="hit-step-name">SIMPLIFY<br/>(OCCAM’S RAZOR)</h4>
+              </div>
+              <div class="hit-step-underline"></div>
+              <p class="hit-step-desc">Prefer the simplest explanation that accounts for the most.</p>
+            </div>
+
+            <!-- Arrow 05 -> 06 -->
+            <div class="hit-step-arrow">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#F5EFC6" stroke-width="1.5" stroke-linecap="round">
+                <path d="M4 11 L 18 11 M 12 5 L 18 11 L 12 17" />
+              </svg>
+            </div>
+
+            <!-- Step 06: APPLY -->
+            <div class="hit-step-card">
+              <div class="hit-step-top">
+                <span class="hit-step-num">06</span>
+                <div class="hit-step-icon-wrap">
+                  <!-- Lightbulb with Rays SVG -->
+                  <svg class="hit-step-icon" width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="#F5EFC6" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 14 C 12 10, 15 7, 19 7 C 23 7, 26 10, 26 14 C 26 18, 22 20, 22 23 L 16 23 C 16 20, 12 18, 12 14 Z" />
+                    <path d="M16 26 L 22 26 M 17 29 L 21 29" />
+                    <path d="M19 2 L 19 4 M 9 6 L 11 8 M 29 6 L 27 8 M 6 15 L 8 15 M 32 15 L 30 15" />
+                  </svg>
+                </div>
+              </div>
+              <div class="hit-step-title-wrap">
+                <h4 class="hit-step-name">APPLY</h4>
+              </div>
+              <div class="hit-step-underline"></div>
+              <p class="hit-step-desc">Turn the clearest insight into strategic directions and creative possibilities.</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================
+         SECTION 3: MY STRENGTHS — DUAL SPINNING WHEELS (Reference Fidelity)
+         ========================================================= -->
+    <section class="about-section" id="my-strengths">
+      <h2 class="section-heading strengths-heading">MY <em>STRENGTHS</em></h2>
+
+      <p class="strengths-quote">
+        “Jack of all trades, master of none, though oftentimes better than master of one.”
+      </p>
+
+      <p class="strengths-intro">
+        My curiosity rarely sticks to one subject. One minute, it’s social loafing, the next, electrophoresis, surfing, film appreciation, or some oddly specific fact I simply had to know. But collecting knowledge is only the beginning. The real excitement lies in connecting ideas across disciplines, seeing what they reveal when brought together.
+      </p>
+
+      <!-- Dual Spinning Wheels Container -->
+      <div class="strengths-wheels-container">
+
+        <!-- Left Wheel: SOFT SKILLS (Cerulean Blue #5D93CA) -->
+        <div class="wheel-card" id="wheelCardSoft" title="Soft Skills Wheel · Spin on Scroll">
+          <svg class="wheel-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <title>Soft Skills Wheel</title>
+            <desc>Spinning wheel displaying Soft Skills: Cross-functional collaboration, Pattern recognition, Conceptualisation and storytelling, Critical thinking and healthy scepticism.</desc>
+            
+            <!-- Spinning Rotor (Quadrants, Icons, Divider Lines, Skill Labels) -->
+            <g class="wheel-rotor wheel-rotor-soft" id="wheelRotorSoft">
+              <!-- Outer Circular Disk -->
+              <circle cx="200" cy="200" r="180" fill="#5D93CA" stroke="#231815" stroke-width="2.5" />
+
+              <!-- Quadrant Divider Lines -->
+              <line x1="200" y1="20" x2="200" y2="380" stroke="#231815" stroke-width="2.5" />
+              <line x1="20" y1="200" x2="380" y2="200" stroke="#231815" stroke-width="2.5" />
+
+              <!-- Quadrant 1: Top-Left (Cross-functional collaboration) -->
+              <g class="quadrant-content" transform="translate(105, 84)">
+                <!-- 3 People Icon -->
+                <g stroke="#F5EFC6" stroke-width="1.8" fill="none" stroke-linecap="round">
+                  <circle cx="0" cy="-6" r="4.5" />
+                  <path d="M -8 8 C -8 1, 8 1, 8 8" />
+                  <circle cx="-13" cy="-3" r="3.5" />
+                  <path d="M -19 9 C -19 4, -8 4, -8 9" />
+                  <circle cx="13" cy="-3" r="3.5" />
+                  <path d="M 8 9 C 8 4, 19 4, 19 9" />
+                </g>
+                <!-- Label -->
+                <text x="0" y="34" font-size="12" font-weight="700" fill="#F5EFC6" text-anchor="middle">Cross-functional</text>
+                <text x="0" y="50" font-size="12" font-weight="700" fill="#F5EFC6" text-anchor="middle">collaboration</text>
+              </g>
+
+              <!-- Quadrant 2: Top-Right (Pattern recognition) -->
+              <g class="quadrant-content" transform="translate(295, 86)">
+                <!-- Magnifying Glass Icon -->
+                <g stroke="#F5EFC6" fill="none">
+                  <circle cx="-4" cy="-4" r="8.5" stroke-width="2" />
+                  <line x1="3" y1="3" x2="11" y2="11" stroke-width="2.5" stroke-linecap="round" />
+                </g>
+                <!-- Label -->
+                <text x="0" y="34" font-size="12.5" font-weight="700" fill="#F5EFC6" text-anchor="middle">Pattern</text>
+                <text x="0" y="50" font-size="12.5" font-weight="700" fill="#F5EFC6" text-anchor="middle">recognition</text>
+              </g>
+
+              <!-- Quadrant 3: Bottom-Right (Conceptualisation and storytelling) -->
+              <g class="quadrant-content" transform="translate(295, 260)">
+                <!-- Lightbulb Icon with Rays -->
+                <g stroke="#F5EFC6" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M -6 1 C -10 -3, -10 -8, -6 -12 C -2 -15, 2 -15, 6 -12 C 10 -8, 10 -3, 6 1 L 4 5 L -4 5 Z" />
+                  <line x1="-3" y1="7" x2="3" y2="7" />
+                  <line x1="-1.5" y1="9.5" x2="1.5" y2="9.5" />
+                  <!-- Radiant Rays -->
+                  <line x1="0" y1="-19" x2="0" y2="-16" />
+                  <line x1="-11" y1="-14" x2="-8.5" y2="-12" />
+                  <line x1="11" y1="-14" x2="8.5" y2="-12" />
+                  <line x1="-15" y1="-5" x2="-12" y2="-5" />
+                  <line x1="15" y1="-5" x2="12" y2="-5" />
+                </g>
+                <!-- Label -->
+                <text x="0" y="26" font-size="12" font-weight="700" fill="#F5EFC6" text-anchor="middle">Conceptualisation</text>
+                <text x="0" y="42" font-size="12" font-weight="700" fill="#F5EFC6" text-anchor="middle">and storytelling</text>
+              </g>
+
+              <!-- Quadrant 4: Bottom-Left (Critical thinking and healthy scepticism) -->
+              <g class="quadrant-content" transform="translate(105, 252)">
+                <!-- Brain Icon -->
+                <g stroke="#F5EFC6" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M -1 -10 C -6 -12, -12 -9, -12 -3 C -15 0, -15 6, -12 9 C -13 13, -9 16, -5 15 C -3 15, -1 14, -1 13" />
+                  <path d="M 1 -10 C 6 -12, 12 -9, 12 -3 C 15 0, 15 6, 12 9 C 13 13, 9 16, 5 15 C 3 15, 1 14, 1 13" />
+                  <line x1="0" y1="-9" x2="0" y2="13" />
+                  <path d="M -8 -4 C -6 0, -10 3, -6 7" />
+                  <path d="M 8 -4 C 6 0, 10 3, 6 7" />
+                </g>
+                <!-- Label -->
+                <text x="0" y="26" font-size="11.5" font-weight="700" fill="#F5EFC6" text-anchor="middle">Critical thinking</text>
+                <text x="0" y="41" font-size="11.5" font-weight="700" fill="#F5EFC6" text-anchor="middle">and healthy</text>
+                <text x="0" y="56" font-size="11.5" font-weight="700" fill="#F5EFC6" text-anchor="middle">scepticism</text>
+              </g>
+
+              <!-- Centre Hub: SOFT SKILLS (Rotates as part of the rigid wheel disc) -->
+              <circle cx="200" cy="200" r="46" fill="#F5EFC6" stroke="#231815" stroke-width="2.5" />
+              <text x="200" y="195" font-size="14.5" font-weight="800" fill="#231815" text-anchor="middle" letter-spacing="0.06em">SOFT</text>
+              <text x="200" y="213" font-size="14.5" font-weight="800" fill="#231815" text-anchor="middle" letter-spacing="0.06em">SKILLS</text>
+            </g>
+
+            <!-- Fixed Top Pointer at 12 o'clock -->
+            <polygon points="187,6 213,6 200,30" fill="#F5EFC6" stroke="#231815" stroke-width="2" stroke-linejoin="round" />
+          </svg>
+        </div>
+
+        <!-- Right Wheel: HARD SKILLS (Sceptre Red #881E26) -->
+        <div class="wheel-card" id="wheelCardHard" title="Hard Skills Wheel">
+          <svg class="wheel-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <title>Hard Skills Wheel</title>
+            <desc>Spinning wheel displaying Hard Skills: Competitive Analysis, Brand Positioning and Architecture, Consumer Insights and Segmentation, Market Research Design, Go-to-Market Strategy.</desc>
+            
+            <!-- Spinning Rotor (5 Wedges, Icons, Divider Lines, Skill Labels) -->
+            <g class="wheel-rotor wheel-rotor-hard" id="wheelRotorHard">
+              <!-- Outer Circular Disk -->
+              <circle cx="200" cy="200" r="180" fill="#881E26" stroke="#231815" stroke-width="2.5" />
+
+              <!-- 5 Wedge Dividing Lines (72° each) -->
+              <line x1="200" y1="200" x2="200" y2="380" stroke="#231815" stroke-width="2.5" />
+              <line x1="200" y1="200" x2="371.2" y2="255.6" stroke="#231815" stroke-width="2.5" />
+              <line x1="200" y1="200" x2="305.8" y2="54.4" stroke="#231815" stroke-width="2.5" />
+              <line x1="200" y1="200" x2="94.2" y2="54.4" stroke="#231815" stroke-width="2.5" />
+              <line x1="200" y1="200" x2="28.8" y2="255.6" stroke="#231815" stroke-width="2.5" />
+
+              <!-- Wedge 1: Top (Competitive Analysis) -->
+              <g class="wedge-content" transform="translate(200, 78)">
+                <!-- Bar Chart with Trend Arrow Icon -->
+                <g stroke="#F5EFC6" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M -12 6 L -5 0 L 4 -8 M -2 -8 L 4 -8 L 4 -2" />
+                  <rect x="-12" y="8" width="5" height="10" stroke="#F5EFC6" stroke-width="1.5" />
+                  <rect x="-3" y="2" width="5" height="16" stroke="#F5EFC6" stroke-width="1.5" />
+                  <rect x="6" y="-5" width="5" height="23" stroke="#F5EFC6" stroke-width="1.5" />
+                </g>
+                <!-- Label -->
+                <text x="0" y="38" font-size="12" font-weight="700" fill="#F5EFC6" text-anchor="middle">Competitive</text>
+                <text x="0" y="54" font-size="12" font-weight="700" fill="#F5EFC6" text-anchor="middle">Analysis</text>
+              </g>
+
+              <!-- Wedge 2: Upper Right (Brand Positioning and Architecture) -->
+              <g class="wedge-content" transform="translate(308, 140)">
+                <!-- Price Tag Icon -->
+                <g transform="rotate(-35)" stroke="#F5EFC6" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M -8 -6 L 4 -6 L 10 0 L 4 6 L -8 6 Z" />
+                  <circle cx="-4" cy="0" r="1.5" fill="#F5EFC6" stroke="none" />
+                </g>
+                <!-- Label -->
+                <text x="0" y="26" font-size="11" font-weight="700" fill="#F5EFC6" text-anchor="middle">Brand Positioning</text>
+                <text x="0" y="40" font-size="11" font-weight="700" fill="#F5EFC6" text-anchor="middle">and Architecture</text>
+              </g>
+
+              <!-- Wedge 3: Lower Right (Consumer Insights and Segmentation) -->
+              <g class="wedge-content" transform="translate(268, 256)">
+                <!-- 3 People Segmentation Icon -->
+                <g stroke="#F5EFC6" stroke-width="1.8" fill="none" stroke-linecap="round">
+                  <circle cx="0" cy="-6" r="4.5" />
+                  <path d="M -8 9 C -8 2, 8 2, 8 9" />
+                  <circle cx="-12" cy="-3" r="3.5" />
+                  <path d="M -19 10 C -19 5, -7 5, -7 10" />
+                  <circle cx="12" cy="-3" r="3.5" />
+                  <path d="M 7 10 C 7 5, 19 5, 19 10" />
+                </g>
+                <!-- Label -->
+                <text x="0" y="30" font-size="11" font-weight="700" fill="#F5EFC6" text-anchor="middle">Consumer Insights</text>
+                <text x="0" y="44" font-size="11" font-weight="700" fill="#F5EFC6" text-anchor="middle">and Segmentation</text>
+              </g>
+
+              <!-- Wedge 4: Lower Left (Market Research Design) -->
+              <g class="wedge-content" transform="translate(132, 254)">
+                <!-- Document / Clipboard Icon -->
+                <g stroke="#F5EFC6" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="-8" y="-10" width="16" height="20" rx="2" />
+                  <line x1="-4" y1="-4" x2="4" y2="-4" stroke-width="1.5" />
+                  <line x1="-4" y1="0" x2="4" y2="0" stroke-width="1.5" />
+                  <line x1="-4" y1="4" x2="2" y2="4" stroke-width="1.5" />
+                </g>
+                <!-- Label -->
+                <text x="0" y="32" font-size="11.5" font-weight="700" fill="#F5EFC6" text-anchor="middle">Market</text>
+                <text x="0" y="47" font-size="11.5" font-weight="700" fill="#F5EFC6" text-anchor="middle">Research Design</text>
+              </g>
+
+              <!-- Wedge 5: Upper Left (Go-to-Market Strategy) -->
+              <g class="wedge-content" transform="translate(92, 140)">
+                <!-- Paper Airplane Icon -->
+                <g stroke="#F5EFC6" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M -9 6 L 10 -7 L 3 9 L -1 3 Z" />
+                  <line x1="10" y1="-7" x2="-1" y2="3" />
+                </g>
+                <!-- Label -->
+                <text x="0" y="26" font-size="11.5" font-weight="700" fill="#F5EFC6" text-anchor="middle">Go-to-Market</text>
+                <text x="0" y="40" font-size="11.5" font-weight="700" fill="#F5EFC6" text-anchor="middle">Strategy</text>
+              </g>
+
+              <!-- Centre Hub: HARD SKILLS (Rotates as part of the rigid wheel disc) -->
+              <circle cx="200" cy="200" r="46" fill="#F5EFC6" stroke="#231815" stroke-width="2.5" />
+              <text x="200" y="195" font-size="14.5" font-weight="800" fill="#231815" text-anchor="middle" letter-spacing="0.06em">HARD</text>
+              <text x="200" y="213" font-size="14.5" font-weight="800" fill="#231815" text-anchor="middle" letter-spacing="0.06em">SKILLS</text>
+            </g>
+
+            <!-- Fixed Top Pointer at 12 o'clock -->
+            <polygon points="187,6 213,6 200,30" fill="#F5EFC6" stroke="#231815" stroke-width="2" stroke-linejoin="round" />
+          </svg>
+        </div>
+
+      </div>
+
+      <!-- Result Reveal Note: Revealed as user scrolls down through wheels -->
+      <div class="wheel-result-note" id="wheelResultNote">
+        <svg class="result-burst result-burst-left" width="36" height="30" viewBox="0 0 36 30" fill="none" stroke="#F5EFC6" stroke-width="2.2" stroke-linecap="round">
+          <line x1="30" y1="15" x2="6" y2="6" />
+          <line x1="32" y1="15" x2="4" y2="15" />
+          <line x1="30" y1="15" x2="6" y2="24" />
+        </svg>
+        <span class="wheel-result-text">you're in luck, you get all these skill-sets</span>
+        <svg class="result-burst result-burst-right" width="36" height="30" viewBox="0 0 36 30" fill="none" stroke="#F5EFC6" stroke-width="2.2" stroke-linecap="round">
+          <line x1="6" y1="15" x2="30" y2="6" />
+          <line x1="4" y1="15" x2="32" y2="15" />
+          <line x1="6" y1="15" x2="30" y2="24" />
+        </svg>
+      </div>
+
+    </section>
+
+    <!-- Cross-Worlds Navigation -->
+    <nav class="cross-worlds-nav" aria-label="Explore other worlds">
+      <div class="cross-worlds-title">EXPLORE THE FOUR WORLDS</div>
+      <div class="cross-worlds-links">
+        <a href="../experience/" class="cross-link-card">
+          <span class="cross-link-idx">[02] WORLD TWO</span>
+          <span class="cross-link-name">WORK EXPERIENCE &#8594;</span>
+        </a>
+        <a href="../projects/" class="cross-link-card">
+          <span class="cross-link-idx">[03] WORLD THREE</span>
+          <span class="cross-link-name">PROJECTS ARCHIVE &#8594;</span>
+        </a>
+        <a href="../observatory/" class="cross-link-card">
+          <span class="cross-link-idx">[04] WORLD FOUR</span>
+          <span class="cross-link-name">THE OBSERVATORY &#8594;</span>
+        </a>
+      </div>
+    </nav>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="about-footer">
+    <span>PRANAVI RUDRADEV &#183; BRAND STRATEGY &#183; CONSUMER PSYCHOLOGY &#183; QUALITATIVE THINKING</span>
+    <a href="#top" class="about-nav-link" style="font-size: 10.5px;">BACK TO TOP &#8593;</a>
+  </footer>
+
+  <!-- Script: Mount Canonical Shared 76px Optical Fisheye Lens -->
+  <script type="module">
+    import { FisheyeCursor } from '../src/components/lens-cursor/FisheyeCursor.js';
+    const lens = new FisheyeCursor();
+    lens.mount();
+  </script>
+
+  <script>
+    /**
+     * =========================================================
+     * SECTION 3: MY STRENGTHS — PHYSICAL PRIZE WHEEL ENGINE
+     * =========================================================
+     * 
+     * Exact behaviour:
+     * - Both wheels remain strictly fixed in their original positions.
+     * - Each entire wheel rotates as one rigid disc around its exact centre (transform-origin: center center).
+     * - The blue Soft Skills wheel spins anticlockwise.
+     * - The red Hard Skills wheel spins clockwise.
+     * - As user scrolls down, both wheels accelerate into a fast, continuous spin,
+     *   then gradually decelerate with realistic physical momentum.
+     * - Each wheel stops at a different, randomly selected final angle on each animation run.
+     * - Wheels settle smoothly like physical prize wheels without bouncing, wobbling, or shifting.
+     * - Once both wheels stop, reveals: "you're in luck, you get all these skill-sets" beneath them.
+     */
+    function setupStrengthsWheels() {
+      const strengthsSection = document.getElementById('my-strengths');
+      const wheelContainer = document.querySelector('.strengths-wheels-container');
+      const wheelCards = document.querySelectorAll('.wheel-card');
+
+      if (!strengthsSection || !wheelContainer) return;
+
+      let isSpinning = false;
+      let hasSpunInCurrentView = false;
+      let currentAngleSoft = 0;
+      let currentAngleHard = 0;
+      let animFrameId = null;
+
+      /**
+       * Physical Prize Wheel Easing Curve:
+       * - Smooth acceleration during initial 10% of time
+       * - Gradual friction ease-out with quartic decay over remaining 90%
+       * - Velocity = 0 at t=0 and t=1 (smooth dead stop, zero bounce)
+       */
+      function prizeWheelEase(t) {
+        if (t <= 0) return 0;
+        if (t >= 1) return 1;
+        const t_acc = 0.10;
+        const A1 = t_acc / 2; // 0.05
+        const exp = 4.0;
+        const A2 = (1 - t_acc) / exp; // 0.90 / 4.0 = 0.225
+        const A_tot = A1 + A2; // 0.275
+
+        if (t <= t_acc) {
+          return ((t * t) / (2 * t_acc)) / A_tot;
+        } else {
+          const remain = (1 - t) / (1 - t_acc);
+          return (A1 + A2 * (1 - Math.pow(remain, exp))) / A_tot;
+        }
+      }
+
+      function startPrizeWheelSpin() {
+        if (isSpinning) return;
+        isSpinning = true;
+
+        const softRotors = document.querySelectorAll('.wheel-rotor-soft');
+        const hardRotors = document.querySelectorAll('.wheel-rotor-hard');
+        const resultNotes = document.querySelectorAll('.wheel-result-note');
+
+        // Hide result text during spin
+        resultNotes.forEach(note => note.classList.remove('is-revealed'));
+
+        // Ensure both wheels complete full rotations in assigned directions:
+        // Soft Skills spins ANTICLOCKWISE (negative): completes 4 full rotations (-1440deg)
+        // Hard Skills spins CLOCKWISE (positive): completes 4 full rotations (+1440deg)
+        // Both decelerate smoothly and stop at exact original orientations (0deg) as shown in reference image!
+        const FULL_ROTATIONS = 4; // Complete multiple full 360° revolutions
+        const deltaSoft = -(FULL_ROTATIONS * 360); // -1440deg anticlockwise
+        const deltaHard = +(FULL_ROTATIONS * 360); // +1440deg clockwise
+        const startSoft = 0;
+        const startHard = 0;
+
+        const durationSoft = 3400; // ms
+        const durationHard = 3400; // ms
+
+        const startTime = performance.now();
+
+        function animate(now) {
+          const elapsed = now - startTime;
+
+          const tSoft = Math.min(1, Math.max(0, elapsed / durationSoft));
+          const tHard = Math.min(1, Math.max(0, elapsed / durationHard));
+
+          const pSoft = prizeWheelEase(tSoft);
+          const pHard = prizeWheelEase(tHard);
+
+          const angleSoft = deltaSoft * pSoft;
+          const angleHard = deltaHard * pHard;
+
+          // Technical requirement: apply rotation transforms using transform-origin: center center
+          softRotors.forEach(el => {
+            el.style.transformOrigin = 'center center';
+            el.style.transformBox = 'view-box';
+            el.style.transform = `rotate(${angleSoft.toFixed(2)}deg)`;
+            el.setAttribute('transform', `rotate(${angleSoft.toFixed(2)}, 200, 200)`);
+          });
+
+          hardRotors.forEach(el => {
+            el.style.transformOrigin = 'center center';
+            el.style.transformBox = 'view-box';
+            el.style.transform = `rotate(${angleHard.toFixed(2)}deg)`;
+            el.setAttribute('transform', `rotate(${angleHard.toFixed(2)}, 200, 200)`);
+          });
+
+          if (tSoft < 1 || tHard < 1) {
+            animFrameId = requestAnimationFrame(animate);
+          } else {
+            // Both wheels have completed their full rotation cycles and stopped at exact original orientations
+            isSpinning = false;
+            softRotors.forEach(el => {
+              el.style.transform = 'rotate(0deg)';
+              el.setAttribute('transform', 'rotate(0, 200, 200)');
+            });
+            hardRotors.forEach(el => {
+              el.style.transform = 'rotate(0deg)';
+              el.setAttribute('transform', 'rotate(0, 200, 200)');
+            });
+
+            // Reveal the text once both wheels have completely stopped
+            resultNotes.forEach(note => note.classList.add('is-revealed'));
+          }
+        }
+
+        if (animFrameId) cancelAnimationFrame(animFrameId);
+        animFrameId = requestAnimationFrame(animate);
+      }
+
+      // Scroll trigger: trigger the physical prize wheel spin as user scrolls down into view
+      let lastScrollY = window.scrollY;
+
+      function checkScroll() {
+        const rect = wheelContainer.getBoundingClientRect();
+        const vh = window.innerHeight;
+        const currentScrollY = window.scrollY;
+        const isScrollingDown = currentScrollY >= lastScrollY;
+        lastScrollY = currentScrollY;
+
+        // Trigger when wheels container enters comfortable reading focal zone
+        const inView = rect.top < vh * 0.80 && rect.bottom > vh * 0.15;
+
+        if (inView && isScrollingDown) {
+          if (!hasSpunInCurrentView && !isSpinning) {
+            hasSpunInCurrentView = true;
+            startPrizeWheelSpin();
+          }
+        } else if (rect.top > vh * 0.95 || rect.bottom < 0) {
+          // Reset when scrolled away so scrolling back down triggers another spin with new random angles
+          if (hasSpunInCurrentView && !isSpinning) {
+            hasSpunInCurrentView = false;
+            document.querySelectorAll('.wheel-result-note').forEach(note => note.classList.remove('is-revealed'));
+          }
+        }
+      }
+
+      window.addEventListener('scroll', checkScroll, { passive: true });
+
+      // IntersectionObserver for robust viewport entrance detection
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !hasSpunInCurrentView && !isSpinning) {
+            hasSpunInCurrentView = true;
+            startPrizeWheelSpin();
+          } else if (!entry.isIntersecting && !isSpinning) {
+            if (entry.boundingClientRect.top > window.innerHeight) {
+              hasSpunInCurrentView = false;
+              document.querySelectorAll('.wheel-result-note').forEach(note => note.classList.remove('is-revealed'));
+            }
+          }
+        });
+      }, { threshold: 0.35 });
+
+      observer.observe(wheelContainer);
+
+      // Interactive bonus: click-to-spin if already in view
+      wheelCards.forEach(card => {
+        card.addEventListener('click', () => {
+          if (!isSpinning) {
+            startPrizeWheelSpin();
+          }
+        });
+      });
+
+      // Initial check in case user loaded the page already anchored on #my-strengths
+      checkScroll();
+    }
+
+    // Initialize after DOM and mirror stage are ready
+    setTimeout(setupStrengthsWheels, 60);
+  </script>
+
+  <!-- =========================================================
+       LAYER 100: TRUE OPTICAL FISHEYE LENS (76px)
+       ========================================================= -->
+  <div class="fisheye-lens-loupe" id="fisheye" aria-hidden="true">
+    <div class="fisheye-lens-warp-container" id="fisheyeWarpContainer">
+      <div class="fisheye-lens-mirror-stage" id="fisheyeMirrorStage"></div>
+    </div>
+    <div class="fisheye-lens-glass-overlay"></div>
+    <div class="fisheye-lens-rim"></div>
+  </div>
+
+</body>
+</html>

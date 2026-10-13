@@ -1,0 +1,248 @@
+/**
+ * PRANAVI RUDRADEV PORTFOLIO — HOMEPAGE TWO-STAGE STYLES (REFINED ART-DIRECTION)
+ * 
+ * Strict Colour Hierarchy:
+ * - YELLOW (#F5EFC6): All primary titles, hero statement, name, major text
+ * - BLUE (#A5BCD6): Indices [01]-[04], arrows, subtle system indicators
+ * - RED (#4D0E12): Subtle occasional accent detail only
+ * - BACKGROUND: Potting Soil (#4A2E27)
+ * 
+ * Strict Z-Index Layers:
+ * - .home-background: z-index: 0
+ * - .home-image-field: z-index: 1
+ * - .home-hero: z-index: 10
+ * - .home-interface: z-index: 20
+ * - .fisheye-lens: z-index: 100
+ * 
+ * Pure Borderless Photographic Rectangular Boxes (NO cards, NO borders, NO rounded corners)
+ * Clean Focus State (NO browser default blue rectangle on mouse click)
+ */
+
+/* Explicit Architectural Z-Index Layers */
+.home-background { z-index: 0; }
+.home-image-field { z-index: 1; }
+.home-hero { z-index: 10; }
+.home-interface { z-index: 20; }
+.fisheye-lens { z-index: 100; }
+
+/* Universal Focus Refinement */
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible),
+.world-tab-item:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+a:focus-visible,
+button:focus-visible,
+.world-tab-item:focus-visible {
+  outline: 1px dashed var(--color-transparent-yellow, #F5EFC6) !important;
+  outline-offset: 4px !important;
+}
+
+/* =========================================================================
+   STAGE 1: THE OPENING SCENE
+   ========================================================================= */
+.opening-home-stage {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding: 0 var(--space-margin);
+  background-color: var(--color-transparent-yellow, #F5EFC6);
+  color: var(--color-potting-soil, #4A2E27);
+}
+
+/* Canvas containing floating small image placeholders (Strictly BEHIND typography) */
+.home-image-field-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Individual empty image slot (100% TRANSPARENT when empty, NO coloured boxes) */
+.home-image-fragment,
+.home-image-slot {
+  position: absolute;
+  pointer-events: auto;
+  overflow: hidden;
+  background: transparent !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  transition: opacity 300ms ease;
+  will-change: transform;
+}
+
+.fragment-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1), filter 350ms ease;
+  filter: contrast(102%) saturate(96%);
+  will-change: transform, filter;
+}
+
+/* Hover rule: ONLY THE IMAGE SCALES (NO popups, NO labels) */
+.home-image-fragment:hover .fragment-photo {
+  transform: scale(var(--hover-scale, 1.06));
+  filter: contrast(106%) saturate(102%);
+}
+
+/* Subtle scroll indicator in Stage 1 */
+.stage-scroll-indicator {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-cerulean-blue, #A5BCD6);
+  text-decoration: none;
+  z-index: 20;
+  letter-spacing: 0.12em;
+  transition: color 250ms ease, opacity 250ms ease;
+}
+
+.stage-scroll-indicator:hover {
+  color: var(--color-transparent-yellow, #F5EFC6);
+}
+
+/* =========================================================================
+   STAGE 2: THE FOUR WORLDS NAVIGATION
+   ========================================================================= */
+.four-worlds-stage {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  padding: clamp(100px, 15vh, 180px) var(--space-margin) clamp(80px, 12vh, 140px);
+  background-color: var(--color-potting-soil, #4A2E27);
+  z-index: 20;
+}
+
+.worlds-intro-header {
+  margin-bottom: clamp(40px, 6vw, 76px);
+  border-bottom: 1px solid rgba(245, 239, 198, 0.14);
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.world-index-blue {
+  color: var(--color-cerulean-blue, #A5BCD6) !important;
+}
+
+.worlds-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.world-tab-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  text-decoration: none;
+  padding: clamp(24px, 3.6vw, 44px) 0;
+  border-top: 1px solid rgba(245, 239, 198, 0.16);
+  transition: background-color 300ms ease, border-color 300ms ease, padding 300ms ease;
+  position: relative;
+  outline: none;
+}
+
+.world-tab-item:last-child {
+  border-bottom: 1px solid rgba(245, 239, 198, 0.16);
+}
+
+.world-tab-left {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(16px, 2.5vw, 32px);
+}
+
+/* Strict Colour Hierarchy: Indices are BLUE */
+.world-index {
+  font-size: clamp(0.78rem, 1vw, 0.92rem);
+  color: var(--color-cerulean-blue, #A5BCD6) !important;
+}
+
+/* Strict Colour Hierarchy: Titles are YELLOW (~30% smaller than previous 5.2rem) */
+.world-title {
+  font-family: var(--font-primary, 'Satoshi', sans-serif);
+  font-size: clamp(1.65rem, 3.4vw, 3.6rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin: 0;
+  color: var(--color-transparent-yellow, #F5EFC6) !important;
+  transition: transform 300ms ease;
+}
+
+/* Navigation item alignment */
+.world-tab-right {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+/* Strict Colour Hierarchy: Arrows are BLUE */
+.world-arrow {
+  font-size: clamp(1.3rem, 1.8vw, 2rem);
+  color: var(--color-cerulean-blue, #A5BCD6) !important;
+  transition: transform 300ms ease;
+}
+
+/* Hover state on the 4 tabs */
+.world-tab-item:hover {
+  border-color: rgba(165, 188, 214, 0.35);
+  background: rgba(35, 24, 21, 0.35);
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.world-tab-item:hover .world-title {
+  transform: translateX(8px);
+}
+
+.world-tab-item:hover .world-arrow {
+  transform: translateX(8px);
+}
+
+/* =========================================================================
+   MOBILE RESPONSIVE REDESIGN
+   ========================================================================= */
+@media (max-width: 860px) {
+  .home-image-fragment {
+    max-width: 130px !important;
+    opacity: 0.65 !important;
+  }
+
+  .world-tab-item {
+    padding: 22px 0;
+  }
+
+  .world-title {
+    font-size: clamp(1.4rem, 5vw, 2.2rem);
+  }
+
+  .world-arrow {
+    display: inline-block;
+  }
+}

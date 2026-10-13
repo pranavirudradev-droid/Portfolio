@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pranavi Rudradev — Portfolio</title>
+
+  <!-- =========================================================
+       TYPOGRAPHY: SATOSHI (CENTRALIZED FONT DEFINITION)
+       ========================================================= -->
+  <link rel="stylesheet" href="assets/fonts/satoshi.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap" rel="stylesheet">
+  <style>
+    @import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400,300&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap');
+
+    /* =========================================================
+       DESIGN TOKENS & COLOURS
+       ========================================================= */
+    :root {
+      --potting-soil: #4A2E27;
+      --transparent-yellow: #F5EFC6;
+      --cerulean-blue: #A5BCD6;
+      --sceptre-red: #4D0E12;
+      --java-brown: #231815;
+
+      --hero-background: var(--transparent-yellow);
+      --hero-text: var(--potting-soil);
+
+      --tab-background: var(--potting-soil);
+      --tab-text: var(--transparent-yellow);
+      --tab-number: var(--cerulean-blue);
+
+      --lens-size: 76px;
+      --lens-magnification: 1.08;
+      --lens-distortion: 0.12;
+      --lens-opacity: 1.0;
+      --lens-transition-speed: 180ms;
+
+      --satoshi: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* =========================================================
+       RESET & BASE STYLES
+       ========================================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--tab-background);
+    }
+
+    body {
+      font-family: var(--satoshi);
+      background: var(--tab-background);
+      color: var(--tab-text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* =========================================================
+       LAYER 0 & HOMEPAGE ROOT: THE FIRST CHAPTER
+       ========================================================= */
+    .home-chapter {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 100svh;
+      overflow: hidden;
+      background: var(--hero-background);
+      color: var(--hero-text);
+      isolation: isolate;
+    }
+
+    .home-background {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: var(--hero-background);
+      pointer-events: none;
+    }
+
+    /* =========================================================
+       LAYER 1: FLOATING PHOTOGRAPHIC IMAGE FIELD (14 SLOTS)
+       ========================================================= */
+    .home-image-field {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    .home-image-slot {
+      position: absolute;
+      overflow: hidden;
+      border: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      pointer-events: auto;
+      will-change: transform;
+      background: transparent !important;
+    }
+
+    /* Abstract Photographic Surfaces (Temporary Generative Plates) */
+    .photo-surface {
+      width: 100%;
+      height: 100%;
+      display: block;
+      overflow: hidden;
+      border-radius: 0 !important;
+      border: none !important;
+      box-shadow: none !important;
+      transition: filter 350ms ease;
+    }
+
+    .home-image-slot:hover .photo-surface {
+      filter: contrast(108%) brightness(105%);
+    }
+
+    .home-image-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      user-select: none;
+      pointer-events: none;
+      border-radius: 0 !important;
+      border: none !important;
+      box-shadow: none !important;
+      transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .home-image-slot:hover img {
+      transform: scale(1.05);
+    }
+
+        /* Exact Percentage Positions & Dimensions Matching Reference Layout (Zero Overlap) */
+    .image-01 { left: 47.1%; top: 0%; width: 17.7%; height: 9.2%; }
+    .image-02 { left: 68.9%; top: 4.7%; width: 8.7%; height: 14.4%; }
+    .image-03 { left: 89.4%; top: 5.9%; width: 10.6%; height: 16.7%; }
+    .image-04 { left: 31.2%; top: 15.1%; width: 11.5%; height: 16.5%; }
+    .image-05 { left: 50.7%; top: 21.4%; width: 14.4%; height: 10.0%; }
+    .image-06 { left: 2.9%; top: 22.5%; width: 15.3%; height: 15.0%; }
+    .image-07 { left: 80.7%; top: 26.7%; width: 5.1%; height: 6.7%; }
+    .image-08 { left: 89.9%; top: 58.4%; width: 8.2%; height: 8.4%; }
+    .image-09 { left: 0%; top: 62.7%; width: 14.6%; height: 11.4%; }
+    .image-10 { left: 64.0%; top: 67.3%; width: 5.7%; height: 8.6%; }
+    .image-11 { left: 30.3%; top: 68.3%; width: 17.6%; height: 21.2%; }
+    .image-12 { left: 73.9%; top: 74.8%; width: 15.0%; height: 12.5%; }
+    .image-13 { left: 55.8%; top: 80.0%; width: 11.3%; height: 17.8%; }
+    .image-14 { left: 10.6%; top: 81.1%; width: 12.0%; height: 15.8%; }
+    .image-15 { left: 93.0%; top: 90.8%; width: 4.6%; height: 6.7%; }
+
+    /* =========================================================
+       LAYER 10: HERO TYPOGRAPHY (STABLE ANCHOR)
+       ========================================================= */
+    .home-identity {
+      position: absolute;
+      top: clamp(32px, 6vh, 64px);
+      left: clamp(28px, 5vw, 80px);
+      z-index: 10;
+      color: var(--hero-text);
+      pointer-events: auto;
+    }
+
+    .home-name {
+      margin: 0;
+      font-family: var(--satoshi);
+      font-size: 42px; /* 42px Satoshi Bold */
+      line-height: 0.96;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--potting-soil);
+    }
+
+    /* Final Hero Statement: Exactly Two Lines in Potting Soil Brown (52px Satoshi Bold) */
+    .home-hero-statement {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 10;
+      width: min(92vw, 1100px);
+      transform: translate(-50%, -50%);
+      margin: 0;
+      color: var(--potting-soil);
+      font-family: var(--satoshi);
+      font-size: 52px; /* 52px Satoshi Bold */
+      line-height: 1.08;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      text-transform: uppercase;
+      text-align: center;
+      pointer-events: auto;
+      user-select: text;
+    }
+
+    .home-hero-title {
+      margin: 0;
+      font-family: var(--satoshi);
+      font-size: 52px; /* 52px Satoshi Bold */
+      line-height: 1.08;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      text-transform: uppercase;
+      color: var(--potting-soil);
+    }
+
+    .home-hero-title span,
+    .home-hero-statement span {
+      display: block;
+      white-space: nowrap;
+    }
+
+    /* Handwritten Tagline: 24px Caveat directly beneath headline */
+    .home-tagline {
+      margin: 16px 0 0 0;
+      font-family: 'Caveat', cursive, serif;
+      font-size: 24px; /* 24px Caveat */
+      font-weight: 600;
+      line-height: 1.35;
+      letter-spacing: 0.02em;
+      color: var(--potting-soil);
+      text-align: center;
+      text-transform: none;
+      display: block;
+    }
+
+    /* =========================================================
+       LAYER 20: SCROLL INDICATOR
+       ========================================================= */
+    .home-scroll {
+      position: absolute;
+      left: 50%;
+      bottom: 28px;
+      z-index: 20;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: var(--potting-soil);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      pointer-events: auto;
+      transition: opacity 250ms ease, transform 250ms ease;
+    }
+
+    .home-scroll:hover {
+      opacity: 0.75;
+      transform: translateX(-50%) translateY(2px);
+    }
+
+    .home-scroll-arrow {
+      font-size: 20px;
+      line-height: 1;
+      font-weight: 400;
+    }
+
+    /* =========================================================
+       LAYER 100: TRUE OPTICAL FISHEYE LENS (76px)
+       ========================================================= */
+    .fisheye-lens-loupe {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: var(--lens-size, 76px);
+      height: var(--lens-size, 76px);
+      z-index: 100;
+      pointer-events: none;
+      border-radius: 50%;
+      opacity: 0;
+      transform: translate3d(-50%, -50%, 0);
+      overflow: hidden;
+      box-shadow:
+        0 10px 28px rgba(0, 0, 0, 0.25),
+        0 2px 8px rgba(0, 0, 0, 0.14);
+      transition: opacity var(--lens-transition-speed, 180ms) ease;
+      will-change: left, top, opacity;
+    }
+
+    .fisheye-lens-loupe.is-active {
+      opacity: var(--lens-opacity, 1.0);
+    }
+
+    /* Warped Scene Container with SVG Barrel Distortion */
+    .fisheye-lens-warp-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      filter: url(#optical-lens-warp);
+      pointer-events: none;
+    }
+
+    /* Cloned Scene Mirror Stage positioned under cursor */
+    .fisheye-lens-mirror-stage {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      min-height: 100vh;
+      transform-origin: 0 0;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    #homeLensMirror,
+    #sectionsLensMirror {
+      pointer-events: none !important;
+      user-select: none !important;
+    }
+
+    #sectionsLensMirror * {
+      pointer-events: none !important;
+      user-select: none !important;
+    }
+
+    /* Optical Glass Surface Overlay: Specular highlight, convex shading, subtle reflection */
+    .fisheye-lens-glass-overlay {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      pointer-events: none;
+      background: radial-gradient(
+        circle at 35% 30%,
+        rgba(255, 255, 255, 0.35) 0%,
+        rgba(255, 255, 255, 0.10) 45%,
+        rgba(0, 0, 0, 0.04) 75%,
+        rgba(0, 0, 0, 0.22) 100%
+      );
+      box-shadow:
+        inset 0 0 8px rgba(255, 255, 255, 0.24),
+        inset 0 1.5px 3.5px rgba(255, 255, 255, 0.40);
+      backdrop-filter: contrast(108%) brightness(104%);
+      -webkit-backdrop-filter: contrast(108%) brightness(104%);
+    }
+
+    /* Physical Glass Rim / Refraction Edge */
+    .fisheye-lens-rim {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.30);
+      box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.5);
+      pointer-events: none;
+    }
+
+    /* =========================================================
+       STAGE 2: THE FOUR WORLDS NAVIGATION CHAPTER
+       ========================================================= */
+    .sections-stage {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100svh;
+      background: var(--tab-background);
+      color: var(--tab-text);
+      z-index: 30;
+      padding:
+        clamp(60px, 10vh, 120px)
+        clamp(28px, 5vw, 84px)
+        clamp(60px, 10vh, 120px);
+    }
+
+    .section-list {
+      width: 100%;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    .section-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(55px, 7%) minmax(0, 1fr) auto;
+      align-items: baseline;
+      min-height: clamp(130px, 18vh, 200px);
+      padding: clamp(24px, 3.5vw, 42px) 0;
+      border-top: 1px solid rgba(245, 239, 198, 0.18);
+      cursor: pointer;
+      transition: padding 300ms ease, border-color 300ms ease, background-color 300ms ease;
+      outline: none;
+    }
+
+    .section-item:last-child {
+      border-bottom: 1px solid rgba(245, 239, 198, 0.18);
+    }
+
+    .section-item:hover,
+    .section-item.is-hovered {
+      padding-left: 14px;
+      padding-right: 14px;
+      border-color: rgba(165, 188, 214, 0.45);
+      background: rgba(35, 24, 21, 0.32);
+    }
+
+    .section-number {
+      color: var(--tab-number);
+      font-size: clamp(12px, 1vw, 16px);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
+
+    .section-title {
+      margin: 0;
+      color: var(--tab-text);
+      font-size: clamp(38px, 4.8vw, 76px);
+      line-height: 0.98;
+      font-weight: 700;
+      letter-spacing: -0.045em;
+      transition: transform 300ms ease;
+    }
+
+    .section-item:hover .section-title,
+    .section-item.is-hovered .section-title {
+      transform: translateX(8px);
+    }
+
+    .section-arrow {
+      color: var(--tab-number);
+      font-size: clamp(24px, 2.8vw, 38px);
+      font-weight: 300;
+      transition: transform 300ms ease;
+    }
+
+    .section-item:hover .section-arrow,
+    .section-item.is-hovered .section-arrow {
+      transform: translateX(8px);
+    }
+
+    /* Universal Focus & Accessibility */
+    a:focus:not(:focus-visible),
+    button:focus:not(:focus-visible),
+    .section-item:focus:not(:focus-visible) {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--tab-number) !important;
+      outline-offset: 6px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+      .home-image-slot,
+      .section-item,
+      .section-arrow,
+      .section-title {
+        transition: none !important;
+        transform: none !important;
+      }
+    }
+
+    /* Mobile Responsive Composition */
+    @media (max-width: 768px) {
+      .home-chapter {
+        height: 100svh;
+      }
+      .home-name {
+        font-size: clamp(26px, 4.5vw, 42px);
+      }
+      .home-hero-statement {
+        width: 90vw;
+        font-size: clamp(24px, 5.8vw, 52px);
+        line-height: 1.1;
+      }
+      .home-hero-title {
+        font-size: clamp(24px, 5.8vw, 52px);
+        line-height: 1.1;
+      }
+      .home-tagline {
+        font-size: clamp(16px, 4vw, 24px);
+        margin-top: 10px;
+      }
+      .home-image-slot {
+        max-width: 28vw;
+      }
+      .home-scroll {
+        bottom: 20px;
+      }
+      .sections-stage {
+        padding: 48px 24px 80px;
+      }
+      .section-item {
+        grid-template-columns: 42px minmax(0, 1fr) 32px;
+        min-height: 120px;
+      }
+      .section-title {
+        font-size: clamp(30px, 8.5vw, 48px);
+      }
+      .section-number {
+        font-size: 11px;
+      }
+    }
+
+    /* Touch & Mobile Lens Elimination */
+    @media (hover: none), (pointer: coarse) {
+      .fisheye-lens-loupe {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================================================
+       SVG OPTICAL BARREL DISTORTION DISPLACEMENT ENGINE
+       ========================================================= -->
+  <svg style="position: absolute; width: 0; height: 0; pointer-events: none;" aria-hidden="true">
+    <defs>
+      <filter id="optical-lens-warp" x="-20%" y="-20%" width="140%" height="140%">
+        <feImage id="fe-lens-displacement" href="" result="radialMap" />
+        <feDisplacementMap in="SourceGraphic" in2="radialMap" scale="22" xChannelSelector="R" yChannelSelector="G" result="warped" />
+        <feComposite in="warped" in2="SourceAlpha" operator="in" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- =========================================================
+       CHAPTER 1: THE HOMEPAGE (FIRST VIEWPORT)
+       ========================================================= -->
+  <main class="home-chapter" id="home">
+
+    <!-- Layer 0: Yellow Field -->
+    <div class="home-background" aria-hidden="true"></div>
+
+    <!-- Layer 1: Floating Photographic Image Field (14 Slots) -->
+    <div class="home-image-field" id="homeImageField" aria-hidden="true">
+
+      <!-- Slot 01: Top Center-Edge Landscape (Crop at top edge) -->
+      <div class="home-image-slot image-01" id="home-image-01" data-depth="0.22" data-rotation="0">
+        <div class="photo-surface">
+          <svg viewBox="0 0 360 120" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
+            <defs>
+              <filter id="grain-01">
+                <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" result="n" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.14 0" result="t" />
+                <feBlend in="SourceGraphic" in2="t" mode="overlay" />
+              </filter>
+              <linearGradient id="p-base-01" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#4C515D" />
+                <stop offset="50%" stop-color="#3A3E48" />
+                <stop offset="100%" stop-color="#24262E" />
+              </linearGradient>
+              <radialGradient id="p-light-01" cx="60%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#DCE3EE" stop-opacity="0.85" />
+                <stop offset="45%" stop-color="#727988" stop-opacity="0.35" />
+                <stop offset="100%" stop-color="#24262E" stop-opacity="0" />
+              </radialGradient>
+              <filter id="p-blur-01"><feGaussianBlur stdDeviation="16" /></filter>
+            </defs>
+            <g filter="url(#grain-01)">
+              <rect width="100%" height="100%" fill="url(#p-base-01)" />
+              <rect width="100%" height="100%" fill="url(#p-light-01)" />
+              <polygon points="-30,60 210,10 370,80 -30,140" fill="#E8EDF6" opacity="0.22" filter="url(#p-blur-01)" />
+              <path d="M-40,90 Q140,65 370,110 L370,130 L-40,130 Z" fill="#1C1E24" opacity="0.55" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slot 02: Top Right-Center Square -->
+      <div class="home-image-slot image-02" id="home-image-02" data-depth="0.32" data-rotation="1">
+        <div class="photo-surface">
+          <svg viewBox="0 0 280 290" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
+            <defs>
+              <filter id="grain-02">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="n" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.12 0" result="t" />
+                <feBlend in="SourceGraphic" in2="t" mode="overlay" />
+              </filter>
+              <radialGradient id="p-light-02" cx="40%" cy="36%" r="75%">
+                <stop offset="0%" stop-color="#F0F4FA" />
+                <stop offset="35%" stop-color="#C2C9D6" />
+                <stop offset="70%" stop-color="#8C93A2" />
+                <stop offset="100%" stop-color="#5B6170" />
+              </radialGradient>
+              <filter id="p-blur-02"><feGaussianBlur stdDeviation="20" /></filter>
+            </defs>
+            <g filter="url(#grain-02)">
+              <rect width="100%" height="100%" fill="url(#p-light-02)" />
+              <circle cx="44%" cy="34%" r="38%" fill="#FFFFFF" opacity="0.4" filter="url(#p-blur-02)" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slot 03: Top Right Square (Touches Right Viewport Edge) -->
+      <div class="home-image-slot image-03" id="home-image-03" data-depth="0.25" data-rotation="-1">
+        <div class="photo-surface">
+          <svg viewBox="0 0 300 300" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
+            <defs>
+              <filter id="grain-03">
+                <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" result="n" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.13 0" result="t" />
+                <feBlend in="SourceGraphic" in2="t" mode="overlay" />
+              </filter>
+              <linearGradient id="p-base-03" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0%" stop-color="#1B1E25" />
+                <stop offset="45%" stop-color="#2D323E" />
+                <stop offset="100%" stop-color="#5A6273" />
+              </linearGradient>
+              <radialGradient id="p-light-03" cx="70%" cy="25%" r="60%">
+                <stop offset="0%" stop-color="#E2E7F0" stop-opacity="0.9" />
+                <stop offset="50%" stop-color="#9BA4B5" stop-opacity="0.4" />
+                <stop offset="100%" stop-color="#2D323E" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <g filter="url(#grain-03)">
+              <rect width="100%" height="100%" fill="url(#p-base-03)" />
+              <rect width="100%" height="100%" fill="url(#p-light-03)" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slot 04: Top Left-Center Square (Refined Horizon Wash) -->
+      <div class="home-image-slot image-04" id="home-image-04" data-depth="0.28" data-rotation="1">
+        <div class="photo-surface">
+          <svg viewBox="0 0 300 290" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
+            <defs>
+              <filter id="grain-04">
+                <feTurbulence type="fractalNoise" baseFrequency="0.76" numOctaves="3" result="n" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.15 0" result="t" />
+                <feBlend in="SourceGraphic" in2="t" mode="overlay" />
+              </filter>
+              <linearGradient id="p-base-04" x1="0.5" y1="0" x2="0.5" y2="1">
+                <stop offset="0%" stop-color="#343842" />
+                <stop offset="55%" stop-color="#5D6473" />
+                <stop offset="100%" stop-color="#202228" />
+              </linearGradient>
+              <linearGradient id="p-sky-04" x1="0" y1="0" x2="0" y2="0.65">
+                <stop offset="0%" stop-color="#D7DEEB" stop-opacity="0.75" />
+                <stop offset="100%" stop-color="#5D6473" stop-opacity="0" />
+              </linearGradient>
+              <filter id="p-blur-04"><feGaussianBlur stdDeviation="14" /></filter>
+            </defs>
+            <g filter="url(#grain-04)">
+              <rect width="100%" height="100%" fill="url(#p-base-04)" />
+              <rect width="100%" height="65%" fill="url(#p-sky-04)" />
+              <ellipse cx="65%" cy="60%" rx="35%" ry="22%" fill="#FFFFFF" opacity="0.25" filter="url(#p-blur-04)" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slot 05: Above Headline Landscape -->
+      <div class="home-image-slot image-05" id="home-image-05" data-depth="0.18" data-rotation="-1">
+        <div class="photo-surface">
+          <svg viewBox="0 0 320 140" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
+            <defs>
+              <filter id="grain-05">
+                <feTurbulence type="fractalNoise" baseFrequency="0.84" numOctaves="3" result="n" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.12 0" result="t" />
+                <feBlend in="SourceGraphic" in2="t" mode="overlay" />
+              </filter>
+              <radialGradient id="p-light-05" cx="30%" cy="50%" r="65%">
+                <stop offset="0%" stop-color="#C5CDDC" />
+                <stop offset="45%" stop-color="#7B8394" />
+                <stop offset="100%" stop-color="#3B3F4B" />
+              </radialGradient>
+            </defs>
+            <g filter="url(#grain-05)">
+              <rect width="100%" height="100%" fill="url(#p-light-05)" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slot 06: Upper Left Flank Landscape -->
+      <div class="home-image-slot image-06" id="home-image-06" data-depth="0.20" data-rotation="1">
+        <div class="photo-surface">
+          <svg viewBox="0 0 320 200" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
+            <defs>
+              <filter id="grain-06">
+                <feTurbulence type="fractalNoise" baseFrequency="0.74" numOctaves="3" result="n" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.14 0" result="t" />
+                <feBlend in="SourceGraphic" in2="t" mode="overlay" />
+              </filter>
+              <linearGradient id="p-base-06" x1="0" y1="0.2" x2="1" y2="0.8">
+                <stop offset="0%" stop-color="#2D313A" />
+                <stop offset="50%" stop-color="#4A505F" />
+                <stop offset="100%" stop-color="#1E2026" />
+              </linearGradient>
+              <radialGradient id="p-glow-06" cx="75%" cy="30%" r="55%">
+                <stop offset="0%" stop-color="#E1E6F0" stop-opacity="0.85" />
+                <stop offset="100%" stop-color="#4A505F" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <g filter="url(#grain-06)">
+              <rect width="100%" height="100%" fill="url(#p-base-06)" />
+              <rect width="100%" height="100%" fill="url(#p-glow-06)" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slot 07: Upper Right Flank Small Square -->
+      <div class="home-image-slot image-07" id="home-image-07" data-depth="0.35" data-rotation="0">
+        <div class="photo-surface">
+          <svg viewBox="0 0 200 160" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
+            <defs>
+              <filter id="grain-07">
+                <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" result="n" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.12 0" result="t" />
+                <feBlend in="SourceGraphic" in2="t" mode="overlay" />
+              </filter>
+              <radialGradient id="p-light-07" cx="45%" cy="40%" r="60%">
+                <stop offset="0%" stop-color="#C2C9D7" />
+                <stop offset="60%" stop-color="#676D7C" />
+                <stop offset="100%" stop-color="#2F323A" />
+              </radialGradient>
+            </defs>
+            <g filter="url(#grain-07)">
+              <rect width="100%" height="100%" fill="url(#p-light-07)" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slot 08: Mid-Lower Right Flank Landscape -->
+      <div class="home-image-slot image-08" id="home-image-08" data-depth="0.30" data-rotation="-1">
+        <div class="photo-surface">
+          <svg viewBox="0 0 260 170" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
+            <defs>
+              <filter id="grain-08">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="n" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.13 0" result="t" />
+                <feBlend in="SourceGraphic" in2="t" mode="overlay" />
+              </filter>
+              <linearGradient id="p-base-08" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#555B6A" />
+                <stop offset="50%" stop-color="#343842" />
+                <stop offset="100%" stop-color="#1E2026" />
+              </linearGradient>
+              <radialGradient id="p-light-08" cx="30%" cy="30%" r="55%">
+                <stop offset="0%" stop-color="#CED5E3" stop-opacity="0.85" />
+                <stop offset="100%" stop-color="#343842" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <g filter="url(#grain-08)">
+              <rect width="100%" height="100%" fill="url(#p-base-08)" />
+              <rect width="100%" height="100%" fill="url(#p-light-08)" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slot 09: Left Edge Flush Landscape (Crop at Left Edge) -->
+      <div class="home-image-slot image-09" id="home-image-09" data-depth="0.24" data-rotation="0">
+        <div class="photo-surface">
+          <svg viewBox="0 0 320 160" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
+            <defs>
+              <filter id="grain-09">
+                <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" result="n" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.14 0" result="t" />
+                <feBlend in="SourceGraphic" in2="t" mode="overlay" />
+              </filter>
+              <linearGradient id="p-base-09" x1="1" y1="0.5" x2="0" y2="0.5">
+                <stop offset="0%" stop-color="#4C5260" />
+                <stop offset="50%" stop-color="#31353E" />
+                <stop offset="100%" stop-color="#1F2128" />
+              </linearGradient>
+              <radialGradient id="p-light-09" cx="20%" cy="40%" r="65%">
+                <stop offset="0%" stop-color="#D9E0EC" stop-opacity="0.85" />
+                <stop offset="100%" stop-color="#31353E" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <g filter="url(#grain-09)">
+              <rect width="100%" height="100%" fill="url(#p-base-09)" />
+              <rect width="100%" height="100%" fill="url(#p-light-09)" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slot 10: Below Tagline Small Square -->
+      <div class="home-image-slot image-10" id="home-image-10" data-depth="0.38" data-rotation="1">
+        <div class="photo-surface">
+          <svg viewBox="0 0 200 190" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
+            <defs>
+              <filter id="grain-10">
+                <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" result="n" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.12 0" result="t" />
+                <feBlend in="SourceGraphic" in2="t" mode="overlay" />
+              </filter>
+              <radialGradient id="p-light-10" cx="50%" cy="45%" r="65%">
+                <stop offset="0%" stop-color="#BAC1CD" />
+                <stop offset="55%" stop-color="#595F6D" />
+                <stop offset="100%" stop-color="#2A2D34" />
+              </radialGradient>
+            </defs>
+            <g filter="url(#grain-10)">
+              <rect width="100%" height="100%" fill="url(#p-light-10)" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slot 11: Below Headline Left Large Landscape -->
+      <div class="home-image-slot image-11" id="home-image-11" data-depth="0.26" data-rotation="-1">
+        <div class="photo-surface">
+          <svg viewBox="0 0 360 270" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
+            <defs>
+              <filter id="grain-11">
+                <feTurbulence type="fractalNoise" baseFrequency="0.76" numOctaves="3" result="n" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.14 0" result="t" />
+                <feBlend in="SourceGraphic" in2="t" mode="overlay" />
+              </filter>
+              <linearGradient id="p-base-11" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#616776" />
+                <stop offset="50%" stop-color="#3D414D" />
+                <stop offset="100%" stop-color="#23262E" />
+              </linearGradient>
+              <radialGradient id="p-light-11" cx="65%" cy="30%" r="65%">
+                <stop offset="0%" stop-color="#E2E8F4" stop-opacity="0.85" />
+                <stop offset="45%" stop-color="#838B9D" stop-opacity="0.35" />
+                <stop offset="100%" stop-color="#23262E" stop-opacity="0" />
+              </radialGradient>
+              <filter id="p-blur-11"><feGaussianBlur stdDeviation="18" /></filter>
+            </defs>
+            <g filter="url(#grain-11)">
+              <rect width="100%" height="100%" fill="url(#p-base-11)" />
+              <rect width="100%" height="100%" fill="url(#p-light-11)" />
+              <ellipse cx="60%" cy="38%" rx="40%" ry="24%" fill="#FFFFFF" opacity="0.25" filter="url(#p-blur-11)" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slot 12: Lower Right Landscape -->
+      <div class="home-image-slot image-12" id="home-image-12" data-depth="0.40" data-rotation="2">
+        <div class="photo-surface">
+          <svg viewBox="0 0 320 170" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
+            <defs>
+              <filter id="grain-12">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="n" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.13 0" result="t" />
+                <feBlend in="SourceGraphic" in2="t" mode="overlay" />
+              </filter>
+              <linearGradient id="p-base-12" x1="0" y1="0.5" x2="1" y2="0.5">
+                <stop offset="0%" stop-color="#2D3039" />
+                <stop offset="50%" stop-color="#555B69" />
+                <stop offset="100%" stop-color="#1E2027" />
+              </linearGradient>
+              <radialGradient id="p-light-12" cx="50%" cy="40%" r="55%">
+                <stop offset="0%" stop-color="#D4DBE8" stop-opacity="0.8" />
+                <stop offset="100%" stop-color="#1E2027" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <g filter="url(#grain-12)">
+              <rect width="100%" height="100%" fill="url(#p-base-12)" />
+              <rect width="100%" height="100%" fill="url(#p-light-12)" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slot 13: Bottom Center Square -->
+      <div class="home-image-slot image-13" id="home-image-13" data-depth="0.22" data-rotation="-1">
+        <div class="photo-surface">
+          <svg viewBox="0 0 300 295" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
+            <defs>
+              <filter id="grain-13">
+                <feTurbulence type="fractalNoise" baseFrequency="0.78" numOctaves="3" result="n" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.13 0" result="t" />
+                <feBlend in="SourceGraphic" in2="t" mode="overlay" />
+              </filter>
+              <radialGradient id="p-light-13a" cx="25%" cy="30%" r="60%">
+                <stop offset="0%" stop-color="#CCD2DD" />
+                <stop offset="70%" stop-color="#606674" />
+                <stop offset="100%" stop-color="#343741" />
+              </radialGradient>
+              <radialGradient id="p-light-13b" cx="75%" cy="70%" r="50%">
+                <stop offset="0%" stop-color="#9EA4B2" stop-opacity="0.85" />
+                <stop offset="100%" stop-color="#343741" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <g filter="url(#grain-13)">
+              <rect width="100%" height="100%" fill="url(#p-light-13a)" />
+              <rect width="100%" height="100%" fill="url(#p-light-13b)" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slot 14: Bottom Left Landscape -->
+      <div class="home-image-slot image-14" id="home-image-14" data-depth="0.45" data-rotation="1">
+        <div class="photo-surface">
+          <svg viewBox="0 0 300 250" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
+            <defs>
+              <filter id="grain-14">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="n" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.13 0" result="t" />
+                <feBlend in="SourceGraphic" in2="t" mode="overlay" />
+              </filter>
+              <linearGradient id="p-base-14" x1="1" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#BAC1CD" />
+                <stop offset="45%" stop-color="#686E7B" />
+                <stop offset="100%" stop-color="#30333C" />
+              </linearGradient>
+            </defs>
+            <g filter="url(#grain-14)">
+              <rect width="100%" height="100%" fill="url(#p-base-14)" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slot 15: Bottom Right Corner Small Square -->
+      <div class="home-image-slot image-15" id="home-image-15" data-depth="0.30" data-rotation="0">
+        <div class="photo-surface">
+          <svg viewBox="0 0 200 185" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
+            <defs>
+              <filter id="grain-15">
+                <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" result="n" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.12 0" result="t" />
+                <feBlend in="SourceGraphic" in2="t" mode="overlay" />
+              </filter>
+              <radialGradient id="p-light-15" cx="40%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#CED4E0" />
+                <stop offset="50%" stop-color="#6F7585" />
+                <stop offset="100%" stop-color="#252730" />
+              </radialGradient>
+            </defs>
+            <g filter="url(#grain-15)">
+              <rect width="100%" height="100%" fill="url(#p-light-15)" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Layer 10: Top Identity (Scrolls away naturally) -->
+    <header class="home-identity" id="homeIdentity">
+      <h1 class="home-name">PRANAVI RUDRADEV</h1>
+    </header>
+
+    <!-- Layer 10: Final Hero Statement (Stable Anchor above image field) -->
+    <div class="home-hero-statement optical-warp-target" id="heroStatement">
+      <h2 class="home-hero-title">
+        <span>RIGHT QUESTIONS</span>
+        <span>REVEAL WHAT OTHERS OVERLOOK.</span>
+      </h2>
+      <p class="home-tagline">Because there's more to every detail.</p>
+    </div>
+
+    <!-- Layer 20: Scroll Indicator -->
+    <a href="#sections-stage" class="home-scroll" aria-label="Scroll to portfolio worlds">
+      <span>SCROLL</span>
+      <span class="home-scroll-arrow" aria-hidden="true">↓</span>
+    </a>
+
+  </main>
+
+  <!-- =========================================================
+       CHAPTER 2: THE FOUR WORLDS NAVIGATION
+       ========================================================= -->
+  <section class="sections-stage" id="sections-stage">
+    <nav class="section-list" aria-label="Main portfolio sections">
+
+      <!-- [01] ABOUT ME -->
+      <a href="/about" class="section-item" tabindex="0">
+        <span class="section-number">[01]</span>
+        <div class="section-title-wrap">
+          <h2 class="section-title">ABOUT ME</h2>
+        </div>
+        <span class="section-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <!-- [02] WORK EXPERIENCE -->
+      <a href="/experience" class="section-item" tabindex="0">
+        <span class="section-number">[02]</span>
+        <div class="section-title-wrap">
+          <h2 class="section-title">WORK EXPERIENCE</h2>
+        </div>
+        <span class="section-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <!-- [03] PROJECTS -->
+      <a href="/projects" class="section-item" tabindex="0">
+        <span class="section-number">[03]</span>
+        <div class="section-title-wrap">
+          <h2 class="section-title">PROJECTS</h2>
+        </div>
+        <span class="section-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <!-- [04] THE OBSERVATORY -->
+      <a href="/observatory" class="section-item" tabindex="0">
+        <span class="section-number">[04]</span>
+        <div class="section-title-wrap">
+          <h2 class="section-title">THE OBSERVATORY</h2>
+        </div>
+        <span class="section-arrow" aria-hidden="true">→</span>
+      </a>
+
+    </nav>
+  </section>
+
+  <!-- =========================================================
+       LAYER 100: TRUE OPTICAL FISHEYE LENS (76px)
+       ========================================================= -->
+  <div class="fisheye-lens-loupe" id="fisheye" aria-hidden="true">
+    <div class="fisheye-lens-warp-container" id="fisheyeWarpContainer">
+      <div class="fisheye-lens-mirror-stage" id="fisheyeMirrorStage"></div>
+    </div>
+    <div class="fisheye-lens-glass-overlay"></div>
+    <div class="fisheye-lens-rim"></div>
+  </div>
+
+  <!-- =========================================================
+       INTERACTION SCRIPT: CANONICAL CURSOR PARALLAX & OPTICAL LENS
+       ========================================================= -->
+  <script type="module">
+    import { HOME_IMAGES, HERO_STATEMENT } from './src/config/homepage.js';
+    import { NAVIGATION } from './src/config/navigation.js';
+    import { INTERACTION_TOKENS, HOME_INTERACTION, FISHEYE_CONFIG } from './src/config/interactions/interactionTokens.js';
+
+    /* =========================================================
+       1. CENTRALIZED INTERACTION & PARALLAX ENGINE
+       ========================================================= */
+    const imageSlots = Array.from(document.querySelectorAll('#home .home-image-slot'));
+    const heroStatementEl = document.getElementById('heroStatement');
+    const mirrorStage = document.getElementById('fisheyeMirrorStage');
+
+    // Create live optical mirror of the home scene and sections stage for true fisheye distortion
+    const homeEl = document.getElementById('home');
+    const sectionsEl = document.getElementById('sections-stage');
+    let liveSectionItems = [];
+    let mirrorSectionItems = [];
+    if (mirrorStage) {
+      if (homeEl) {
+        const clone = homeEl.cloneNode(true);
+        clone.id = 'homeLensMirror';
+        clone.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+        mirrorStage.appendChild(clone);
+      }
+      if (sectionsEl) {
+        const cloneSections = sectionsEl.cloneNode(true);
+        cloneSections.id = 'sectionsLensMirror';
+        cloneSections.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+        mirrorStage.appendChild(cloneSections);
+
+        liveSectionItems = Array.from(document.querySelectorAll('#sections-stage .section-item'));
+        mirrorSectionItems = Array.from(cloneSections.querySelectorAll('.section-item'));
+        liveSectionItems.forEach((item, idx) => {
+          item.addEventListener('mouseenter', () => {
+            if (mirrorSectionItems[idx]) mirrorSectionItems[idx].classList.add('is-hovered');
+          });
+          item.addEventListener('mouseleave', () => {
+            if (mirrorSectionItems[idx]) mirrorSectionItems[idx].classList.remove('is-hovered');
+          });
+        });
+      }
+    }
+
+    const mirrorSlots = mirrorStage ? Array.from(mirrorStage.querySelectorAll('.home-image-slot')) : [];
+    const mirrorHero = mirrorStage ? mirrorStage.querySelector('.home-hero-statement') : null;
+
+    const targetMouse = { x: 0, y: 0 };
+    const currentMouse = { x: 0, y: 0 };
+    const maxX = HOME_INTERACTION.maxX || 116;
+    const maxY = HOME_INTERACTION.maxY || 34;
+    const smoothing = HOME_INTERACTION.smoothing || 0.08;
+
+    window.addEventListener('mousemove', (e) => {
+      // Normalized coordinates [-1, 1] relative to viewport center
+      targetMouse.x = (e.clientX / window.innerWidth - 0.5) * 2;
+      targetMouse.y = (e.clientY / window.innerHeight - 0.5) * 2;
+    }, { passive: true });
+
+    function renderParallaxLoop() {
+      // Smooth inertia interpolation
+      currentMouse.x += (targetMouse.x - currentMouse.x) * smoothing;
+      currentMouse.y += (targetMouse.y - currentMouse.y) * smoothing;
+
+      const scrollY = window.scrollY;
+
+      // Apply transform directly to the .home-image-slot container
+      imageSlots.forEach((slot, i) => {
+        const depth = parseFloat(slot.dataset.depth) || 0.25;
+        const baseRot = parseFloat(slot.dataset.rotation) || 0;
+
+        const moveX = currentMouse.x * maxX * depth;
+        const moveY = (currentMouse.y * maxY * depth) + (scrollY * depth * 0.35);
+
+        const transformVal = `translate3d(${moveX.toFixed(2)}px, ${moveY.toFixed(2)}px, 0) rotate(${baseRot}deg)`;
+        slot.style.transform = transformVal;
+
+        if (mirrorSlots[i]) {
+          mirrorSlots[i].style.transform = transformVal;
+        }
+      });
+
+      // Typography acts as stable anchor
+      if (heroStatementEl) {
+        const textMoveX = currentMouse.x * 3.5;
+        const textMoveY = currentMouse.y * 2.5;
+        const heroTransform = `translate(calc(-50% + ${textMoveX.toFixed(2)}px), calc(-50% + ${textMoveY.toFixed(2)}px))`;
+        heroStatementEl.style.transform = heroTransform;
+        if (mirrorHero) {
+          mirrorHero.style.transform = heroTransform;
+        }
+      }
+
+      requestAnimationFrame(renderParallaxLoop);
+    }
+
+    renderParallaxLoop();
+
+    /* =========================================================
+       2. REUSABLE IMAGE INJECTION API
+       When a real photograph is added later via code or runtime:
+       setHomeImage('home-image-01', '/assets/home/image-01.jpg', 'Description');
+       The photo immediately appears, inheriting identical movement.
+       ========================================================= */
+    export function setHomeImage(slotId, src, alt = '') {
+      const cleanId = slotId.startsWith('#') ? slotId.slice(1) : slotId;
+      const slot = document.getElementById(cleanId) || document.querySelector(`.${cleanId}`);
+      if (!slot || !src) return;
+
+      slot.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = alt;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      slot.appendChild(img);
+      slot.classList.add('has-image');
+
+      if (mirrorStage) {
+        const mirrorSlot = mirrorStage.querySelector(`.${cleanId}`);
+        if (mirrorSlot) {
+          mirrorSlot.innerHTML = '';
+          const mirrorImg = document.createElement('img');
+          mirrorImg.src = src;
+          mirrorImg.alt = alt;
+          mirrorSlot.appendChild(mirrorImg);
+          mirrorSlot.classList.add('has-image');
+        }
+      }
+    }
+
+    window.setHomeImage = setHomeImage;
+
+    /* =========================================================
+       3. TRUE OPTICAL FISHEYE LENS ENGINE (76px)
+       Generates spherical normal map for feDisplacementMap
+       and tracks cursor with smooth lerp tracking.
+       ========================================================= */
+    function generateSphericalNormalMap(size = 128, distortion = 0.12) {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      const imgData = ctx.createImageData(size, size);
+      const data = imgData.data;
+      const center = size / 2;
+      const radius = size / 2;
+
+      for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+          const dx = (x - center) / radius;
+          const dy = (y - center) / radius;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const idx = (y * size + x) * 4;
+
+          if (dist <= 1.0) {
+            // Optical barrel distortion formula
+            const curve = Math.sin((dist * Math.PI) / 2);
+            const dispX = dx * curve * distortion * 2.0;
+            const dispY = dy * curve * distortion * 2.0;
+
+            data[idx] = Math.min(255, Math.max(0, Math.round(128 + dispX * 127)));
+            data[idx + 1] = Math.min(255, Math.max(0, Math.round(128 + dispY * 127)));
+            data[idx + 2] = 128;
+            data[idx + 3] = 255;
+          } else {
+            data[idx] = 128;
+            data[idx + 1] = 128;
+            data[idx + 2] = 128;
+            data[idx + 3] = 255;
+          }
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+      return canvas.toDataURL('image/png');
+    }
+
+    // Initialize SVG displacement map
+    const displacementImg = document.getElementById('fe-lens-displacement');
+    if (displacementImg) {
+      const normalMapUri = generateSphericalNormalMap(128, FISHEYE_CONFIG.distortion || 0.12);
+      displacementImg.setAttribute('href', normalMapUri);
+      displacementImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', normalMapUri);
+    }
+
+    // Smooth lens tracking & scene portal positioning
+    const fisheye = document.getElementById('fisheye');
+    let lensX = -500;
+    let lensY = -500;
+    let targetLensX = -500;
+    let targetLensY = -500;
+
+    const isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+    const lensEnabled = FISHEYE_CONFIG.enabled && !isTouchDevice;
+
+    if (lensEnabled) {
+      window.addEventListener('mousemove', (e) => {
+        targetLensX = e.clientX;
+        targetLensY = e.clientY;
+        if (fisheye && !fisheye.classList.contains('is-active')) {
+          fisheye.classList.add('is-active');
+        }
+      }, { passive: true });
+
+      document.addEventListener('mouseleave', () => {
+        if (fisheye) fisheye.classList.remove('is-active');
+      });
+
+      document.addEventListener('mouseenter', () => {
+        if (fisheye) fisheye.classList.add('is-active');
+      });
+
+      function animateLensLoop() {
+        lensX += (targetLensX - lensX) * FISHEYE_CONFIG.smoothing;
+        lensY += (targetLensY - lensY) * FISHEYE_CONFIG.smoothing;
+
+        if (fisheye) {
+          fisheye.style.left = `${lensX.toFixed(2)}px`;
+          fisheye.style.top = `${lensY.toFixed(2)}px`;
+        }
+
+        if (mirrorStage) {
+          const M = FISHEYE_CONFIG.magnification || 1.08;
+          const halfSize = (FISHEYE_CONFIG.size || 76) / 2;
+          const scrollX = window.scrollX || window.pageXOffset || 0;
+          const scrollY = window.scrollY || window.pageYOffset || 0;
+          const mirrorX = (halfSize - (lensX + scrollX) * M).toFixed(2);
+          const mirrorY = (halfSize - (lensY + scrollY) * M).toFixed(2);
+          mirrorStage.style.transform = `translate3d(${mirrorX}px, ${mirrorY}px, 0) scale(${M})`;
+
+          if (liveSectionItems.length > 0) {
+            for (let i = 0; i < liveSectionItems.length; i++) {
+              if (liveSectionItems[i].matches(':hover')) {
+                if (mirrorSectionItems[i] && !mirrorSectionItems[i].classList.contains('is-hovered')) {
+                  mirrorSectionItems[i].classList.add('is-hovered');
+                }
+              } else {
+                if (mirrorSectionItems[i] && mirrorSectionItems[i].classList.contains('is-hovered')) {
+                  mirrorSectionItems[i].classList.remove('is-hovered');
+                }
+              }
+            }
+          }
+        }
+
+        requestAnimationFrame(animateLensLoop);
+      }
+
+      animateLensLoop();
+    }
+
+    /* =========================================================
+       4. PREFERS-REDUCED-MOTION
+       ========================================================= */
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (reducedMotion.matches) {
+      imageSlots.forEach((slot) => {
+        const baseRot = parseFloat(slot.dataset.rotation) || 0;
+        slot.style.transform = `rotate(${baseRot}deg)`;
+      });
+      if (heroStatementEl) {
+        heroStatementEl.style.transform = 'translate(-50%, -50%)';
+      }
+    }
+  </script>
+
+</body>
+</html>

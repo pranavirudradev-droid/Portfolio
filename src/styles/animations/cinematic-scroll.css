@@ -1,0 +1,99 @@
+/**
+ * PRANAVI RUDRADEV PORTFOLIO — CINEMATIC SCROLL & PROJECT FIELD STYLES
+ * 
+ * Cinematic Level: 8/10
+ * Primarily vertical.
+ * Subtle parallax, varied speeds, changing visual density.
+ * 
+ * STRICT HOVER RULE:
+ * ONLY THE IMAGE SCALES.
+ * NO title, NO description, NO tooltip, NO metadata, NO text, NO video, NO popup.
+ * 
+ * STRICT IMAGE RULE:
+ * NO rounded corners, NO generic borders, NO cards, NO white frames.
+ */
+
+.project-field-container {
+  position: relative;
+  width: 100%;
+  min-height: 750vh;
+  margin-top: clamp(60px, 12vh, 140px);
+  padding-bottom: 20vh;
+  overflow: visible;
+}
+
+/* Individual Spatially Placed Project Cover Item (Desktop) */
+.project-field-item {
+  position: absolute;
+  will-change: transform;
+  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translate3d(0, var(--parallax-y, 0px), 0) rotate(var(--item-rotation, 0deg));
+  z-index: var(--item-z, 1);
+}
+
+/* Cover Link (One click to project page) */
+.project-cover-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  background-color: var(--color-java-brown, #231815);
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Cover Image Element */
+.project-cover-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0 !important;
+  border: none !important;
+  transition: transform 480ms cubic-bezier(0.22, 1, 0.36, 1), filter 450ms ease;
+  filter: contrast(102%) saturate(96%);
+  will-change: transform, filter;
+}
+
+/* STRICT HOVER: ONLY THE IMAGE SCALES */
+.project-cover-link:hover .project-cover-image {
+  transform: scale(var(--hover-scale, 1.05));
+  filter: contrast(106%) saturate(102%);
+}
+
+/* =========================================================================
+   RESPONSIVE MOBILE REDESIGN
+   ========================================================================= */
+@media (max-width: 860px) {
+  .project-field-container {
+    min-height: auto !important;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(48px, 10vw, 88px);
+    margin-top: 40px;
+    padding-bottom: 60px;
+  }
+
+  .project-field-item {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 540px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    transform: none !important;
+  }
+
+  /* Alternating subtle asymmetric margins on mobile for editorial variety */
+  .project-field-item:nth-child(even) {
+    padding-left: clamp(0px, 4vw, 24px);
+  }
+  .project-field-item:nth-child(odd) {
+    padding-right: clamp(0px, 4vw, 24px);
+  }
+}

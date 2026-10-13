@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work Experience — Pranavi Rudradev</title>
+
+  <link rel="stylesheet" href="../assets/fonts/satoshi.css" />
+  <link rel="stylesheet" href="../styles/reset.css" />
+  <link rel="stylesheet" href="../styles/tokens.css" />
+  <link rel="stylesheet" href="../styles/typography.css" />
+  <link rel="stylesheet" href="../styles/layout.css" />
+  <link rel="stylesheet" href="../styles/documents.css" />
+  <link rel="stylesheet" href="../src/styles/global/fisheye-lens.css" />
+
+  <style>
+    :root {
+      --bg-exp: #231815;
+      --text-yellow: #F5EFC6;
+      --accent-blue: #A5BCD6;
+      --accent-red: #4D0E12;
+      --lens-size: 76px;
+    }
+
+    body {
+      background-color: var(--bg-exp);
+      color: var(--text-yellow);
+      font-family: var(--font-primary, 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Top Navigation */
+    .exp-nav {
+      padding: 24px clamp(24px, 4.5vw, 72px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(245, 239, 198, 0.16);
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .exp-nav-link {
+      color: var(--text-yellow);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      transition: color 200ms ease;
+    }
+
+    .exp-nav-link:hover {
+      color: var(--accent-blue);
+    }
+
+    .exp-nav-section {
+      color: var(--accent-blue);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    /* Accessible heading */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    /* Main Container */
+    .exp-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 clamp(24px, 4.5vw, 72px);
+      width: 100%;
+      box-sizing: border-box;
+      flex-grow: 1;
+    }
+
+    /* Experience List */
+    .exp-list {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    /* Individual Entry */
+    .exp-item {
+      display: grid;
+      grid-template-columns: minmax(290px, 350px) 1fr;
+      gap: clamp(32px, 3.8vw, 56px);
+      padding: clamp(36px, 4.8vh, 56px) 0;
+      border-bottom: 1px solid rgba(245, 239, 198, 0.16);
+      align-items: stretch;
+      box-sizing: border-box;
+    }
+
+    .exp-item:last-child {
+      border-bottom: none;
+    }
+
+    /* Left Column: Number Circle + Pale-Yellow Cover Card */
+    .exp-left-col {
+      display: flex;
+      align-items: flex-start;
+      gap: clamp(16px, 2vw, 28px);
+    }
+
+    .exp-num-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(245, 239, 198, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--text-yellow);
+      font-family: var(--font-primary, 'Satoshi', sans-serif);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      margin-top: 4px;
+    }
+
+    /* Coded Pale-Yellow PDF Cover Placeholder Card */
+    .exp-cover-card {
+      flex-grow: 1;
+      max-width: 254px;
+      min-height: 154px;
+      background-color: var(--text-yellow);
+      border-radius: 18px;
+      padding: 22px 18px 16px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      text-decoration: none;
+      position: relative;
+      transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 240ms ease;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.28);
+      box-sizing: border-box;
+    }
+
+    .exp-cover-card:hover {
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    }
+
+    .exp-cover-card:focus-visible {
+      outline: 2px solid var(--accent-blue);
+      outline-offset: 3px;
+    }
+
+    .exp-cover-header {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .exp-cover-org {
+      font-family: var(--font-primary, 'Satoshi', sans-serif);
+      font-size: clamp(17px, 1.35vw, 20.5px);
+      font-weight: 800;
+      line-height: 1.14;
+      letter-spacing: -0.015em;
+      text-transform: uppercase;
+      color: #231815;
+      margin: 0;
+    }
+
+    .exp-cover-sub {
+      font-family: var(--font-primary, 'Satoshi', sans-serif);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #231815;
+      opacity: 0.78;
+      margin-top: 8px;
+    }
+
+    .exp-cover-arrow-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background-color: #231815;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      align-self: flex-end;
+      flex-shrink: 0;
+      transition: transform 200ms ease, background-color 200ms ease;
+    }
+
+    .exp-cover-card:hover .exp-cover-arrow-btn {
+      transform: translate(2px, -2px);
+      background-color: #120c0a;
+    }
+
+    /* Vertical Divider & Right Column Content */
+    .exp-right-col {
+      border-left: 1px solid rgba(245, 239, 198, 0.16);
+      padding-left: clamp(24px, 3.5vw, 44px);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      box-sizing: border-box;
+    }
+
+    .exp-meta-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 6px;
+    }
+
+    .exp-category {
+      font-family: var(--font-primary, 'Satoshi', sans-serif);
+      font-size: clamp(11.5px, 0.85vw, 13px);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+    }
+
+    .exp-meta-time-loc {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+
+    .exp-dates {
+      font-family: var(--font-primary, 'Satoshi', sans-serif);
+      font-size: clamp(12px, 0.9vw, 13.5px);
+      font-weight: 500;
+      color: var(--text-yellow);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .exp-location {
+      font-family: var(--font-primary, 'Satoshi', sans-serif);
+      font-size: clamp(11.5px, 0.85vw, 13px);
+      font-weight: 500;
+      color: rgba(245, 239, 198, 0.78);
+    }
+
+    .exp-role-title {
+      font-family: var(--font-primary, 'Satoshi', sans-serif);
+      font-size: clamp(20px, 1.7vw, 25px);
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+      color: var(--text-yellow);
+      margin: 4px 0 16px 0;
+    }
+
+    .exp-bullet-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .exp-bullet-item {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .exp-bullet-dot {
+      color: var(--text-yellow);
+      opacity: 0.85;
+      font-size: 15px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .exp-bullet-text,
+    .exp-desc,
+    .exp-description {
+      font-family: var(--font-primary, 'Satoshi', sans-serif);
+      font-size: clamp(13px, 0.95vw, 14.5px);
+      font-weight: 500;
+      line-height: 1.58;
+      color: var(--text-yellow);
+    }
+
+    .exp-tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 10px;
+      margin-top: 4px;
+    }
+
+    .exp-skill-tag {
+      font-family: var(--font-primary, 'Satoshi', sans-serif);
+      font-size: clamp(10px, 0.72vw, 11px);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(245, 239, 198, 0.92);
+      background: rgba(35, 24, 21, 0.6);
+      border: 1px solid rgba(245, 239, 198, 0.22);
+      padding: 5px 12px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    /* Footer */
+    .exp-footer {
+      margin-top: auto;
+      padding: 32px clamp(24px, 4.5vw, 72px);
+      border-top: 1px solid rgba(245, 239, 198, 0.16);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: rgba(245, 239, 198, 0.55);
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 900px) {
+      .exp-item {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .exp-left-col {
+        justify-content: flex-start;
+      }
+      .exp-cover-card {
+        max-width: 260px;
+        width: 100%;
+      }
+      .exp-right-col {
+        border-left: none;
+        border-top: 1px solid rgba(245, 239, 198, 0.16);
+        padding-left: 0;
+        padding-top: 24px;
+      }
+      .exp-meta-header {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .exp-meta-time-loc {
+        align-items: flex-start;
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .exp-left-col {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .exp-cover-card {
+        max-width: 100%;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body id="top">
+
+  <!-- =========================================================
+       SVG OPTICAL BARREL DISTORTION DISPLACEMENT ENGINE
+       ========================================================= -->
+  <svg style="position: absolute; width: 0; height: 0; pointer-events: none;" aria-hidden="true">
+    <defs>
+      <filter id="optical-lens-warp" x="-20%" y="-20%" width="140%" height="140%">
+        <feImage id="fe-lens-displacement" href="" result="radialMap" />
+        <feDisplacementMap in="SourceGraphic" in2="radialMap" scale="22" xChannelSelector="R" yChannelSelector="G" result="warped" />
+        <feComposite in="warped" in2="SourceAlpha" operator="in" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Top Navigation Bar -->
+  <nav class="exp-nav" aria-label="Page navigation">
+    <a href="../#sections-stage" class="exp-nav-link">
+      <span>←</span>
+      <span>RETURN TO FOUR WORLDS</span>
+    </a>
+    <span class="exp-nav-section">[02] WORK EXPERIENCE</span>
+  </nav>
+
+  <!-- Main Work Experience Section -->
+  <main class="exp-container">
+    <h1 class="sr-only">Work Experience — Pranavi Rudradev</h1>
+
+    <div class="exp-list">
+
+      <!-- 01: ORIGAMI CREATIVE -->
+      <article class="exp-item" id="exp-origami-creative">
+        <!-- Left Side: Number + Coded Pale-Yellow Cover Card -->
+        <div class="exp-left-col">
+          <div class="exp-num-circle" aria-label="Entry 01">
+            <span>01</span>
+          </div>
+          <button 
+            type="button" 
+            class="exp-cover-card" 
+            onclick="openDocById('origami-creative')"
+            aria-label="View Origami Creative presentation"
+            data-lens
+          >
+            <div class="exp-cover-header">
+              <h3 class="exp-cover-org">ORIGAMI<br/>CREATIVE</h3>
+              <span class="exp-cover-sub">ADVERTISING AGENCY</span>
+            </div>
+            <div class="exp-cover-arrow-btn" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#F5EFC6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="2" y1="11" x2="11" y2="2" />
+                <polyline points="4 2 11 2 11 9" />
+              </svg>
+            </div>
+          </button>
+        </div>
+
+        <!-- Vertical Divider + Right Side Content -->
+        <div class="exp-right-col">
+          <div class="exp-meta-header">
+            <span class="exp-category">ADVERTISING AGENCY</span>
+            <div class="exp-meta-time-loc">
+              <span class="exp-dates">May 2026 — Jul 2026</span>
+              <span class="exp-location">Bengaluru</span>
+            </div>
+          </div>
+
+          <h2 class="exp-role-title">Brand Strategy Intern / Brand Custodian</h2>
+
+          <ul class="exp-bullet-list">
+            <li class="exp-bullet-item">
+              <span class="exp-bullet-dot">•</span>
+              <span class="exp-bullet-text">Ran competitive analysis across 4 client sectors (real estate, F&amp;B, jewellery, sports), an 11-competitor benchmark study along with go-to-market positioning for a new luxury sub-brand.</span>
+            </li>
+            <li class="exp-bullet-item">
+              <span class="exp-bullet-dot">•</span>
+              <span class="exp-bullet-text">Conducted a 14-competitor benchmark analysis and consumer insights study on buying behaviour and price sensitivity, informing brand architecture across retail and export divisions for an egg products brand.</span>
+            </li>
+            <li class="exp-bullet-item">
+              <span class="exp-bullet-dot">•</span>
+              <span class="exp-bullet-text">Mapped fan segments for a football club through consumer questionnaires and one-on-one interviews, converting findings into audience-led brand strategy.</span>
+            </li>
+            <li class="exp-bullet-item">
+              <span class="exp-bullet-dot">•</span>
+              <span class="exp-bullet-text">Built a pitch deck and campaign concepts for a jewellery sub-brand launch, aiding celebrity-endorser selection and launch-theme development.</span>
+            </li>
+          </ul>
+
+          <div class="exp-tags-row">
+            <span class="exp-skill-tag">BRAND POSITIONING</span>
+            <span class="exp-skill-tag">CONSUMER INSIGHTS</span>
+            <span class="exp-skill-tag">COMPETITIVE ANALYSIS</span>
+            <span class="exp-skill-tag">GO-TO-MARKET STRATEGY</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 02: ARISA FOUNDATION -->
+      <article class="exp-item" id="exp-arisa-foundation">
+        <!-- Left Side: Number + Coded Pale-Yellow Cover Card -->
+        <div class="exp-left-col">
+          <div class="exp-num-circle" aria-label="Entry 02">
+            <span>02</span>
+          </div>
+          <button 
+            type="button" 
+            class="exp-cover-card" 
+            onclick="openDocById('arisa-foundation')"
+            aria-label="View Arisa Foundation documentation"
+            data-lens
+          >
+            <div class="exp-cover-header">
+              <h3 class="exp-cover-org">ARISA<br/>FOUNDATION</h3>
+              <span class="exp-cover-sub">NGO / EVENT PRODUCTION</span>
+            </div>
+            <div class="exp-cover-arrow-btn" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#F5EFC6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="2" y1="11" x2="11" y2="2" />
+                <polyline points="4 2 11 2 11 9" />
+              </svg>
+            </div>
+          </button>
+        </div>
+
+        <!-- Vertical Divider + Right Side Content -->
+        <div class="exp-right-col">
+          <div class="exp-meta-header">
+            <span class="exp-category">EVENT PRODUCTION</span>
+            <div class="exp-meta-time-loc">
+              <span class="exp-dates">Nov 2024 — Jan 2025</span>
+              <span class="exp-location">Pune</span>
+            </div>
+          </div>
+
+          <h2 class="exp-role-title">Project Intern</h2>
+
+          <ul class="exp-bullet-list">
+            <li class="exp-bullet-item">
+              <span class="exp-bullet-dot">•</span>
+              <span class="exp-bullet-text">Managed an 8-sense experience end-to-end for ARISA’s Creative Lab Festival 2025, from psychology-led concept development to sourcing, budgeting, fabrication and execution.</span>
+            </li>
+            <li class="exp-bullet-item">
+              <span class="exp-bullet-dot">•</span>
+              <span class="exp-bullet-text">Shaped brand communications and outreach content aligning organisational messaging with community goals, liaising with cross-functional teams on schedule.</span>
+            </li>
+          </ul>
+
+          <div class="exp-tags-row">
+            <span class="exp-skill-tag">EVENT PRODUCTION</span>
+            <span class="exp-skill-tag">BRAND COMMUNICATIONS</span>
+            <span class="exp-skill-tag">COMMUNITY ENGAGEMENT</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 03: AVIRATHA TRUST -->
+      <article class="exp-item" id="exp-aviratha-trust">
+        <!-- Left Side: Number + Coded Pale-Yellow Cover Card -->
+        <div class="exp-left-col">
+          <div class="exp-num-circle" aria-label="Entry 03">
+            <span>03</span>
+          </div>
+          <button 
+            type="button" 
+            class="exp-cover-card" 
+            onclick="openDocById('avirata-ngo')"
+            aria-label="View Aviratha Trust documentation"
+            data-lens
+          >
+            <div class="exp-cover-header">
+              <h3 class="exp-cover-org">AVIRATHA<br/>TRUST</h3>
+              <span class="exp-cover-sub">NGO / SOCIAL IMPACT</span>
+            </div>
+            <div class="exp-cover-arrow-btn" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#F5EFC6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="2" y1="11" x2="11" y2="2" />
+                <polyline points="4 2 11 2 11 9" />
+              </svg>
+            </div>
+          </button>
+        </div>
+
+        <!-- Vertical Divider + Right Side Content -->
+        <div class="exp-right-col">
+          <div class="exp-meta-header">
+            <span class="exp-category">NGO / FIELD INQUIRY</span>
+            <div class="exp-meta-time-loc">
+              <span class="exp-dates">Jun 2024 — Sep 2024</span>
+              <span class="exp-location">Bengaluru</span>
+            </div>
+          </div>
+
+          <h2 class="exp-role-title">Social Media &amp; Creative Intern</h2>
+
+          <ul class="exp-bullet-list">
+            <li class="exp-bullet-item">
+              <span class="exp-bullet-dot">•</span>
+              <span class="exp-bullet-text">Grew Instagram followers by 110%, expanding average reach to 1,200 per post with 95% coming from non-followers.</span>
+            </li>
+            <li class="exp-bullet-item">
+              <span class="exp-bullet-dot">•</span>
+              <span class="exp-bullet-text">Reshaped weekly content mix using performance analytics: Reels drove 64.4% of traction (500+ views each) versus 30.1% for posts and 5.5% for Stories.</span>
+            </li>
+            <li class="exp-bullet-item">
+              <span class="exp-bullet-dot">•</span>
+              <span class="exp-bullet-text">Produced brand-consistent content across Instagram, Facebook and WhatsApp (Premiere Pro, Photoshop, Canva, Lightroom), maintaining a 10+ post weekly content calendar.</span>
+            </li>
+          </ul>
+
+          <div class="exp-tags-row">
+            <span class="exp-skill-tag">SOCIAL MEDIA STRATEGY</span>
+            <span class="exp-skill-tag">CONTENT CREATION</span>
+            <span class="exp-skill-tag">PERFORMANCE ANALYTICS</span>
+            <span class="exp-skill-tag">COMMUNITY ENGAGEMENT</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 04: DHAARA MAGAZINE -->
+      <article class="exp-item" id="exp-dhaara-magazine">
+        <!-- Left Side: Number + Coded Pale-Yellow Cover Card -->
+        <div class="exp-left-col">
+          <div class="exp-num-circle" aria-label="Entry 04">
+            <span>04</span>
+          </div>
+          <button 
+            type="button" 
+            class="exp-cover-card" 
+            onclick="openDocById('dhara-magazine')"
+            aria-label="View Dhaara Magazine editorial folio"
+            data-lens
+          >
+            <div class="exp-cover-header">
+              <h3 class="exp-cover-org">DHAARA<br/>MAGAZINE</h3>
+              <span class="exp-cover-sub">PUBLICATION / EDITORIAL</span>
+            </div>
+            <div class="exp-cover-arrow-btn" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#F5EFC6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="2" y1="11" x2="11" y2="2" />
+                <polyline points="4 2 11 2 11 9" />
+              </svg>
+            </div>
+          </button>
+        </div>
+
+        <!-- Vertical Divider + Right Side Content -->
+        <div class="exp-right-col">
+          <div class="exp-meta-header">
+            <span class="exp-category">PUBLICATION / EDITORIAL</span>
+            <div class="exp-meta-time-loc">
+              <span class="exp-dates">2021 — 2022</span>
+              <span class="exp-location">Delhi</span>
+            </div>
+          </div>
+
+          <h2 class="exp-role-title">Creative Intern</h2>
+
+          <ul class="exp-bullet-list">
+            <li class="exp-bullet-item">
+              <span class="exp-bullet-dot">•</span>
+              <span class="exp-bullet-text">Photographed and designed the cover for the May (2022) edition featuring &ldquo;Reality of the rights of people with disability&rdquo;.</span>
+            </li>
+            <li class="exp-bullet-item">
+              <span class="exp-bullet-dot">•</span>
+              <span class="exp-bullet-text">Created content for all social media platforms using my photographs along with articles of the magazine.</span>
+            </li>
+            <li class="exp-bullet-item">
+              <span class="exp-bullet-dot">•</span>
+              <span class="exp-bullet-text">Strategized on the content to be published along with building viewership.</span>
+            </li>
+          </ul>
+
+          <div class="exp-tags-row">
+            <span class="exp-skill-tag">PHOTOGRAPHY</span>
+            <span class="exp-skill-tag">COVER DESIGN</span>
+            <span class="exp-skill-tag">CONTENT CREATION</span>
+            <span class="exp-skill-tag">AUDIENCE GROWTH</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 05: I LOVE MONDAYS -->
+      <article class="exp-item" id="exp-i-love-mondays">
+        <!-- Left Side: Number + Coded Pale-Yellow Cover Card -->
+        <div class="exp-left-col">
+          <div class="exp-num-circle" aria-label="Entry 05">
+            <span>05</span>
+          </div>
+          <button 
+            type="button" 
+            class="exp-cover-card" 
+            onclick="openDocById('i-love-mondays')"
+            aria-label="View I Love Mondays program portfolio"
+            data-lens
+          >
+            <div class="exp-cover-header">
+              <h3 class="exp-cover-org">I LOVE<br/>MONDAYS</h3>
+              <span class="exp-cover-sub">MEDIA / INTERVIEWS</span>
+            </div>
+            <div class="exp-cover-arrow-btn" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#F5EFC6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="2" y1="11" x2="11" y2="2" />
+                <polyline points="4 2 11 2 11 9" />
+              </svg>
+            </div>
+          </button>
+        </div>
+
+        <!-- Vertical Divider + Right Side Content -->
+        <div class="exp-right-col">
+          <div class="exp-meta-header">
+            <span class="exp-category">MEDIA / INTERVIEWS</span>
+            <div class="exp-meta-time-loc">
+              <span class="exp-dates">Apr 2022 — Jul 2022</span>
+              <span class="exp-location">Bengaluru</span>
+            </div>
+          </div>
+
+          <h2 class="exp-role-title">Executive Intern &amp; Interviewer</h2>
+
+          <ul class="exp-bullet-list">
+            <li class="exp-bullet-item">
+              <span class="exp-bullet-dot">•</span>
+              <span class="exp-bullet-text">Hosted a program on careers in the music industry, conducting interviews with lead playback singer Shashwat Singh and Dr Adam Greig of KM Music Conservatory.</span>
+            </li>
+            <li class="exp-bullet-item">
+              <span class="exp-bullet-dot">•</span>
+              <span class="exp-bullet-text">Handled enquiries and e-communication with clients and managed communications between interns and music professionals such as Jerry Vincent.</span>
+            </li>
+            <li class="exp-bullet-item">
+              <span class="exp-bullet-dot">•</span>
+              <span class="exp-bullet-text">Coordinated logistics for live industry sessions and participated in the offered music composition course.</span>
+            </li>
+          </ul>
+
+          <div class="exp-tags-row">
+            <span class="exp-skill-tag">INTERVIEWS</span>
+            <span class="exp-skill-tag">PROGRAM PRODUCTION</span>
+            <span class="exp-skill-tag">CLIENT COMMUNICATION</span>
+            <span class="exp-skill-tag">MUSIC INDUSTRY</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="exp-footer">
+    <span>PRANAVI RUDRADEV · BRAND STRATEGY · CONSUMER PSYCHOLOGY · QUALITATIVE THINKING</span>
+    <a href="#top" class="exp-nav-link" style="font-size: 10.5px;">BACK TO TOP ↑</a>
+  </footer>
+
+  <!-- Script: Document Viewer & Canonical Shared Fisheye Lens -->
+  <script type="module">
+    import { DocumentViewer } from '../components/document/DocumentViewer.js';
+    import { FisheyeCursor } from '../src/components/lens-cursor/FisheyeCursor.js';
+
+    // 1. Mount Shared Fisheye Lens
+    const lens = new FisheyeCursor();
+    lens.mount();
+
+    // 2. Document Viewer Engine & Document Map
+    const viewer = new DocumentViewer();
+
+    const DOC_MAP = {
+      'origami-creative': {
+        title: 'Origami Creative Strategic Pitch & Case Presentation',
+        type: 'presentation',
+        pages: [
+          '../assets/experience/documents/origami-creative-cover.jpg',
+          '../assets/projects/covers/consumer-behaviour.jpg'
+        ]
+      },
+      'arisa-foundation': {
+        title: 'Arisa Foundation — Event Production & Creative Lab 2025',
+        type: 'documentation',
+        pages: [
+          '../assets/experience/documents/experience-three-cover.jpg'
+        ]
+      },
+      'avirata-ngo': {
+        title: 'Avirata NGO Strategic Documentation',
+        type: 'pdf',
+        pages: [
+          '../assets/experience/documents/avirata-ngo-cover.jpg',
+          '../assets/projects/covers/packaging-brand-recall.jpg'
+        ]
+      },
+      'dhara-magazine': {
+        title: 'Dhara Magazine Editorial Archive',
+        type: 'pdf',
+        pages: [
+          '../assets/experience/documents/dhara-magazine-cover.jpg',
+          '../assets/projects/covers/nazakath.jpg'
+        ]
+      },
+      'i-love-mondays': {
+        title: 'I Love Mondays — Media & Interview Production',
+        type: 'editorial',
+        pages: [
+          '../assets/experience/documents/experience-four-cover.jpg'
+        ]
+      }
+    };
+
+    window.openDocById = (id) => {
+      const doc = DOC_MAP[id];
+      if (doc) {
+        viewer.open({
+          title: doc.title,
+          type: doc.type,
+          pageCount: doc.pages.length,
+          pages: doc.pages
+        });
+      }
+    };
+
+    window.openDoc = (title, type, customPages) => {
+      viewer.open({
+        title,
+        type: type || 'pdf',
+        pageCount: (customPages && customPages.length) || 3,
+        pages: customPages || [
+          '../assets/projects/covers/packaging-brand-recall.jpg',
+          '../assets/projects/covers/consumer-behaviour.jpg',
+          '../assets/projects/covers/nazakath.jpg'
+        ]
+      });
+    };
+  </script>
+
+  <!-- =========================================================
+       LAYER 100: TRUE OPTICAL FISHEYE LENS (76px)
+       ========================================================= -->
+  <div class="fisheye-lens-loupe" id="fisheye" aria-hidden="true">
+    <div class="fisheye-lens-warp-container" id="fisheyeWarpContainer">
+      <div class="fisheye-lens-mirror-stage" id="fisheyeMirrorStage"></div>
+    </div>
+    <div class="fisheye-lens-glass-overlay"></div>
+    <div class="fisheye-lens-rim"></div>
+  </div>
+
+</body>
+</html>

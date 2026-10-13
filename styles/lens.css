@@ -1,0 +1,70 @@
+/**
+ * PRANAVI RUDRADEV PORTFOLIO — THE LENS INTERACTION STYLES
+ * 
+ * Metaphor: Perspective · Focus · Looking Closer · Reframing · Questioning
+ * 
+ * STRICT PROHIBITIONS:
+ * - NO camera icons
+ * - NO magnifying glass handles
+ * - NO camera shutters or photography clichés
+ */
+
+.lens-inspector {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--lens-size, 76px);
+  height: var(--lens-size, 76px);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 300ms ease;
+  border: 1px solid rgba(245, 239, 198, 0.28);
+  box-shadow: 0 0 0 1px rgba(74, 46, 39, 0.4),
+              0 18px 45px rgba(35, 24, 21, 0.35);
+  backdrop-filter: contrast(108%) brightness(103%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lens-inspector.is-active {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+/* Subtle optical reticle for reframing — minimal, non-literal */
+.lens-reticle {
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  border: 1px dashed rgba(245, 239, 198, 0.16);
+  pointer-events: none;
+}
+
+.lens-badge {
+  font-family: var(--font-primary);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-transparent-yellow);
+  background-color: var(--color-java-brown);
+  padding: 3px 8px;
+  border-radius: 0;
+  border: 1px solid rgba(245, 239, 198, 0.2);
+}
+
+/* Reframing Target — elements equipped with lens inspection */
+.lens-target {
+  position: relative;
+  cursor: crosshair;
+}
+
+.lens-target:hover {
+  outline: 1px dashed rgba(165, 188, 214, 0.35);
+  outline-offset: 4px;
+}
