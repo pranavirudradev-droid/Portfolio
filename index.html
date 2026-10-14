@@ -523,6 +523,317 @@
       }
     }
 
+    /* =========================================================
+       CHAPTER 3: ANIMATED CONTACT FOOTER
+       ========================================================= */
+    .home-contact-footer {
+      position: relative;
+      width: 100%;
+      background-color: var(--transparent-yellow);
+      color: var(--java-brown);
+      z-index: 30;
+      padding:
+        clamp(64px, 10vh, 120px)
+        clamp(28px, 5vw, 84px)
+        clamp(48px, 8vh, 80px);
+      box-sizing: border-box;
+      border-top: 1px solid rgba(74, 46, 39, 0.14);
+      display: flex;
+      flex-direction: column;
+      isolation: isolate;
+      overflow: hidden;
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Scroll-triggered peek-and-settle animation */
+    .home-contact-footer.is-peek-ready {
+      transform: translateY(80px);
+      opacity: 0.7;
+      will-change: transform, opacity;
+    }
+
+    .home-contact-footer.is-peek-ready.is-revealed {
+      animation: contactPeekAndSettle 1100ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes contactPeekAndSettle {
+      0% {
+        transform: translateY(80px);
+        opacity: 0.7;
+      }
+      45% {
+        /* Smoothly rises to peek upward */
+        transform: translateY(-20px);
+        opacity: 1;
+      }
+      65% {
+        /* Pauses momentarily */
+        transform: translateY(-20px);
+        opacity: 1;
+      }
+      100% {
+        /* Settles down into normal resting flow */
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .home-contact-inner {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .home-contact-badge {
+      font-family: var(--satoshi);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--potting-soil);
+      opacity: 0.7;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+
+    .home-contact-headline {
+      font-family: var(--satoshi);
+      font-size: clamp(38px, 6.2vw, 78px);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.04;
+      color: var(--java-brown);
+      text-transform: uppercase;
+      margin: 0 0 16px 0;
+      max-width: 900px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .home-contact-sub {
+      font-family: var(--satoshi);
+      font-size: clamp(15px, 1.2vw, 18px);
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--potting-soil);
+      max-width: 620px;
+      margin: 0 0 clamp(36px, 5vh, 56px) 0;
+      opacity: 0.9;
+      transform: translateY(0);
+    }
+
+    /* Staggered text and links reveal inside footer */
+    .home-contact-footer.is-peek-ready .home-contact-headline {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .home-contact-footer.is-peek-ready.is-revealed .home-contact-headline {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 200ms;
+    }
+
+    .home-contact-footer.is-peek-ready .home-contact-sub {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .home-contact-footer.is-peek-ready.is-revealed .home-contact-sub {
+      opacity: 0.9;
+      transform: translateY(0);
+      transition-delay: 340ms;
+    }
+
+    .home-contact-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(32px, 5vw, 64px);
+      align-items: flex-start;
+      margin-bottom: clamp(48px, 8vh, 80px);
+    }
+
+    .home-contact-link-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .home-contact-footer.is-peek-ready .home-contact-link-item:nth-child(1) {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .home-contact-footer.is-peek-ready.is-revealed .home-contact-link-item:nth-child(1) {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 480ms;
+    }
+
+    .home-contact-footer.is-peek-ready .home-contact-link-item:nth-child(2) {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .home-contact-footer.is-peek-ready.is-revealed .home-contact-link-item:nth-child(2) {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 620ms;
+    }
+
+    .home-contact-label {
+      font-family: var(--satoshi);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--potting-soil);
+      opacity: 0.65;
+    }
+
+    .home-contact-link {
+      font-family: var(--satoshi);
+      font-size: clamp(18px, 2.1vw, 26px);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--java-brown);
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      outline: none;
+      transition: color 240ms ease;
+    }
+
+    .home-contact-link-text {
+      position: relative;
+      display: inline-block;
+      padding-bottom: 2px;
+      transition: color 240ms ease;
+    }
+
+    .home-contact-link-text::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 1.5px;
+      background-color: var(--sceptre-red);
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .home-contact-arrow {
+      display: inline-block;
+      font-family: var(--satoshi);
+      font-size: 1.1em;
+      line-height: 1;
+      margin-left: 6px;
+      vertical-align: middle;
+      transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1), color 240ms ease;
+    }
+
+    /* Hover & Active States with restrained Sceptre Red accent */
+    .home-contact-link:hover,
+    .home-contact-link.is-hovered {
+      color: var(--sceptre-red);
+    }
+
+    .home-contact-link:hover .home-contact-link-text,
+    .home-contact-link.is-hovered .home-contact-link-text {
+      color: var(--sceptre-red);
+    }
+
+    .home-contact-link:hover .home-contact-link-text::after,
+    .home-contact-link.is-hovered .home-contact-link-text::after {
+      transform: scaleX(1);
+    }
+
+    .home-contact-link:hover .home-contact-arrow,
+    .home-contact-link.is-hovered .home-contact-arrow {
+      transform: translate(4px, -4px);
+      color: var(--sceptre-red);
+    }
+
+    /* Keyboard focus state */
+    .home-contact-link:focus-visible {
+      outline: 2px solid var(--sceptre-red);
+      outline-offset: 4px;
+      border-radius: 2px;
+      color: var(--sceptre-red);
+    }
+
+    .home-contact-link:focus-visible .home-contact-link-text::after {
+      transform: scaleX(1);
+    }
+
+    .home-contact-link:focus-visible .home-contact-arrow {
+      transform: translate(4px, -4px);
+      color: var(--sceptre-red);
+    }
+
+    /* Bottom quiet metadata line */
+    .home-contact-meta {
+      border-top: 1px solid rgba(74, 46, 39, 0.14);
+      padding-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-family: var(--satoshi);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--potting-soil);
+      opacity: 0.7;
+    }
+
+    @media (max-width: 768px) {
+      .home-contact-footer {
+        padding: 48px 24px 60px;
+      }
+      .home-contact-headline {
+        font-size: clamp(32px, 8.5vw, 44px);
+      }
+      .home-contact-links {
+        flex-direction: column;
+        gap: 28px;
+        margin-bottom: 40px;
+      }
+      .home-contact-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+    }
+
+    /* Prefers-reduced-motion: keep fully visible and interactive without motion */
+    @media (prefers-reduced-motion: reduce) {
+      .home-contact-footer,
+      .home-contact-footer.is-peek-ready,
+      .home-contact-footer.is-peek-ready.is-revealed,
+      .home-contact-headline,
+      .home-contact-sub,
+      .home-contact-link-item,
+      .home-contact-arrow,
+      .home-contact-link-text::after {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+      }
+    }
+
     /* Touch & Mobile Lens Elimination */
     @media (hover: none), (pointer: coarse) {
       .fisheye-lens-loupe {
@@ -1031,6 +1342,40 @@
   </section>
 
   <!-- =========================================================
+       CHAPTER 3: ANIMATED CONTACT FOOTER
+       ========================================================= -->
+  <footer class="home-contact-footer" id="contact" aria-label="Contact and Social Links">
+    <div class="home-contact-inner">
+      <span class="home-contact-badge">GET IN TOUCH</span>
+      <h2 class="home-contact-headline">LET'S CONNECT</h2>
+      <p class="home-contact-sub">Available for strategic design, brand storytelling, and collaborative opportunities worldwide.</p>
+
+      <div class="home-contact-links">
+        <div class="home-contact-link-item">
+          <span class="home-contact-label">EMAIL</span>
+          <a href="mailto:pranavi.kr.work@gmail.com" class="home-contact-link" aria-label="Send email to pranavi.kr.work@gmail.com">
+            <span class="home-contact-link-text">pranavi.kr.work@gmail.com</span>
+            <span class="home-contact-arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+
+        <div class="home-contact-link-item">
+          <span class="home-contact-label">LINKEDIN</span>
+          <a href="https://www.linkedin.com/in/pranavi-rudradev-48a184223/" target="_blank" rel="noopener noreferrer" class="home-contact-link" aria-label="Visit Pranavi Rudradev LinkedIn profile (opens in a new tab)">
+            <span class="home-contact-link-text">LinkedIn Profile</span>
+            <span class="home-contact-arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="home-contact-meta">
+        <span>© 2026 PRANAVI RUDRADEV</span>
+        <span>BANGALORE · GLOBAL</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================
        LAYER 100: TRUE OPTICAL FISHEYE LENS (76px)
        ========================================================= -->
   <div class="fisheye-lens-loupe" id="fisheye" aria-hidden="true">
@@ -1059,6 +1404,7 @@
     // Create live optical mirror of the home scene and sections stage for true fisheye distortion
     const homeEl = document.getElementById('home');
     const sectionsEl = document.getElementById('sections-stage');
+    const contactEl = document.getElementById('contact');
     let liveSectionItems = [];
     let mirrorSectionItems = [];
     if (mirrorStage) {
@@ -1084,6 +1430,58 @@
             if (mirrorSectionItems[idx]) mirrorSectionItems[idx].classList.remove('is-hovered');
           });
         });
+      }
+      if (contactEl) {
+        const cloneContact = contactEl.cloneNode(true);
+        cloneContact.id = 'contactLensMirror';
+        cloneContact.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+        mirrorStage.appendChild(cloneContact);
+
+        const liveContactLinks = Array.from(contactEl.querySelectorAll('.home-contact-link'));
+        const mirrorContactLinks = Array.from(cloneContact.querySelectorAll('.home-contact-link'));
+        liveContactLinks.forEach((link, idx) => {
+          link.addEventListener('mouseenter', () => {
+            if (mirrorContactLinks[idx]) mirrorContactLinks[idx].classList.add('is-hovered');
+          });
+          link.addEventListener('mouseleave', () => {
+            if (mirrorContactLinks[idx]) mirrorContactLinks[idx].classList.remove('is-hovered');
+          });
+        });
+      }
+    }
+
+    /* =========================================================
+       CONTACT FOOTER: SCROLL-TRIGGERED PEEK-AND-SETTLE REVEAL
+       ========================================================= */
+    if (contactEl) {
+      contactEl.classList.add('is-peek-ready');
+
+      const triggerFooterReveal = () => {
+        if (!contactEl.classList.contains('is-revealed')) {
+          contactEl.classList.add('is-revealed');
+          const mirrorContact = document.getElementById('contactLensMirror');
+          if (mirrorContact) mirrorContact.classList.add('is-revealed');
+        }
+      };
+
+      if ('IntersectionObserver' in window) {
+        const observatoryItem = document.querySelector('#sections-stage .section-item:last-child');
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              triggerFooterReveal();
+              observer.disconnect();
+            }
+          });
+        }, {
+          threshold: 0.1,
+          rootMargin: '0px 0px 40px 0px'
+        });
+
+        if (observatoryItem) observer.observe(observatoryItem);
+        observer.observe(contactEl);
+      } else {
+        triggerFooterReveal();
       }
     }
 
