@@ -860,6 +860,16 @@ export const OBSERVATORY_ENTRIES = ${JSON.stringify(entries, null, 2)};
         return sendJson(res, 200, { success: true, message: imageSrc ? 'Homepage updated successfully' : `Photo removed from ${slotId}` });
       }
 
+      // 14. Admin Authentication
+      if (pathname === '/api/auth/login' && req.method === 'POST') {
+        const body = await parseBody(req);
+        const { username, password } = body;
+        if (username === 'admin' && password === 'Pranavi!14') {
+          return sendJson(res, 200, { success: true, message: 'Authentication successful' });
+        }
+        return sendJson(res, 401, { error: 'Invalid username or password' });
+      }
+
       return sendJson(res, 404, { error: 'API endpoint not found' });
     } catch (err) {
       console.error('API Error:', err);
