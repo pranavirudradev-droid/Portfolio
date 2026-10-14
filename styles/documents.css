@@ -181,3 +181,33 @@
     gap: 20px;
   }
 }
+
+/* Ensure optical fisheye lens loupe is always elevated above document overlay */
+.fisheye-lens-loupe {
+  z-index: 20000 !important;
+}
+
+@keyframes docSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.doc-sheet-pdf {
+  width: 100%;
+  max-width: 980px;
+  background-color: #FFFFFF;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  border-radius: 2px;
+  border: 1px solid rgba(245, 239, 198, 0.15);
+  overflow: hidden;
+  position: relative;
+  transition: transform 200ms ease;
+}
+
+.doc-sheet-pdf img {
+  width: 100%;
+  height: auto;
+  display: block;
+  user-select: none;
+}
+

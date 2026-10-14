@@ -220,7 +220,6 @@ export class FisheyeCursor {
       if (child === this.domElement || child.classList.contains('fisheye-lens-loupe') || child.id === 'fisheye') continue;
       if (child.tagName === 'SCRIPT' || child.tagName === 'NOSCRIPT') continue;
       if (child.tagName === 'SVG' && child.querySelector('#optical-lens-warp')) continue;
-      if (child.classList.contains('doc-viewer-overlay')) continue;
 
       const clone = child.cloneNode(true);
 
@@ -277,6 +276,11 @@ export class FisheyeCursor {
 
     this.liveHero = document.getElementById('heroStatement');
     this.mirrorHero = this.mirrorStage.querySelector('.home-hero-statement');
+
+    this.liveDocOverlay = document.querySelector('.doc-viewer-overlay');
+    this.mirrorDocOverlay = this.mirrorStage.querySelector('.doc-viewer-overlay');
+    this.liveDocTrack = document.querySelector('.doc-viewer-track');
+    this.mirrorDocTrack = this.mirrorStage.querySelector('.doc-viewer-track');
   }
 
   /**
@@ -405,6 +409,24 @@ export class FisheyeCursor {
       }
       if (this.liveHero && this.mirrorHero && this.liveHero.style.transform) {
         this.mirrorHero.style.transform = this.liveHero.style.transform;
+      }
+
+      // e. Document Viewer Overlay & Scroll Track synchronization
+      if (this.liveDocOverlay && this.mirrorDocOverlay) {
+        const isDocOpen = this.liveDocOverlay.classList.contains('is-open');
+        if (isDocOpen !== this.mirrorDocOverlay.classList.contains('is-open')) {
+          this.mirrorDocOverlay.classList.toggle('is-open', isDocOpen);
+        }
+        if (isDocOpen) {
+          const scrollY = window.scrollY || 0;
+          const scrollX = window.scrollX || 0;
+          this.mirrorDocOverlay.style.transform = `translate3d(${scrollX}px, ${scrollY}px, 0)`;
+          if (this.liveDocTrack && this.mirrorDocTrack) {
+            if (Math.abs(this.mirrorDocTrack.scrollTop - this.liveDocTrack.scrollTop) > 1) {
+              this.mirrorDocTrack.scrollTop = this.liveDocTrack.scrollTop;
+            }
+          }
+        }
       }
 
       this.rafId = requestAnimationFrame(loop);
