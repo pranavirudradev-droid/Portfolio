@@ -21,36 +21,6 @@
 
 import { DocumentSheet } from './DocumentSheet.js';
 
-async function ensurePdfJs() {
-  if (window.pdfjsLib) return window.pdfjsLib;
-  return new Promise((resolve, reject) => {
-    const s = document.createElement('script');
-    s.src = '/vendor/pdfjs/pdf.min.js';
-    s.onload = () => {
-      if (window.pdfjsLib) {
-        window.pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
-        resolve(window.pdfjsLib);
-      } else {
-        reject(new Error('PDF.js not available'));
-      }
-    };
-    s.onerror = () => {
-      const cdn = document.createElement('script');
-      cdn.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-      cdn.onload = () => {
-        if (window.pdfjsLib) {
-          window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-          resolve(window.pdfjsLib);
-        } else {
-          reject(new Error('CDN PDF.js failed'));
-        }
-      };
-      cdn.onerror = reject;
-      document.head.appendChild(cdn);
-    };
-    document.head.appendChild(s);
-  });
-}
 
 export class DocumentViewer {
   constructor() {
@@ -147,106 +117,22 @@ export class DocumentViewer {
     const isPdf = (documentData.type === 'pdf') || (fileSrc && (fileSrc.toLowerCase().includes('.pdf') || fileSrc.startsWith('data:application/pdf')));
 
     if (isPdf && fileSrc) {
-      // Immediate tactile loading indicator
+      // Direct high-resolution native PDF rendering with tactile loading overlay
       this.track.innerHTML = `
-        <div class="doc-sheet is-loading" id="docLoadingSheet" style="max-width: 980px; width: 100%; aspect-ratio: 1 / 1.414; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: #FAF7EE; color: #4A2E27; border-radius: 4px; box-shadow: 0 16px 48px rgba(0,0,0,0.4);">
-          <div class="doc-spinner" style="width: 36px; height: 36px; border: 3px solid rgba(74,46,39,0.2); border-top-color: #4A2E27; border-radius: 50%; animation: docSpin 0.8s linear infinite;"></div>
-          <span style="font-family: var(--font-primary, sans-serif); font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;">LOADING DOCUMENT...</span>
+        <div class="doc-viewer-frame-container" style="position: relative; width: 100%; max-width: 1120px; height: calc(100vh - 120px); min-height: 620px; background: #FAF7EE; border-radius: 6px; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.6); display: flex; flex-direction: column;">
+          <div id="docFrameLoading" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: #FAF7EE; color: #4A2E27; z-index: 2; transition: opacity 280ms ease;">
+            <div style="width: 36px; height: 36px; border: 3px solid rgba(74,46,39,0.2); border-top-color: #4A2E27; border-radius: 50%; animation: docSpin 0.8s linear infinite;"></div>
+            <span style="font-family: var(--font-primary, sans-serif); font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;">LOADING DOCUMENT...</span>
+          </div>
+          <iframe 
+            src="${fileSrc}#toolbar=1&navpanes=0&scrollbar=1" 
+            class="doc-viewer-frame" 
+            style="width: 100%; height: 100%; border: none; display: block;"
+            onload="const l=document.getElementById('docFrameLoading'); if(l){l.style.opacity='0'; setTimeout(()=>l.remove(), 300);}"
+          ></iframe>
         </div>
       `;
-
-      ensurePdfJs().then(async (pdfjs) => {
-        try {
-          const loadingTask = pdfjs.getDocument({
-            url: fileSrc,
-            enableXfa: false,
-            isEvalSupported: false
-          });
-
-          const pdfDoc = await loadingTask.promise;
-          const numPages = pdfDoc.numPages;
-
-          if (typeEl) {
-            typeEl.textContent = `PDF · ${numPages} PAGES`;
-          }
-
-          this.track.innerHTML = '';
-
-          for (let p = 1; p <= numPages; p++) {
-            const sheet = document.createElement('article');
-            sheet.className = 'doc-sheet doc-sheet-portrait doc-sheet-pdf';
-            sheet.id = `doc-page-${p}`;
-            sheet.style.minHeight = '720px';
-            sheet.style.display = 'flex';
-            sheet.style.alignItems = 'center';
-            sheet.style.justifyContent = 'center';
-            sheet.style.position = 'relative';
-            sheet.style.background = '#FFFFFF';
-            sheet.innerHTML = `
-              <div style="font-size: 12px; color: #4A2E27; opacity: 0.5; font-family: var(--font-primary, sans-serif); letter-spacing: 0.1em;">PAGE ${p} OF ${numPages}</div>
-              <span class="doc-sheet-page-indicator">${p} / ${numPages}</span>
-            `;
-            this.track.appendChild(sheet);
-          }
-
-          const renderPage = async (p) => {
-            if (!this.isOpen) return;
-            const page = await pdfDoc.getPage(p);
-            const viewport = page.getViewport({ scale: 1.5 });
-            const canvas = document.createElement('canvas');
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-            const ctx = canvas.getContext('2d');
-            await page.render({ canvasContext: ctx, viewport }).promise;
-
-            const sheet = document.getElementById(`doc-page-${p}`);
-            if (sheet && this.isOpen) {
-              const img = document.createElement('img');
-              img.src = canvas.toDataURL('image/jpeg', 0.85);
-              img.alt = `${documentData.title || 'Document'} - Page ${p}`;
-              img.style.width = '100%';
-              img.style.height = 'auto';
-              img.style.display = 'block';
-              img.style.borderRadius = '0';
-              sheet.innerHTML = '';
-              sheet.style.minHeight = 'auto';
-              sheet.appendChild(img);
-              sheet.insertAdjacentHTML('beforeend', `<span class="doc-sheet-page-indicator">${p} / ${numPages}</span>`);
-
-              if (window.__fisheyeLens && typeof window.__fisheyeLens.syncScene === 'function') {
-                window.__fisheyeLens.syncScene();
-              }
-            }
-          };
-
-          // Render Page 1 immediately for instant presentation
-          await renderPage(1);
-
-          if (window.__fisheyeLens && typeof window.__fisheyeLens.syncScene === 'function') {
-            window.__fisheyeLens.syncScene();
-          }
-
-          // Progressively render remaining pages in background
-          for (let p = 2; p <= numPages; p++) {
-            if (!this.isOpen) break;
-            await renderPage(p);
-          }
-        } catch (renderErr) {
-          console.warn('PDF.js render error, falling back to iframe:', renderErr);
-          this.track.innerHTML = `
-            <div style="width: 100%; max-width: 1120px; height: calc(100vh - 100px); min-height: 600px; background: #FAF7EE; border-radius: 6px; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.6); display: flex; flex-direction: column;">
-              <iframe src="${fileSrc}#toolbar=1&navpanes=0&scrollbar=1" class="doc-viewer-frame" style="width: 100%; height: 100%; border: none; display: block;"></iframe>
-            </div>
-          `;
-        }
-      }).catch((err) => {
-        console.warn('PDF.js script load error, falling back to iframe:', err);
-        this.track.innerHTML = `
-          <div style="width: 100%; max-width: 1120px; height: calc(100vh - 100px); min-height: 600px; background: #FAF7EE; border-radius: 6px; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.6); display: flex; flex-direction: column;">
-            <iframe src="${fileSrc}#toolbar=1&navpanes=0&scrollbar=1" class="doc-viewer-frame" style="width: 100%; height: 100%; border: none; display: block;"></iframe>
-          </div>
-        `;
-      });
+    }
     } else if (documentData.pages && documentData.pages.length > 0 && documentData.type !== 'pdf') {
       // Build vertical scrolling sheets from authentic slide images
       const count = documentData.pages.length;

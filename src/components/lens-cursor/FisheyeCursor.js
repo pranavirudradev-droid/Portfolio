@@ -304,12 +304,6 @@ export class FisheyeCursor {
             if (liveEl.id) {
               mirrorEl = this.mirrorStage.querySelector(`[data-lens-id="${liveEl.id}"]`);
             }
-            if (!mirrorEl && liveEl.className && typeof liveEl.className === 'string') {
-              const firstClass = liveEl.className.trim().split(/\s+/)[0];
-              if (firstClass && !firstClass.startsWith('is-') && !firstClass.startsWith('active')) {
-                mirrorEl = this.mirrorStage.querySelector(`.${firstClass}`);
-              }
-            }
 
             if (mirrorEl && typeof mirrorEl.setAttribute === 'function') {
               mirrorEl.setAttribute(attrName, liveEl.getAttribute(attrName));
