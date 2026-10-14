@@ -132,7 +132,6 @@ export class DocumentViewer {
           ></iframe>
         </div>
       `;
-    }
     } else if (documentData.pages && documentData.pages.length > 0 && documentData.type !== 'pdf') {
       // Build vertical scrolling sheets from authentic slide images
       const count = documentData.pages.length;
