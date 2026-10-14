@@ -128,8 +128,8 @@
   pointer-events: none !important;
 }
 
-/* Touch & Mobile: Cleanly disabled */
-@media (pointer: coarse), (hover: none) {
+/* Touch-only Mobile/Tablet: Cleanly disabled when no hover or fine pointer is present */
+@media (hover: none) and (pointer: coarse) {
   .fisheye-lens-loupe,
   .fisheye-lens-cursor,
   .fisheye-lens {

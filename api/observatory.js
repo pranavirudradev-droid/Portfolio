@@ -64,7 +64,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Observatory Title is required' });
     }
 
-    const slug = existingId || slugify(title);
+    const slug = body.slotId || existingId || (title ? slugify(title) : 'pic-1');
     const existing = (portfolio.observatory || []).find(o => o.id === slug) || {};
 
     const newEntry = {

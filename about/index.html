@@ -2267,7 +2267,7 @@
         .catch(() => fetch('/api/content').then(r => r.json()))
         .catch(() => ({}))
         .then(data => {
-          const about = (localData && localData.about) ? localData.about : (data && data.about ? data.about : null);
+          const about = (data && data.about) ? data.about : (localData && localData.about ? localData.about : null);
           if (about) {
             if (about.meta && about.meta.headline) {
               const el = document.getElementById('about-pull-statement');

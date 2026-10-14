@@ -811,7 +811,7 @@
         .catch(() => fetch('/api/content').then(r => r.json()))
         .catch(() => ({}))
         .then(data => {
-          const experiences = (localData && localData.experiences) ? localData.experiences : (data && data.experiences ? data.experiences : []);
+          const experiences = (data && data.experiences && data.experiences.length) ? data.experiences : (localData && localData.experiences ? localData.experiences : []);
           if (experiences && experiences.length) {
             experiences.forEach(e => {
               let docSrc = (e.document && e.document.src) ? e.document.src : '';

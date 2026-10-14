@@ -617,68 +617,47 @@
     <div class="tab-panel" id="panel-observatory">
       <div class="card">
         <div class="mode-bar">
-          <div class="mode-toggle">
-            <button class="mode-btn active" id="btn-obs-mode-create" onclick="setObsMode('create')">+ Add New Photo / Observation</button>
-            <button class="mode-btn" id="btn-obs-mode-edit" onclick="setObsMode('edit')">✏ Edit Existing Observation</button>
+          <div>
+            <h2 class="card-title">22 Photographic Carousel Slots (Pic 1 to Pic 22)</h2>
+            <p class="card-desc">Upload and manage pictures for the 22 landscape photograph slots in The Observatory. Changes sync to the live website instantly.</p>
           </div>
           <a href="../observatory/" target="_blank" style="font-size:12px; color:var(--accent-blue);">View The Observatory ↗</a>
         </div>
 
-        <div class="form-group full" id="group-select-obs" style="display:none; margin-bottom:20px;">
-          <label for="select-obs">Choose Observation to Edit</label>
-          <select id="select-obs" onchange="onSelectObservatory()"></select>
-        </div>
-
-        <form id="form-obs" onsubmit="saveObservatory(event)">
+        <form id="form-obs" onsubmit="saveObservatory(event)" style="margin-bottom:28px; padding-bottom:24px; border-bottom:1px solid rgba(245,239,198,0.12);">
           <input type="hidden" id="obs-img-src" />
+          <input type="hidden" id="obs-title" value="Pic 1" />
 
           <div class="form-grid">
             <div class="form-group full">
-              <label for="obs-title">Title *</label>
-              <input type="text" id="obs-title" required placeholder="e.g. The Invisible Choreography of Checkout Queues" />
-            </div>
-
-            <div class="form-group">
-              <label for="obs-category">Category</label>
-              <select id="obs-category">
-                <option value="PHOTOGRAPHY">PHOTOGRAPHY</option>
-                <option value="QUALITATIVE INQUIRY">QUALITATIVE INQUIRY</option>
-                <option value="CULTURAL NOTE">CULTURAL NOTE</option>
-                <option value="FIELD LOG">FIELD LOG</option>
-                <option value="ESSAY">ESSAY</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="obs-date">Year / Date</label>
-              <input type="text" id="obs-date" placeholder="e.g. 2024" />
+              <label for="select-obs">Select Picture Slot</label>
+              <select id="select-obs" onchange="onSelectObservatory()"></select>
             </div>
 
             <div class="form-group full">
-              <label>Photograph / Image (Choose from computer)</label>
+              <label>Photograph / Image (Choose from computer: 5:4 Landscape Recommended)</label>
               <div class="upload-control">
                 <input type="file" accept="image/*" onchange="handleDirectUpload(event, 'observatory-images', setObsImage)" />
                 <div class="upload-preview" id="preview-obs-img" style="display:none;">
-                  <img id="thumb-obs-img" src="" alt="photo" />
+                  <img id="thumb-obs-img" src="" alt="photo" style="max-height:80px; object-fit:cover; border-radius:4px;" />
                   <div style="flex:1;">
-                    <span class="upload-badge">Photo Ready</span>
-                    <div id="name-obs-img" style="font-size:11px; margin-top:4px; opacity:0.8;"></div>
+                    <span class="upload-badge" id="badge-obs-img">Photo Ready</span>
+                    <div id="name-obs-img" style="font-size:11px; margin-top:4px; opacity:0.8; word-break:break-all;"></div>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div class="form-group full">
-              <label for="obs-summary">Observation Summary / Note</label>
-              <textarea id="obs-summary" placeholder="Qualitative observation, behavioural trigger, or ethnography note..."></textarea>
-            </div>
           </div>
 
-          <div class="actions-row">
-            <button type="submit" class="btn btn-primary" id="btn-save-obs">Save Observation & Sync Website</button>
-            <button type="button" class="btn btn-danger" id="btn-del-obs" style="display:none;" onclick="deleteObservatory()">Delete Observation 🗑</button>
+          <div class="actions-row" style="margin-top:16px;">
+            <button type="submit" class="btn btn-primary" id="btn-save-obs">Save Photo to Slot & Sync Website</button>
+            <button type="button" class="btn btn-danger" id="btn-del-obs" onclick="clearCurrentObsSlot()">Clear Photo from Slot 🗑</button>
           </div>
         </form>
+
+        <h3 class="card-title" style="margin-top:16px;">All 22 Picture Slots</h3>
+        <p class="card-desc">Quick overview of all 22 slots. Click "Choose Image" on any slot to upload and update it immediately.</p>
+        <div class="slots-grid" id="obs-slots-grid" style="margin-top:16px;"></div>
       </div>
 
       <!-- Documentary Video Showcase Management -->
@@ -880,6 +859,10 @@
 
       const panel = document.getElementById(`panel-${tab}`);
       if (panel) panel.classList.add('active');
+
+      if (tab === 'observatory' && typeof renderObservatorySlots === 'function') {
+        renderObservatorySlots();
+      }
     }
 
     // Client-side image optimizer to keep payloads fast, light, and below Vercel/localStorage limits
@@ -959,6 +942,13 @@
               uploadBody = new Blob([arr], { type: mimeType });
             }
           } catch (_) {}
+        } else {
+          try {
+            const buf = await file.arrayBuffer();
+            uploadBody = new Blob([buf], { type: mimeType });
+          } catch (_) {
+            uploadBody = file;
+          }
         }
 
         // Direct stream to Supabase Storage (bypasses Vercel 4.5MB gateway)
@@ -1299,7 +1289,7 @@
     }
 
     // ==========================================
-    // 3. OBSERVATORY LOGIC
+    // 3. OBSERVATORY LOGIC (22 PICTURE SLOTS + DOCUMENTARY)
     // ==========================================
     function setObsImage(file) {
       const targetSrc = file.url || file.path;
@@ -1307,73 +1297,71 @@
       document.getElementById('thumb-obs-img').src = targetSrc.startsWith('data:') || targetSrc.startsWith('blob:') || targetSrc.startsWith('http') || targetSrc.startsWith('/') ? targetSrc : `/${targetSrc}`;
       document.getElementById('name-obs-img').textContent = file.name;
       document.getElementById('preview-obs-img').style.display = 'flex';
-    }
-
-    function setObsMode(mode) {
-      obsMode = mode;
-      document.getElementById('btn-obs-mode-create').className = 'mode-btn' + (mode === 'create' ? ' active' : '');
-      document.getElementById('btn-obs-mode-edit').className = 'mode-btn' + (mode === 'edit' ? ' active' : '');
-
-      const selectGroup = document.getElementById('group-select-obs');
-      const delBtn = document.getElementById('btn-del-obs');
-
-      if (mode === 'create') {
-        selectGroup.style.display = 'none';
-        delBtn.style.display = 'none';
-        currentObsId = null;
-        document.getElementById('form-obs').reset();
-        document.getElementById('obs-img-src').value = '';
-        document.getElementById('preview-obs-img').style.display = 'none';
-      } else {
-        selectGroup.style.display = 'flex';
-        delBtn.style.display = 'inline-flex';
-        populateObsSelect();
-      }
+      const badge = document.getElementById('badge-obs-img');
+      if (badge) badge.textContent = 'Photo Ready';
     }
 
     function populateObsSelect() {
       const s = document.getElementById('select-obs');
-      s.innerHTML = '<option value="">-- Choose an observation --</option>' +
-        (portfolio.observatory || []).map(o => `<option value="${o.id}">${o.title}</option>`).join('');
+      if (!s) return;
+      const curVal = s.value || 'pic-1';
+      s.innerHTML = Array.from({ length: 22 }, (_, i) => {
+        const num = i + 1;
+        const id = 'pic-' + num;
+        const exist = (portfolio.observatory || []).find(o => o.id === id);
+        const hasImg = exist && exist.media && exist.media.src ? ' (Photo Uploaded)' : ' (Empty)';
+        return `<option value="${id}">Pic ${num}${hasImg}</option>`;
+      }).join('');
+      s.value = curVal;
+      onSelectObservatory();
     }
 
     function onSelectObservatory() {
-      const id = document.getElementById('select-obs').value;
+      const s = document.getElementById('select-obs');
+      if (!s) return;
+      const id = s.value || 'pic-1';
       currentObsId = id;
-      if (!id) return;
+
+      const num = id.replace('pic-', '');
+      const titleEl = document.getElementById('obs-title');
+      if (titleEl) titleEl.value = `Pic ${num}`;
 
       const obs = (portfolio.observatory || []).find(x => x.id === id);
-      if (!obs) return;
+      const prev = document.getElementById('preview-obs-img');
 
-      document.getElementById('obs-title').value = obs.title || '';
-      document.getElementById('obs-category').value = obs.category || 'PHOTOGRAPHY';
-      document.getElementById('obs-date').value = obs.date || '';
-      document.getElementById('obs-summary').value = obs.summary || '';
-
-      if (obs.media && obs.media.src) {
+      if (obs && obs.media && obs.media.src) {
         document.getElementById('obs-img-src').value = obs.media.src;
         const mSrc = obs.media.src;
         document.getElementById('thumb-obs-img').src = (mSrc.startsWith('data:') || mSrc.startsWith('blob:') || mSrc.startsWith('http') || mSrc.startsWith('/')) ? mSrc : `/${mSrc}`;
         document.getElementById('name-obs-img').textContent = mSrc.split('/').pop().slice(0, 40);
-        document.getElementById('preview-obs-img').style.display = 'flex';
+        const badge = document.getElementById('badge-obs-img');
+        if (badge) badge.textContent = 'Current Photo';
+        if (prev) prev.style.display = 'flex';
       } else {
-        document.getElementById('preview-obs-img').style.display = 'none';
+        document.getElementById('obs-img-src').value = '';
+        if (prev) prev.style.display = 'none';
       }
     }
 
     async function saveObservatory(e) {
-      e.preventDefault();
-      const payload = {
-        title: document.getElementById('obs-title').value,
-        category: document.getElementById('obs-category').value,
-        date: document.getElementById('obs-date').value,
-        summary: document.getElementById('obs-summary').value,
-        imageSrc: document.getElementById('obs-img-src').value
-      };
+      if (e) e.preventDefault();
+      const s = document.getElementById('select-obs');
+      const slotId = s ? s.value : (currentObsId || 'pic-1');
+      const num = slotId.replace('pic-', '');
+      const title = `Pic ${num}`;
+      const imageSrc = document.getElementById('obs-img-src').value;
 
-      if (obsMode === 'edit' && currentObsId) {
-        payload.id = currentObsId;
+      if (!imageSrc) {
+        showToast('Please choose an image for ' + title, 'error');
+        return;
       }
+
+      const payload = {
+        slotId: slotId,
+        id: slotId,
+        title: title,
+        imageSrc: imageSrc
+      };
 
       try {
         const res = await fetch('/api/observatory', {
@@ -1383,19 +1371,14 @@
         });
         const data = await res.json();
         if (res.ok) {
-          showToast(data.message || '🎉 Observation saved & synced to website!');
+          showToast(`🎉 ${title} saved & synced to live Observatory!`);
           if (data.entry) {
             const idx = (portfolio.observatory || []).findIndex(o => o.id === data.entry.id);
             if (idx >= 0) portfolio.observatory[idx] = data.entry;
             else (portfolio.observatory = portfolio.observatory || []).push(data.entry);
-            saveToLocalStorage();
           }
           populateObsSelect();
-          if (data.entry) {
-            currentObsId = data.entry.id;
-            document.getElementById('select-obs').value = data.entry.id;
-            onSelectObservatory();
-          }
+          renderObservatorySlots();
         } else {
           showToast(data.error || 'Failed to save', 'error');
         }
@@ -1404,37 +1387,125 @@
       }
     }
 
-    async function deleteObservatory() {
-      if (!currentObsId) return;
-      if (!confirm('Are you sure you want to delete this observation?')) return;
-
-      try {
-        const res = await fetch(`/api/observatory/${currentObsId}`, { method: 'DELETE' });
-        const data = await res.json();
-        if (res.ok) {
-          showToast('Deleted observation');
-          portfolio.observatory = (portfolio.observatory || []).filter(o => o.id !== currentObsId);
-          saveToLocalStorage();
-          populateObsSelect();
-          setObsMode('create');
-        } else {
-          showToast(data.error || 'Failed to delete', 'error');
-        }
-      } catch (err) {
-        showToast('Error: ' + err.message, 'error');
-      }
+    async function clearCurrentObsSlot() {
+      const s = document.getElementById('select-obs');
+      const slotId = s ? s.value : (currentObsId || 'pic-1');
+      clearObsSlot(slotId);
     }
 
-    // Documentary Video Functions
-    function setDocVideo(file) {
+    function renderObservatorySlots() {
+      const grid = document.getElementById('obs-slots-grid');
+      if (!grid) return;
+      grid.innerHTML = Array.from({ length: 22 }, (_, i) => {
+        const num = i + 1;
+        const id = 'pic-' + num;
+        const entry = (portfolio.observatory || []).find(o => o.id === id);
+        const imgSrc = entry && entry.media && entry.media.src ? entry.media.src : null;
+        const fullSrc = imgSrc ? ((imgSrc.startsWith('http') || imgSrc.startsWith('data:') || imgSrc.startsWith('/')) ? imgSrc : '/' + imgSrc) : '';
+
+        return `
+          <div class="slot-card" style="position:relative; background:#1b1412; border:1px solid rgba(245,239,198,0.12); border-radius:4px; padding:12px;">
+            <div class="slot-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span class="slot-id" style="font-weight:700; font-size:12px; color:var(--text-yellow);">Pic ${num}</span>
+              ${imgSrc ? '<span style="color:#A5BCD6; font-size:10px; font-weight:600;">● Live</span>' : '<span style="opacity:0.4; font-size:10px;">Placeholder</span>'}
+            </div>
+            <div class="slot-preview" style="height:120px; background:#120c0a; border-radius:4px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+              ${imgSrc ? `<img src="${fullSrc}" alt="Pic ${num}" style="width:100%; height:100%; object-fit:cover;" />` : `<div style="font-size:11px; opacity:0.45; text-align:center;">5:4 Landscape<br>Slot ${num}</div>`}
+            </div>
+            <div class="slot-actions" style="margin-top:10px; display:flex; gap:6px;">
+              <label class="btn" style="flex:1; text-align:center; cursor:pointer; font-size:11px; padding:6px 8px; background:rgba(245,239,198,0.08); border:1px solid rgba(245,239,198,0.2); color:var(--text-yellow);">
+                ${imgSrc ? 'Replace' : 'Upload'}
+                <input type="file" accept="image/*" style="display:none;" onchange="handleObsSlotUpload(event, '${id}')" />
+              </label>
+              ${imgSrc ? `<button type="button" class="btn btn-danger" style="padding:4px 8px; font-size:11px;" title="Clear Photo" onclick="clearObsSlot('${id}')">✕</button>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function handleObsSlotUpload(e, slotId) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const num = slotId.replace('pic-', '');
+      showToast(`Uploading Pic ${num}...`);
+      await handleDirectUpload(e, 'observatory-images', async (res) => {
+        const targetSrc = res.url || res.path;
+        if (!portfolio.observatory) portfolio.observatory = [];
+        let item = portfolio.observatory.find(o => o.id === slotId);
+        if (item) {
+          item.media = item.media || {};
+          item.media.src = targetSrc;
+        } else {
+          item = { id: slotId, title: `Pic ${num}`, media: { type: 'image', src: targetSrc, alt: `Pic ${num}` } };
+          portfolio.observatory.push(item);
+        }
+
+        try {
+          const apiRes = await fetch('/api/observatory', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slotId: slotId, id: slotId, title: `Pic ${num}`, imageSrc: targetSrc })
+          });
+          if (apiRes.ok) {
+            showToast(`✅ Pic ${num} saved & synced to live website!`);
+          }
+        } catch (_) {}
+
+        renderObservatorySlots();
+        populateObsSelect();
+      });
+    }
+
+    async function clearObsSlot(slotId) {
+      const num = slotId.replace('pic-', '');
+      if (!confirm(`Clear photo for Pic ${num}? It will revert to the default placeholder.`)) return;
+      const item = (portfolio.observatory || []).find(o => o.id === slotId);
+      if (item && item.media) item.media.src = '';
+      try {
+        await fetch('/api/observatory', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slotId: slotId, id: slotId, title: `Pic ${num}`, imageSrc: '' })
+        });
+        showToast(`Pic ${num} photo cleared`);
+      } catch (_) {}
+      renderObservatorySlots();
+      populateObsSelect();
+    }
+
+    // Documentary Video Functions with Immediate Live Auto-Save
+    async function setDocVideo(file) {
       const targetSrc = file.url || file.path;
       document.getElementById('doc-video-src').value = targetSrc;
       document.getElementById('name-doc-vid').textContent = file.name;
       document.getElementById('preview-doc-vid').style.display = 'flex';
+
+      if (!portfolio.documentary) portfolio.documentary = {};
+      portfolio.documentary.videoSrc = targetSrc;
+      try {
+        const payload = {
+          title: document.getElementById('doc-video-title').value || portfolio.documentary.title,
+          badge: document.getElementById('doc-video-badge').value || portfolio.documentary.badge,
+          meta: document.getElementById('doc-video-meta').value || portfolio.documentary.meta,
+          videoSrc: targetSrc,
+          description: document.getElementById('doc-video-desc').value || portfolio.documentary.description
+        };
+        const res = await fetch('/api/observatory/documentary', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+          showToast('🎬 Documentary video uploaded & saved live!');
+        }
+      } catch (err) {
+        console.warn('Auto-save video error:', err);
+      }
     }
 
     async function saveDocumentaryVideo(e) {
-      e.preventDefault();
+      if (e) e.preventDefault();
       const payload = {
         title: document.getElementById('doc-video-title').value,
         badge: document.getElementById('doc-video-badge').value,
@@ -1451,9 +1522,8 @@
         });
         const data = await res.json();
         if (res.ok) {
-          showToast('🎬 Documentary showcase updated & synced!');
+          showToast('🎬 Documentary showcase updated & synced live!');
           portfolio.documentary = data.documentary || payload;
-          saveToLocalStorage();
         } else {
           showToast(data.error || 'Failed to save documentary', 'error');
         }
@@ -1733,19 +1803,12 @@
         }
       }
 
-      // Merge client overrides from localStorage (if any)
-      const overrides = loadFromLocalStorage();
-      if (overrides) {
-        portfolio = {
-          ...portfolio,
-          ...overrides,
-          projects: overrides.projects || portfolio.projects,
-          experiences: overrides.experiences || portfolio.experiences,
-          observatory: overrides.observatory || portfolio.observatory,
-          documentary: overrides.documentary || portfolio.documentary,
-          about: overrides.about || portfolio.about,
-          homepage: overrides.homepage || portfolio.homepage
-        };
+      // Fallback to localStorage ONLY if network and module load completely failed
+      if (!portfolio) {
+        const overrides = loadFromLocalStorage();
+        if (overrides) {
+          portfolio = overrides;
+        }
       }
 
       if (portfolio) {
@@ -1753,6 +1816,7 @@
         populateProjSelect();
         if (typeof populateExpSelect === 'function') populateExpSelect();
         if (typeof populateObsSelect === 'function') populateObsSelect();
+        if (typeof renderObservatorySlots === 'function') renderObservatorySlots();
 
         // Populate about
         if (portfolio.about) {

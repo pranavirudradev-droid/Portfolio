@@ -1346,7 +1346,7 @@
         .catch(() => fetch('/api/content').then(r => r.json()))
         .catch(() => ({}))
         .then(data => {
-          const home = (localData && localData.homepage) ? localData.homepage : (data && data.homepage ? data.homepage : null);
+          const home = (data && data.homepage) ? data.homepage : (localData && localData.homepage ? localData.homepage : null);
           if (home) {
             // Sync Hero Statement and Tagline
             if (home.hero) {

@@ -1257,17 +1257,55 @@
       let timer   = null;
 
       function fmt(s) {
-        return String(Math.floor(s / 60)).padStart(2,'0') + ':' + String(s % 60).padStart(2,'0');
+        const sec = Math.floor(s || 0);
+        return String(Math.floor(sec / 60)).padStart(2,'0') + ':' + String(sec % 60).padStart(2,'0');
       }
-      function update() {
-        const pct = (current / TOTAL * 100).toFixed(2) + '%';
-        fill.style.width = pct;
-        head.style.left  = pct;
-        tc.textContent   = fmt(current) + ' / 18:24';
-        scr.setAttribute('aria-valuenow', current);
+      function update(currSec, totalSec) {
+        const tot = totalSec || TOTAL;
+        const cur = currSec !== undefined ? currSec : current;
+        const pct = Math.min(100, Math.max(0, (cur / tot * 100))).toFixed(2) + '%';
+        if (fill) fill.style.width = pct;
+        if (head) head.style.left  = pct;
+        if (tc) tc.textContent   = fmt(cur) + ' / ' + fmt(tot);
+        if (scr) scr.setAttribute('aria-valuenow', Math.round(cur));
       }
 
+      window.__setupDocVideoEvents = function(vid) {
+        if (!vid || vid.__eventsBound) return;
+        vid.__eventsBound = true;
+        vid.addEventListener('play', function() {
+          playing = true;
+          if (label) label.textContent = 'PAUSE';
+          btn.style.opacity = '0.35';
+        });
+        vid.addEventListener('pause', function() {
+          playing = false;
+          if (label) label.textContent = 'PLAY DOCUMENTARY';
+          btn.style.opacity = '1';
+        });
+        vid.addEventListener('ended', function() {
+          playing = false;
+          if (label) label.textContent = 'PLAY DOCUMENTARY';
+          btn.style.opacity = '1';
+        });
+        vid.addEventListener('timeupdate', function() {
+          if (vid.duration) {
+            update(vid.currentTime, vid.duration);
+          }
+        });
+      };
+
       btn.addEventListener('click', function () {
+        const vid = document.getElementById('docVideoPlayer');
+        if (vid && vid.src) {
+          if (vid.paused) {
+            vid.play().catch(() => {});
+          } else {
+            vid.pause();
+          }
+          return;
+        }
+
         playing = !playing;
         if (playing) {
           label.textContent    = 'PAUSE PREVIEW';
@@ -1284,12 +1322,20 @@
       });
 
       // Scrubber click to seek
-      scr.addEventListener('click', function (e) {
-        const rect  = scr.getBoundingClientRect();
-        const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-        current = Math.round(ratio * TOTAL);
-        update();
-      });
+      if (scr) {
+        scr.addEventListener('click', function (e) {
+          const rect  = scr.getBoundingClientRect();
+          const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+          const vid = document.getElementById('docVideoPlayer');
+          if (vid && vid.duration) {
+            vid.currentTime = ratio * vid.duration;
+            update(vid.currentTime, vid.duration);
+          } else {
+            current = Math.round(ratio * TOTAL);
+            update();
+          }
+        });
+      }
     })();
   </script>
 
@@ -1304,7 +1350,7 @@
     <div class="fisheye-lens-rim"></div>
   </div>
 
-  <!-- Dynamic synchronization script with Admin API + localStorage -->
+  <!-- Dynamic synchronization script with Admin API + localStorage (Supabase is single source of truth) -->
   <script>
     function syncObservatory() {
       let localData = null;
@@ -1322,7 +1368,8 @@
         .catch(() => fetch('/api/content').then(r => r.json()))
         .catch(() => ({}))
         .then(data => {
-          const doc = (localData && localData.documentary) ? localData.documentary : (data && data.documentary ? data.documentary : null);
+          // Supabase is the single source of truth across all devices
+          const doc = (data && data.documentary) ? data.documentary : (localData && localData.documentary ? localData.documentary : null);
           if (doc) {
             const titleEl = document.querySelector('.doc-feature-title');
             const descEl = document.querySelector('.doc-feature-synopsis');
@@ -1346,24 +1393,43 @@
                 vid.id = 'docVideoPlayer';
                 vid.playsInline = true;
                 vid.controls = true;
-                vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;background:#000;';
-                frame.appendChild(vid);
+                vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;background:#000;';
+                frame.insertBefore(vid, frame.firstChild);
               }
-              if (vid) vid.src = cleanSrc;
+              if (vid) {
+                if (vid.src !== cleanSrc) vid.src = cleanSrc;
+                if (typeof window.__setupDocVideoEvents === 'function') {
+                  window.__setupDocVideoEvents(vid);
+                }
+              }
             }
           }
 
-          const obsEntries = (localData && localData.observatory) ? localData.observatory : (data && data.observatory ? data.observatory : []);
+          // 22 Pictures synchronization
+          const obsEntries = (data && data.observatory && data.observatory.length) ? data.observatory : (localData && localData.observatory ? localData.observatory : []);
           if (obsEntries && obsEntries.length) {
             const slides = document.querySelectorAll('.carousel-slide');
             obsEntries.forEach((entry, idx) => {
-              if (slides[idx] && entry.media && entry.media.src) {
-                const img = slides[idx].querySelector('img');
+              if (idx < 22 && entry.media && entry.media.src) {
                 let srcPath = entry.media.src;
                 if (srcPath && !srcPath.startsWith('http') && !srcPath.startsWith('data:') && !srcPath.startsWith('blob:') && !srcPath.startsWith('/')) {
                   srcPath = '/' + srcPath.replace(/^(\.\.\/)+/, '');
                 }
-                if (img) img.src = srcPath;
+                const updateSlide = (slideEl) => {
+                  if (!slideEl) return;
+                  const img = slideEl.querySelector('img');
+                  if (img) {
+                    img.src = srcPath;
+                    img.alt = entry.title || `Photograph ${idx + 1}`;
+                  } else {
+                    slideEl.innerHTML = `<img src="${srcPath}" alt="${entry.title || `Photograph ${idx + 1}`}" style="width:100%;height:100%;object-fit:cover;" />`;
+                  }
+                };
+
+                // Update primary slide in Set A (1-22)
+                updateSlide(slides[idx]);
+                // Update duplicate slide in Set B for seamless loop (23-44)
+                updateSlide(slides[idx + 22]);
               }
             });
           }

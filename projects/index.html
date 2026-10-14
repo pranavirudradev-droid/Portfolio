@@ -1150,7 +1150,7 @@
         .catch(() => fetch('/api/content').then(r => r.json()))
         .catch(() => ({}))
         .then(data => {
-          const projects = (localData && localData.projects) ? localData.projects : (data && data.projects ? data.projects : []);
+          const projects = (data && data.projects && data.projects.length) ? data.projects : (localData && localData.projects ? localData.projects : []);
           if (projects && projects.length) {
             projects.forEach(p => {
               let docSrc = (p.document && p.document.src) ? p.document.src : '';

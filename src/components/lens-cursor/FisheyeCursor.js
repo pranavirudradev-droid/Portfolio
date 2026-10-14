@@ -109,13 +109,18 @@ export class FisheyeCursor {
   }
 
   mount(container = document.body, targetScene = null) {
-    // Cleanly disable on touch and mobile devices
+    // Cleanly disable on touch-only mobile/tablet devices (allow touch laptops with mouse/trackpad)
     if (typeof window === 'undefined') return;
-    if (window.matchMedia('(hover: none), (pointer: coarse)').matches) {
+    if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
       return;
     }
 
     if (this.mounted) return;
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => this.mount(container, targetScene), { once: true });
+      return;
+    }
 
     const normalMapUri = this.generateSphericalNormalMap(128);
 
@@ -146,7 +151,7 @@ export class FisheyeCursor {
     }
 
     // 2. Locate or create the canonical optical loupe DOM element
-    let lensEl = document.querySelector('.fisheye-lens-loupe');
+    let lensEl = document.getElementById('fisheye') || document.querySelector('.fisheye-lens-loupe');
     if (!lensEl) {
       lensEl = document.createElement('div');
       lensEl.className = 'fisheye-lens-loupe';
