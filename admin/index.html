@@ -855,6 +855,9 @@
       if (tab === 'observatory' && typeof renderObservatorySlots === 'function') {
         renderObservatorySlots();
       }
+      if (tab === 'homepage' && typeof renderHomepageSlots === 'function') {
+        renderHomepageSlots();
+      }
     }
 
     // Client-side image optimizer to keep payloads fast, light, and below Vercel/localStorage limits
@@ -1704,19 +1707,27 @@
 
     function renderHomepageSlots() {
       const grid = document.getElementById('slots-grid');
-      const slots = portfolio.homepage.images || [];
+      if (!grid) return;
+      const images = (portfolio && portfolio.homepage && Array.isArray(portfolio.homepage.images)) ? portfolio.homepage.images : [];
+
+      const slots = Array.from({ length: 15 }, (_, i) => {
+        const num = String(i + 1).padStart(2, '0');
+        const id = `home-image-${num}`;
+        const existing = images.find(x => x.id === id);
+        return existing || { id, src: null };
+      });
 
       grid.innerHTML = slots.map(s => {
         const hasImg = s.src && s.src !== 'null';
         const srcUrl = hasImg ? ((s.src.startsWith('data:') || s.src.startsWith('blob:') || s.src.startsWith('http') || s.src.startsWith('/')) ? s.src : '/' + s.src) : '';
         return `
-          <div class="slot-card">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="slot-card" style="position:relative; background:#1b1412; border:1px solid rgba(245,239,198,0.12); border-radius:4px; padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
               <span style="font-size:11px; font-weight:700; color:var(--accent-blue);">${s.id.toUpperCase()}</span>
-              ${hasImg ? `<button type="button" class="btn btn-danger" style="padding:2px 6px; font-size:10px;" onclick="clearSlotPhoto('${s.id}')">Remove ✕</button>` : ''}
+              ${hasImg ? `<button type="button" class="btn btn-danger" style="padding:2px 8px; font-size:10px;" onclick="clearSlotPhoto('${s.id}')">Remove ✕</button>` : '<span style="font-size:10px; opacity:0.4;">Empty</span>'}
             </div>
-            ${hasImg ? `<img src="${srcUrl}" alt="${s.id}" style="height:120px; object-fit:cover; border-radius:4px;" />` : `<div style="height:120px; background:#19110f; display:flex; align-items:center; justify-content:center; color:rgba(245,239,198,0.4); font-size:11px; border-radius:4px;">No Photo Attached</div>`}
-            <div class="upload-control" style="padding:8px; margin-top:4px;">
+            ${hasImg ? `<img src="${srcUrl}" alt="${s.id}" style="height:120px; width:100%; object-fit:cover; border-radius:4px;" />` : `<div style="height:120px; background:#19110f; display:flex; align-items:center; justify-content:center; color:rgba(245,239,198,0.4); font-size:11px; border-radius:4px;">No Photo Attached</div>`}
+            <div class="upload-control" style="padding:8px; margin-top:8px;">
               <input type="file" accept="image/*" onchange="uploadSlotPhoto(event, '${s.id}')" />
             </div>
           </div>
