@@ -1329,7 +1329,7 @@
       }
     }
 
-    /* Dynamic synchronization script with Admin API + localStorage */
+    /* Dynamic synchronization script with Admin API + Supabase CDN */
     function syncHomepage() {
       let localData = null;
       try {
@@ -1366,9 +1366,28 @@
                 if (slot.id) {
                   if (slot.src && slot.src !== 'null') {
                     const fullSrc = (slot.src.startsWith('data:') || slot.src.startsWith('blob:') || slot.src.startsWith('http') || slot.src.startsWith('/')) ? slot.src : '/' + slot.src;
-                    window.setHomeImage(slot.id, fullSrc, slot.alt || slot.id);
+                    if (typeof window.setHomeImage === 'function') {
+                      window.setHomeImage(slot.id, fullSrc, slot.alt || slot.id);
+                    } else {
+                      const cleanId = slot.id.replace('#', '');
+                      const el = document.getElementById(cleanId) || document.querySelector('.' + cleanId);
+                      if (el) {
+                        el.innerHTML = `<img src="${fullSrc}" alt="${slot.alt || cleanId}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;" />`;
+                        el.classList.add('has-image');
+                      }
+                      const mirrorStage = document.getElementById('fisheyeMirrorStage');
+                      if (mirrorStage) {
+                        const mEl = mirrorStage.querySelector(`[data-lens-id="${cleanId}"]`) || mirrorStage.querySelector('.' + cleanId);
+                        if (mEl) {
+                          mEl.innerHTML = `<img src="${fullSrc}" alt="${slot.alt || cleanId}" style="width:100%;height:100%;object-fit:cover;display:block;" />`;
+                          mEl.classList.add('has-image');
+                        }
+                      }
+                    }
                   } else {
-                    window.setHomeImage(slot.id, null);
+                    if (typeof window.setHomeImage === 'function') {
+                      window.setHomeImage(slot.id, null);
+                    }
                   }
                 }
               });
@@ -1377,6 +1396,8 @@
         });
     }
     syncHomepage();
+    // Safety retry in 300ms in case module script was still compiling
+    setTimeout(syncHomepage, 300);
   </script>
 
 </body>
