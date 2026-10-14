@@ -406,18 +406,32 @@ export class FisheyeCursor {
       }
 
       // e. Document Viewer Overlay & Scroll Track synchronization
-      if (this.liveDocOverlay && this.mirrorDocOverlay) {
-        const isDocOpen = this.liveDocOverlay.classList.contains('is-open');
-        if (isDocOpen !== this.mirrorDocOverlay.classList.contains('is-open')) {
-          this.mirrorDocOverlay.classList.toggle('is-open', isDocOpen);
+      if (!this.liveDocOverlay) {
+        this.liveDocOverlay = document.querySelector('.doc-viewer-overlay');
+        if (this.liveDocOverlay && this.mirrorStage) {
+          this.mirrorDocOverlay = this.mirrorStage.querySelector('.doc-viewer-overlay');
+          this.liveDocTrack = document.querySelector('.doc-viewer-track');
+          this.mirrorDocTrack = this.mirrorStage.querySelector('.doc-viewer-track');
         }
-        if (isDocOpen) {
-          const scrollY = window.scrollY || 0;
-          const scrollX = window.scrollX || 0;
-          this.mirrorDocOverlay.style.transform = `translate3d(${scrollX}px, ${scrollY}px, 0)`;
-          if (this.liveDocTrack && this.mirrorDocTrack) {
-            if (Math.abs(this.mirrorDocTrack.scrollTop - this.liveDocTrack.scrollTop) > 1) {
-              this.mirrorDocTrack.scrollTop = this.liveDocTrack.scrollTop;
+      }
+
+      if (this.liveDocOverlay) {
+        const isDocOpen = this.liveDocOverlay.classList.contains('is-open');
+        if (isDocOpen && !this.mirrorDocOverlay && this.mirrorStage) {
+          this.populateMirrorStage();
+        }
+        if (this.mirrorDocOverlay) {
+          if (isDocOpen !== this.mirrorDocOverlay.classList.contains('is-open')) {
+            this.mirrorDocOverlay.classList.toggle('is-open', isDocOpen);
+          }
+          if (isDocOpen) {
+            const scrollY = window.scrollY || 0;
+            const scrollX = window.scrollX || 0;
+            this.mirrorDocOverlay.style.transform = `translate3d(${scrollX}px, ${scrollY}px, 0)`;
+            if (this.liveDocTrack && this.mirrorDocTrack) {
+              if (Math.abs(this.mirrorDocTrack.scrollTop - this.liveDocTrack.scrollTop) > 0.5) {
+                this.mirrorDocTrack.scrollTop = this.liveDocTrack.scrollTop;
+              }
             }
           }
         }
