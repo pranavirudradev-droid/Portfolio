@@ -746,13 +746,12 @@
     import { DocumentViewer } from '../components/document/DocumentViewer.js';
     import { FisheyeCursor } from '../src/components/lens-cursor/FisheyeCursor.js';
 
-    // 1. Universal Document Viewer
-    const viewer = new DocumentViewer();
-    viewer.mount();
-
-    // 2. Mount Shared Fisheye Lens
+    // 1. Mount Shared Fisheye Lens
     const lens = new FisheyeCursor();
     lens.mount();
+
+    // 2. Document Viewer Engine & Document Map
+    const viewer = new DocumentViewer();
 
     const DOC_MAP = {
       'origami-creative': {

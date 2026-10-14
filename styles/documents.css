@@ -182,9 +182,15 @@
   }
 }
 
-/* Ensure optical fisheye lens loupe is always elevated above document overlay */
-.fisheye-lens-loupe {
-  z-index: 20000 !important;
+/* Remove lens cursor completely when document viewer is open */
+body:has(.doc-viewer-overlay.is-open) .fisheye-lens-loupe,
+body.has-doc-open .fisheye-lens-loupe,
+.doc-viewer-overlay.is-open ~ .fisheye-lens-loupe,
+.doc-viewer-overlay.is-open .fisheye-lens-loupe {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
 }
 
 @keyframes docSpin {
