@@ -37,3 +37,6 @@ export const OBSERVATORY_ENTRIES = Array.from({ length: 22 }, (_, i) => {
     }
   };
 });
+
+export const OBSERVATORY_PHOTOS = OBSERVATORY_ENTRIES;
+

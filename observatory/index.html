@@ -1155,17 +1155,18 @@
     import { FisheyeCursor } from '../src/components/lens-cursor/FisheyeCursor.js';
     const lens = new FisheyeCursor();
     lens.mount();
+    window.__fisheyeLens = lens;
 
-    // HorizontalPhotoGallery component import for architectural compatibility
-    import { HorizontalPhotoGallery } from '../src/components/media/HorizontalPhotoGallery.js';
-
-    // OBSERVATORY_PHOTOS reference (data model, 22 landscape photographs, 5:4 aspect ratio)
-    import { OBSERVATORY_PHOTOS } from '../content/observatory/index.js';
-    const observatoryPhotos = OBSERVATORY_PHOTOS || [];
-    if (observatoryPhotos.length) {
-      document.getElementById('observatory-gallery-mount')
-        .setAttribute('data-photo-count', observatoryPhotos.length);
-    }
+    // Optional gallery mount metadata
+    try {
+      import('../content/observatory/index.js').then(mod => {
+        const photos = mod.OBSERVATORY_PHOTOS || mod.OBSERVATORY_ENTRIES || [];
+        const mount = document.getElementById('observatory-gallery-mount');
+        if (mount && photos.length) {
+          mount.setAttribute('data-photo-count', photos.length);
+        }
+      }).catch(() => {});
+    } catch (_) {}
   </script>
 
   <script>
@@ -1383,21 +1384,34 @@
 
             if (doc.videoSrc) {
               const frame = document.querySelector('.doc-player-frame');
-              let vid = document.getElementById('docVideoPlayer');
-              let cleanSrc = doc.videoSrc;
-              if (cleanSrc && !cleanSrc.startsWith('http') && !cleanSrc.startsWith('data:') && !cleanSrc.startsWith('blob:') && !cleanSrc.startsWith('/')) {
-                cleanSrc = '/' + cleanSrc.replace(/^(\.\.\/)+/, '');
-              }
-              if (!vid && frame) {
-                vid = document.createElement('video');
-                vid.id = 'docVideoPlayer';
-                vid.playsInline = true;
-                vid.controls = true;
-                vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;background:#000;';
-                frame.insertBefore(vid, frame.firstChild);
-              }
-              if (vid) {
-                if (vid.src !== cleanSrc) vid.src = cleanSrc;
+              const cleanSrc = (doc.videoSrc || '').trim();
+
+              const ytMatch = cleanSrc.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
+              const vimeoMatch = cleanSrc.match(/(?:vimeo\.com\/)(\d+)/i);
+
+              if (ytMatch && frame) {
+                const vidId = ytMatch[1];
+                frame.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${vidId}?autoplay=0&rel=0" style="position:absolute;inset:0;width:100%;height:100%;border:none;z-index:1;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+              } else if (vimeoMatch && frame) {
+                const vidId = vimeoMatch[1];
+                frame.innerHTML = `<iframe src="https://player.vimeo.com/video/${vidId}?title=0&byline=0&portrait=0" style="position:absolute;inset:0;width:100%;height:100%;border:none;z-index:1;" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+              } else if (cleanSrc && frame) {
+                let directSrc = cleanSrc;
+                if (!directSrc.startsWith('http') && !directSrc.startsWith('data:') && !directSrc.startsWith('blob:') && !directSrc.startsWith('/')) {
+                  directSrc = '/' + directSrc.replace(/^(\.\.\/)+/, '');
+                }
+                let vid = document.getElementById('docVideoPlayer');
+                if (!vid) {
+                  vid = document.createElement('video');
+                  vid.id = 'docVideoPlayer';
+                  vid.playsInline = true;
+                  vid.controls = true;
+                  vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;background:#000;';
+                  frame.insertBefore(vid, frame.firstChild);
+                }
+                if (vid && vid.src !== directSrc) {
+                  vid.src = directSrc;
+                }
                 if (typeof window.__setupDocVideoEvents === 'function') {
                   window.__setupDocVideoEvents(vid);
                 }
@@ -1405,33 +1419,49 @@
             }
           }
 
-          // 22 Pictures synchronization
+          // Dynamic photograph slots synchronization (supports 22, 23, or any number of added slots)
           const obsEntries = (data && data.observatory && data.observatory.length) ? data.observatory : (localData && localData.observatory ? localData.observatory : []);
           if (obsEntries && obsEntries.length) {
-            const slides = document.querySelectorAll('.carousel-slide');
-            obsEntries.forEach((entry, idx) => {
-              if (idx < 22 && entry.media && entry.media.src) {
-                let srcPath = entry.media.src;
+            const track = document.querySelector('.carousel-track');
+            if (track) {
+              const N = obsEntries.length;
+              let htmlA = '';
+              let htmlB = '';
+
+              obsEntries.forEach((entry, idx) => {
+                const num = idx + 1;
+                let srcPath = (entry.media && entry.media.src) ? entry.media.src : '';
                 if (srcPath && !srcPath.startsWith('http') && !srcPath.startsWith('data:') && !srcPath.startsWith('blob:') && !srcPath.startsWith('/')) {
                   srcPath = '/' + srcPath.replace(/^(\.\.\/)+/, '');
                 }
-                const updateSlide = (slideEl) => {
-                  if (!slideEl) return;
-                  const img = slideEl.querySelector('img');
-                  if (img) {
-                    img.src = srcPath;
-                    img.alt = entry.title || `Photograph ${idx + 1}`;
-                  } else {
-                    slideEl.innerHTML = `<img src="${srcPath}" alt="${entry.title || `Photograph ${idx + 1}`}" style="width:100%;height:100%;object-fit:cover;" />`;
-                  }
-                };
 
-                // Update primary slide in Set A (1-22)
-                updateSlide(slides[idx]);
-                // Update duplicate slide in Set B for seamless loop (23-44)
-                updateSlide(slides[idx + 22]);
+                if (srcPath) {
+                  htmlA += `<div class="carousel-slide" role="listitem" aria-label="${entry.title || `Photograph ${num}`}"><img src="${srcPath}" alt="${entry.title || `Photograph ${num}`}" style="width:100%;height:100%;object-fit:cover;" loading="lazy" /></div>`;
+                  htmlB += `<div class="carousel-slide" aria-hidden="true"><img src="${srcPath}" alt="${entry.title || `Photograph ${num}`}" style="width:100%;height:100%;object-fit:cover;" loading="lazy" /></div>`;
+                } else {
+                  htmlA += `
+                    <div class="carousel-slide" role="listitem" aria-label="Photograph ${num}">
+                      <div class="slide-placeholder">
+                        <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+                        <span class="ph-dims">2000 × 1600</span><span class="ph-label">PIC ${num}</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">${num} / ${N}</span>
+                      </div>
+                    </div>`;
+                  htmlB += `
+                    <div class="carousel-slide" aria-hidden="true">
+                      <div class="slide-placeholder">
+                        <svg class="ph-icon" viewBox="0 0 28 28" fill="none" stroke="#F5EFC6" stroke-width="1.2" aria-hidden="true"><circle cx="14" cy="14" r="10" opacity="0.35" stroke-dasharray="2 3"/><circle cx="14" cy="14" r="5.5" opacity="0.5"/><circle cx="14" cy="14" r="2" fill="#F5EFC6" opacity="0.6"/></svg>
+                        <span class="ph-dims">2000 × 1600</span><span class="ph-label">PIC ${num}</span><span class="ph-spec">5:4 LANDSCAPE · 2000 × 1600 PX</span><span class="ph-num">${num} / ${N}</span>
+                      </div>
+                    </div>`;
+                }
+              });
+
+              track.innerHTML = htmlA + htmlB;
+
+              if (window.__fisheyeLens && typeof window.__fisheyeLens.syncScene === 'function') {
+                window.__fisheyeLens.syncScene();
               }
-            });
+            }
           }
         });
     }

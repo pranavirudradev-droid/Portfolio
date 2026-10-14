@@ -47,7 +47,7 @@ export default async function handler(req, res) {
         const fs = await import('fs');
         const path = await import('path');
         const obsJsPath = path.resolve(process.cwd(), 'content/observatory/index.js');
-        const content = `export const OBSERVATORY_DOCUMENTARY = ${JSON.stringify(updatedDoc, null, 2)};\nexport const OBSERVATORY_ENTRIES = ${JSON.stringify(portfolio.observatory || [], null, 2)};\n`;
+        const content = `export const OBSERVATORY_DOCUMENTARY = ${JSON.stringify(updatedDoc, null, 2)};\nexport const OBSERVATORY_ENTRIES = ${JSON.stringify(portfolio.observatory || [], null, 2)};\nexport const OBSERVATORY_PHOTOS = OBSERVATORY_ENTRIES;\n`;
         fs.writeFileSync(obsJsPath, content, 'utf8');
       } catch (_) {}
 
@@ -96,7 +96,7 @@ export default async function handler(req, res) {
       const fs = await import('fs');
       const path = await import('path');
       const obsJsPath = path.resolve(process.cwd(), 'content/observatory/index.js');
-      const content = `export const OBSERVATORY_DOCUMENTARY = ${JSON.stringify(portfolio.documentary || {}, null, 2)};\nexport const OBSERVATORY_ENTRIES = ${JSON.stringify(entries, null, 2)};\n`;
+      const content = `export const OBSERVATORY_DOCUMENTARY = ${JSON.stringify(portfolio.documentary || {}, null, 2)};\nexport const OBSERVATORY_ENTRIES = ${JSON.stringify(entries, null, 2)};\nexport const OBSERVATORY_PHOTOS = OBSERVATORY_ENTRIES;\n`;
       fs.writeFileSync(obsJsPath, content, 'utf8');
     } catch (_) {}
 
