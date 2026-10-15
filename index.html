@@ -527,6 +527,18 @@
        CHAPTER 3: ANIMATED CONTACT FOOTER
        ========================================================= */
     .home-contact-footer {
+      --contact-y: 0px;
+      --contact-opacity: 1;
+      --badge-opacity: 0.7;
+      --badge-y: 0px;
+      --headline-opacity: 1;
+      --headline-y: 0px;
+      --sub-opacity: 0.9;
+      --sub-y: 0px;
+      --link1-opacity: 1;
+      --link1-y: 0px;
+      --link2-opacity: 1;
+      --link2-y: 0px;
       position: relative;
       width: 100%;
       background-color: var(--transparent-yellow);
@@ -542,41 +554,10 @@
       flex-direction: column;
       isolation: isolate;
       overflow: hidden;
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    /* Scroll-triggered peek-and-settle animation */
-    .home-contact-footer.is-peek-ready {
-      transform: translateY(80px);
-      opacity: 0.7;
-      will-change: transform, opacity;
-    }
-
-    .home-contact-footer.is-peek-ready.is-revealed {
-      animation: contactPeekAndSettle 1100ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-
-    @keyframes contactPeekAndSettle {
-      0% {
-        transform: translateY(80px);
-        opacity: 0.7;
-      }
-      45% {
-        /* Smoothly rises to peek upward */
-        transform: translateY(-20px);
-        opacity: 1;
-      }
-      65% {
-        /* Pauses momentarily */
-        transform: translateY(-20px);
-        opacity: 1;
-      }
-      100% {
-        /* Settles down into normal resting flow */
-        transform: translateY(0);
-        opacity: 1;
-      }
+      transform: translateY(var(--contact-y, 0px));
+      opacity: var(--contact-opacity, 1);
+      will-change: transform;
+      transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .home-contact-inner {
@@ -594,9 +575,12 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--potting-soil);
-      opacity: 0.7;
+      opacity: var(--badge-opacity, 0.7);
+      transform: translateY(var(--badge-y, 0px));
       display: inline-block;
       margin-bottom: 16px;
+      will-change: opacity, transform;
+      transition: opacity 220ms cubic-bezier(0.16, 1, 0.3, 1), transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .home-contact-headline {
@@ -609,8 +593,10 @@
       text-transform: uppercase;
       margin: 0 0 16px 0;
       max-width: 900px;
-      opacity: 1;
-      transform: translateY(0);
+      opacity: var(--headline-opacity, 1);
+      transform: translateY(var(--headline-y, 0px));
+      will-change: opacity, transform;
+      transition: opacity 240ms cubic-bezier(0.16, 1, 0.3, 1), transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .home-contact-sub {
@@ -621,33 +607,10 @@
       color: var(--potting-soil);
       max-width: 620px;
       margin: 0 0 clamp(36px, 5vh, 56px) 0;
-      opacity: 0.9;
-      transform: translateY(0);
-    }
-
-    /* Staggered text and links reveal inside footer */
-    .home-contact-footer.is-peek-ready .home-contact-headline {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .home-contact-footer.is-peek-ready.is-revealed .home-contact-headline {
-      opacity: 1;
-      transform: translateY(0);
-      transition-delay: 200ms;
-    }
-
-    .home-contact-footer.is-peek-ready .home-contact-sub {
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .home-contact-footer.is-peek-ready.is-revealed .home-contact-sub {
-      opacity: 0.9;
-      transform: translateY(0);
-      transition-delay: 340ms;
+      opacity: var(--sub-opacity, 0.9);
+      transform: translateY(var(--sub-y, 0px));
+      will-change: opacity, transform;
+      transition: opacity 260ms cubic-bezier(0.16, 1, 0.3, 1), transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .home-contact-links {
@@ -662,30 +625,20 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      opacity: 1;
-      transform: translateY(0);
     }
 
-    .home-contact-footer.is-peek-ready .home-contact-link-item:nth-child(1) {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .home-contact-footer.is-peek-ready.is-revealed .home-contact-link-item:nth-child(1) {
-      opacity: 1;
-      transform: translateY(0);
-      transition-delay: 480ms;
+    .home-contact-link-item:nth-child(1) {
+      opacity: var(--link1-opacity, 1);
+      transform: translateY(var(--link1-y, 0px));
+      will-change: opacity, transform;
+      transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1), transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .home-contact-footer.is-peek-ready .home-contact-link-item:nth-child(2) {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .home-contact-footer.is-peek-ready.is-revealed .home-contact-link-item:nth-child(2) {
-      opacity: 1;
-      transform: translateY(0);
-      transition-delay: 620ms;
+    .home-contact-link-item:nth-child(2) {
+      opacity: var(--link2-opacity, 1);
+      transform: translateY(var(--link2-y, 0px));
+      will-change: opacity, transform;
+      transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .home-contact-label {
@@ -820,8 +773,7 @@
     /* Prefers-reduced-motion: keep fully visible and interactive without motion */
     @media (prefers-reduced-motion: reduce) {
       .home-contact-footer,
-      .home-contact-footer.is-peek-ready,
-      .home-contact-footer.is-peek-ready.is-revealed,
+      .home-contact-badge,
       .home-contact-headline,
       .home-contact-sub,
       .home-contact-link-item,
@@ -1347,8 +1299,8 @@
   <footer class="home-contact-footer" id="contact" aria-label="Contact and Social Links">
     <div class="home-contact-inner">
       <span class="home-contact-badge">GET IN TOUCH</span>
-      <h2 class="home-contact-headline">LET'S CONNECT</h2>
-      <p class="home-contact-sub">Available for strategic design, brand storytelling, and collaborative opportunities worldwide.</p>
+      <h2 class="home-contact-headline">LET’S CONNECT.</h2>
+      <p class="home-contact-sub">Good conversations can start anywhere. Here’s where to find me.</p>
 
       <div class="home-contact-links">
         <div class="home-contact-link-item">
@@ -1451,38 +1403,132 @@
     }
 
     /* =========================================================
-       CONTACT FOOTER: SCROLL-TRIGGERED PEEK-AND-SETTLE REVEAL
+       CONTACT FOOTER: SCROLL-DRIVEN SNEAK PEEK & REVERSIBLE REVEAL
        ========================================================= */
-    if (contactEl) {
-      contactEl.classList.add('is-peek-ready');
+    if (contactEl && sectionsEl) {
+      const tab4El = sectionsEl.querySelector('.section-item:last-child');
+      const mirrorContact = document.getElementById('contactLensMirror');
+      const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      const triggerFooterReveal = () => {
-        if (!contactEl.classList.contains('is-revealed')) {
-          contactEl.classList.add('is-revealed');
-          const mirrorContact = document.getElementById('contactLensMirror');
-          if (mirrorContact) mirrorContact.classList.add('is-revealed');
+      let lastAppliedState = null;
+
+      const applyContactStyles = (state) => {
+        const stateKey = `${state.y}_${state.badgeOpacity}_${state.headlineOpacity}_${state.subOpacity}_${state.link1Opacity}_${state.link2Opacity}`;
+        if (lastAppliedState === stateKey) return;
+        lastAppliedState = stateKey;
+
+        const targets = mirrorContact ? [contactEl, mirrorContact] : [contactEl];
+        targets.forEach((el) => {
+          el.style.setProperty('--contact-y', `${state.y}px`);
+          el.style.setProperty('--badge-opacity', state.badgeOpacity);
+          el.style.setProperty('--badge-y', `${state.badgeY}px`);
+          el.style.setProperty('--headline-opacity', state.headlineOpacity);
+          el.style.setProperty('--headline-y', `${state.headlineY}px`);
+          el.style.setProperty('--sub-opacity', state.subOpacity);
+          el.style.setProperty('--sub-y', `${state.subY}px`);
+          el.style.setProperty('--link1-opacity', state.link1Opacity);
+          el.style.setProperty('--link1-y', `${state.link1Y}px`);
+          el.style.setProperty('--link2-opacity', state.link2Opacity);
+          el.style.setProperty('--link2-y', `${state.link2Y}px`);
+        });
+      };
+
+      const updateContactScroll = () => {
+        if (isReducedMotion) return;
+
+        const winH = window.innerHeight;
+        const sRect = sectionsEl.getBoundingClientRect();
+        const tab4Rect = tab4El ? tab4El.getBoundingClientRect() : sRect;
+
+        // Stage 1: Above sections stage (at Hero)
+        if (sRect.top >= winH) {
+          applyContactStyles({
+            y: 0,
+            badgeOpacity: 0,
+            badgeY: 8,
+            headlineOpacity: 0,
+            headlineY: 12,
+            subOpacity: 0,
+            subY: 16,
+            link1Opacity: 0,
+            link1Y: 18,
+            link2Opacity: 0,
+            link2Y: 18
+          });
+          return;
+        }
+
+        // Stage 2: Navigation tabs enter viewport
+        // tabEntryProgress goes from 0 to 1 as the tabs emerge
+        const tabEntryProgress = Math.max(0, Math.min(1, (winH - sRect.top) / (winH * 0.55)));
+
+        // Max sneak-peek shift ensuring Tab 4 is never covered (always keeping at least 20px clearance)
+        const maxClearanceShift = Math.max(0, sRect.bottom - (tab4Rect.bottom + 20));
+        const desiredSneakPeek = Math.min(72, Math.max(48, Math.round(winH * 0.08)));
+        const allowedSneakPeek = Math.min(desiredSneakPeek, maxClearanceShift);
+        const sneakPeekY = -allowedSneakPeek * tabEntryProgress;
+
+        // Stage 3: Progressive reveal as user scrolls down past tabs into contact
+        const revealRange = Math.max(220, winH * 0.42);
+        const revealProgress = Math.max(0, Math.min(1, (winH - sRect.bottom + 60) / revealRange));
+
+        // Smoothly settle the panel towards 0 in normal document flow
+        const translateY = Math.round(sneakPeekY * (1 - revealProgress));
+
+        // Staggered sequential reveals in exact requested order:
+        // 1. GET IN TOUCH (badge)
+        const pBadge = Math.max(0, Math.min(1, tabEntryProgress * 0.6 + revealProgress * 0.4));
+        const badgeOpacity = pBadge < 0.2 ? 0 : Math.min(1, (pBadge - 0.2) / 0.4 * 0.85 + revealProgress * 0.15);
+        const badgeY = Math.round((1 - pBadge) * 8);
+
+        // 2. LET’S CONNECT. (headline)
+        const pHeadline = Math.max(0, Math.min(1, revealProgress / 0.45));
+        const headlineOpacity = tabEntryProgress > 0.5 ? Math.min(1, 0.45 + 0.55 * pHeadline) : 0;
+        const headlineY = Math.round((1 - pHeadline) * 12);
+
+        // 3. Supporting sentence
+        const pSub = Math.max(0, Math.min(1, (revealProgress - 0.22) / 0.45));
+        const subOpacity = +(pSub * 0.9).toFixed(2);
+        const subY = Math.round((1 - pSub) * 16);
+
+        // 4. Email & LinkedIn links (subtle staggered fade and upward motion)
+        const pLink1 = Math.max(0, Math.min(1, (revealProgress - 0.48) / 0.38));
+        const link1Opacity = +pLink1.toFixed(2);
+        const link1Y = Math.round((1 - pLink1) * 18);
+
+        const pLink2 = Math.max(0, Math.min(1, (revealProgress - 0.62) / 0.35));
+        const link2Opacity = +pLink2.toFixed(2);
+        const link2Y = Math.round((1 - pLink2) * 18);
+
+        applyContactStyles({
+          y: translateY,
+          badgeOpacity: +badgeOpacity.toFixed(2),
+          badgeY,
+          headlineOpacity: +headlineOpacity.toFixed(2),
+          headlineY,
+          subOpacity,
+          subY,
+          link1Opacity,
+          link1Y,
+          link2Opacity,
+          link2Y
+        });
+      };
+
+      let ticking = false;
+      const onScroll = () => {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            updateContactScroll();
+            ticking = false;
+          });
+          ticking = true;
         }
       };
 
-      if ('IntersectionObserver' in window) {
-        const observatoryItem = document.querySelector('#sections-stage .section-item:last-child');
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              triggerFooterReveal();
-              observer.disconnect();
-            }
-          });
-        }, {
-          threshold: 0.1,
-          rootMargin: '0px 0px 40px 0px'
-        });
-
-        if (observatoryItem) observer.observe(observatoryItem);
-        observer.observe(contactEl);
-      } else {
-        triggerFooterReveal();
-      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+      updateContactScroll();
     }
 
     const mirrorSlots = mirrorStage ? Array.from(mirrorStage.querySelectorAll('.home-image-slot')) : [];
